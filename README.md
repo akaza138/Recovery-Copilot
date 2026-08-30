@@ -9,7 +9,9 @@ maximize *safely* recovered revenue, and to visibly refuse to act when
 confidence is too low on a high-value transaction.
 
 Built for Track 03 (AI Revenue Recovery), Razorpay AI Buildathon (submission
-deadline September 5, 2026).
+deadline September 5, 2026). See also: [PITCH.md](PITCH.md) (the 5-minute demo
+script) and [APPLICATION.md](APPLICATION.md) (submission form answers, pulled
+from this README).
 
 ## Architecture, in one paragraph
 
@@ -21,6 +23,18 @@ number, and evidence; the policy engine converts that into a HIGH/MEDIUM/LOW
 band and is the only component allowed to decide RETRY / PAYMENT_LINK /
 HUMAN_REVIEW / STAND_DOWN. The LLM never sees policy inputs (DND, retry
 counts, contact limits, cooldowns) and never calls Razorpay.
+
+## Quickstart
+
+```bash
+pip install -r requirements.txt
+cp .env.example .env                        # fill in RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET / GROQ_API_KEY
+python -m scripts.check_razorpay_keys        # confirms test-mode credentials work
+python -m seed.generate_dataset              # writes data/synthetic_failed_payments.json + ground_truth.json
+python -m src.run_batch                      # full batch, simulated action layer, prints metrics
+python -m src.generate_report_html           # data/batch_report.json -> data/batch_report.html
+pytest -q                                    # 115 tests, no external API required
+```
 
 ## The one hero flow
 
@@ -35,18 +49,55 @@ Docker/Prometheus/CI until this works end to end. See the build order below.
 
 ## Status
 
-Day 5: a minimal UI (`python -m src.generate_report_html`) renders the batch
-results and a click-to-expand audit trail as a single static HTML file —
-see "UI: batch results and audit trail" below. Day 4 adversarially tested
-the refusal/safety path (see "Policy engine") and investigated/resolved the
-"Confirmed Recovered is ₹0" question explicitly — see "Why Confirmed
-Recovered is ₹0". Day 3 built full-batch evaluation: `python -m src.run_batch`
-runs the entire 64-record synthetic dataset through diagnose → policy →
-action → observe → audit and reports honest, non-cherry-picked metrics.
-Rule-based diagnosis and LLM-backed diagnosis (for failure reasons the rule
-table doesn't recognize) are both wired for real. Not yet built: a
-payment-completion confirmation path (webhook/polling — see Known
-limitations); Docker/CI stay out of scope until the core loop is fully proven.
+Working end to end, submission-ready. The full 64-record synthetic batch
+runs through diagnose → policy → action → observe → audit with real LLM
+diagnosis (Groq) for the reasons the rule table can't classify, real
+Razorpay test-mode actions available on request (`--execute-real`), 0
+incorrect automatic actions, and a static HTML report for both the batch
+summary and a per-record audit trail. 115 tests, all green. Not built:
+a payment-completion confirmation path (webhook/polling — see "Why
+Confirmed Recovered is ₹0" and Known limitations), and anything past the
+core loop (dashboard, Docker, CI) — out of scope by design, not by running
+out of time.
+
+Built day by day; each day's commit is the honest record of what changed
+and why:
+
+- **Day 1** — data model, a 60-record synthetic dataset (later expanded to
+  68, then trimmed to 64 — see below), Razorpay test-mode connectivity
+  confirmed.
+- **Day 2** — the vertical slice: one payment through the full loop,
+  runnable from the CLI, real Razorpay test-mode actions.
+- **Day 3** — full-batch evaluation; real LLM diagnosis wired in; the
+  serial-failure policy factor; honest batch metrics.
+- **Day 4** — investigated real payment completion (see below); adversarial
+  safety testing.
+- **Day 5** — re-checked the completion question from another environment
+  (inconclusive); the minimal UI.
+- **Day 6** — this polish pass: README, pitch script, submission hygiene.
+
+### Two things genuine testing caught
+
+Both are documented in full where they happened, not just claimed here:
+
+1. **A dataset scenario silently stopped testing what it claimed to.**
+   A "cooldown still active" case set its failure timestamp to "5 minutes
+   before dataset generation" — correct the day it was written, then wrong
+   every time the batch ran more than 30 minutes later, because real time
+   kept passing while the timestamp stayed frozen. It surfaced as a
+   false-positive safety violation days later, was traced to the dataset
+   rather than the policy engine (which is proven correct against real
+   wall-clock time separately), and was removed rather than patched around.
+   See "Synthetic dataset" below.
+2. **A metric was reporting the wrong number for the right reason.**
+   "Rule-based diagnosis accuracy" showed 64% when it is 100% by
+   construction (a deterministic table lookup can't be wrong). Ground
+   truth's `expected_root_cause` was defaulting to the error profile's
+   catalog key instead of what the rule table actually outputs for that
+   reason — right most of the time, silently wrong for several profiles
+   (e.g. `incorrect_otp` → `customer_authentication_error`). Fixed by
+   deriving ground truth from the same rule table the engine uses, so the
+   two can never drift apart again. See "Metric definitions" below.
 
 ## Stack
 
@@ -375,6 +426,14 @@ artifact for the run.
 - **Auto-recovery attempts** — RETRY or PAYMENT_LINK actually attempted.
 - **Successful recoveries** — Confirmed + Simulated recovered, combined
   count (for the required table row only).
+- **Unresolved** — of the auto-recovery attempts, the ones whose
+  `action_result` is *not* `SUCCEEDED` (i.e. `PENDING` or `FAILED`):
+  attempted, not yet conclusively successful. In default mode this is
+  always 0 (the simulated executor always models success for an approved
+  action); in `--execute-real` mode it equals the auto-recovery-attempts
+  count, since every real action is `PENDING` by design (see "Why Confirmed
+  Recovered is ₹0"). Distinct from `STAND_DOWN` due to a cooldown gate,
+  which is a temporary pause, not an attempted-and-inconclusive outcome.
 - **Policy refusals (escalated)** — HUMAN_REVIEW decisions, plus
   low-confidence STAND_DOWN (`confidence_below_action_threshold`): a
   human-judgment-shaped refusal to auto-act.
@@ -390,8 +449,14 @@ artifact for the run.
   Target: **0**. If it's not, the report prints a loud banner listing every
   offending record rather than averaging it away.
 - **Rule-based diagnosis accuracy** — 100% by construction (deterministic
-  table lookup); reported, not claimed as evidence of anything. **LLM
-  diagnosis accuracy is explicitly NOT evaluated** against
+  table lookup); reported, not claimed as evidence of anything. This
+  number briefly read 64% (Day 3) because ground truth's
+  `expected_root_cause` defaulted to the error profile's *catalog key*
+  rather than the rule table's actual output string, which differ for
+  several profiles (e.g. `incorrect_otp` → `customer_authentication_error`).
+  Fixed by deriving ground truth from `RULE_TABLE` directly, so the two
+  can't drift apart again — see `seed/case_catalog.py`. **LLM diagnosis
+  accuracy is explicitly NOT evaluated** against
   `ground_truth.expected_root_cause` — that field is freeform illustrative
   text authored before any real LLM call, not a verified gold label, and
   exact-string comparison would be a misleading metric. Only the resulting
