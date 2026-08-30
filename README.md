@@ -35,7 +35,10 @@ Docker/Prometheus/CI until this works end to end. See the build order below.
 
 ## Status
 
-Day 3: full-batch evaluation. `python -m src.run_batch` runs the entire
+Day 4: the refusal/safety path has been adversarially tested (see "Policy
+engine" below), and the "Confirmed Recovered is ₹0" question has been
+investigated and resolved explicitly — see "Why Confirmed Recovered is ₹0".
+Day 3 built full-batch evaluation: `python -m src.run_batch` runs the entire
 68-record synthetic dataset through diagnose → policy → action → observe →
 audit and reports honest, non-cherry-picked metrics. Rule-based diagnosis
 and LLM-backed diagnosis (for failure reasons the rule table doesn't
@@ -140,6 +143,31 @@ factors below. Gates, in order:
    `cooldown_seconds` (default 30 min) since the last attempt.
 6. **Contact limit** (PAYMENT_LINK only): `max_contact_attempts`.
 
+### Adversarially tested (Day 4)
+
+Not just the happy path — [tests/test_adversarial_safety.py](tests/test_adversarial_safety.py)
+specifically tries to break each gate above, and the precedence between them:
+
+- A fresh, HIGH-confidence, clearly-retryable diagnosis still can't get past
+  an already-reached retry cap, or a cooldown window that hasn't elapsed.
+- DND blocks both RETRY and PAYMENT_LINK even when stacked with HIGH
+  confidence and a high payment value — checked at the policy level and,
+  separately, end-to-end through the real pipeline with an assertion that
+  Razorpay is never called (not just that the result looks right).
+- The HIGH/MEDIUM confidence boundary (0.85) and the MEDIUM/LOW boundary
+  (0.60) are exercised exactly at the line and confirmed deterministic
+  across repeated calls with identical input.
+- Serial-failure history overrides even a high-value, HIGH-confidence,
+  retryable case.
+- Explicit precedence, not incidental code order: DND beats serial-failure
+  history; serial-failure history beats the retry cap; risk-block
+  (`never_auto`) beats DND (deliberately — HUMAN_REVIEW never contacts the
+  customer, so it doesn't conflict with an opt-out).
+- The retry-cap pipeline test runs the real accumulating state (three real
+  sequential calls, then a fourth) rather than hand-setting `retry_count=3`
+  in a fixture; the cooldown pipeline test uses real wall-clock time with no
+  override, hammering the same payment twice back-to-back.
+
 ## Action layer
 
 [src/razorpay_action.py](src/razorpay_action.py) (`RazorpayActionClient`, the
@@ -159,6 +187,51 @@ recovery.
 
 HUMAN_REVIEW and STAND_DOWN decisions never reach either executor — see
 `_execute_action` in [src/pipeline.py](src/pipeline.py).
+
+## Why Confirmed Recovered is ₹0
+
+This is by design, investigated on Day 4 — not a bug and not an unbuilt
+feature quietly left unfinished. Track 03's bar asks for measured money
+recovered, so this deserves a direct answer, not a silent ₹0 that could
+read either way.
+
+**What was researched.** Razorpay's own test-mode documentation
+([test card details](https://razorpay.com/docs/payments/payments/test-card-details/),
+the [payment capture API](https://razorpay.com/docs/api/payments/capture/))
+confirms there is no server-side, API-only way to move a test-mode Order or
+Payment Link to a paid state. Test-mode completion requires the hosted
+Checkout UI: the customer (or someone standing in for them) enters a
+published test card number, then completes a mock bank page by entering an
+OTP (4–10 digits for success). The Capture API only moves an *already
+authorized* payment to *captured* — authorization itself still has to come
+from a real Checkout session. There is no "simulate success" endpoint for
+either the Orders or the Payment Links API.
+
+**What was attempted.** Since completion is a real (if scripted) UI flow,
+not a fabrication, a headless-browser automation of that exact flow was a
+legitimate option: create a real test-mode Order or Payment Link (as this
+system already does), drive a browser to the hosted checkout, submit
+Razorpay's own published test card, and let Razorpay itself confirm the
+payment as paid via the mock bank page. This was tried against a real,
+freshly created payment link. `checkout.razorpay.com/v1/checkout.js` (and
+the payment-link page's own bundle) came back `net::ERR_BLOCKED_BY_CLIENT`
+from *every* script/style resource — a hard, network-layer content block in
+the available browser environment, not a timing issue or a page that needed
+more time. Confirmed on two separate Razorpay CDN endpoints before
+concluding it wasn't a fluke. Routing around a content-blocking mechanism
+wasn't an appropriate thing to try to force through, so this path was
+closed out rather than pursued further.
+
+**The resulting position.** This system's job stops at "the customer now
+has a working, Razorpay-confirmed way to pay" — a real order or payment
+link, genuinely created, genuinely reachable. Completing it is the
+customer's action, not the agent's, and this project will not submit card
+data server-side to fake that step (out of PCI scope, and a prohibited
+action in its own right regardless of test-mode). **Confirmed Recovered is
+₹0 for the entire batch, in both the default and `--execute-real` modes,
+always**, until a real completion-confirmation path exists (a webhook
+receiver or status-polling loop — see Known limitations). The batch report
+prints this explanation directly under the metric, not as a footnote.
 
 ## Synthetic dataset
 
@@ -309,7 +382,7 @@ pytest -q
 Runs against an in-memory SQLite database, so no Postgres container and no
 external API is required — Groq and Razorpay are both mocked at the
 transport layer (`httpx.MockTransport`) in every automated test; only the
-manual verification runs below hit real APIs. 88 tests covering: the
+manual verification runs below hit real APIs. 104 tests covering: the
 models, the case catalog, the diagnosis engine (rule table + LLM dispatch),
 the policy engine (every gate individually and in combination), the LLM
 diagnosis module (successful/low-confidence/malformed/HTTP-error/
@@ -321,7 +394,8 @@ refusal, retry-cap refusal, audit record creation, no fake recovered
 result), the batch metrics computation, the batch runner (full-dataset
 processing, four-way categorization, `--execute-real` never touching
 Razorpay for HUMAN_REVIEW/STAND_DOWN, `--only-ambiguous`/`--limit`
-filtering, ground truth never reaching the LLM), and the health endpoint.
+filtering, ground truth never reaching the LLM), adversarial safety tests
+(see "Policy engine" above), and the health endpoint.
 
 ## Build order
 
@@ -330,16 +404,18 @@ filtering, ground truth never reaching the LLM), and the health endpoint.
 | 1 (done) | Synthetic dataset + data model; confirmed Razorpay test-mode keys work |
 | 2 (done) | Vertical slice: one failed payment through diagnose → policy → real Razorpay test-mode action → result → append-only audit record, runnable from the CLI |
 | 3 (done) | Full 68-record batch runner; real LLM diagnosis for the rule table's blind spots; serial-failure policy factor; honest batch metrics |
-| 4 | A real payment-completion confirmation path (webhook or polling) so `CONFIRMED_RECOVERED` becomes reachable; further hardening of the refusal path |
-| 5 | Minimal UI: batch results by outcome category, audit trail viewer |
+| 4 (done) | Investigated real test-payment completion (found genuinely blocked — see "Why Confirmed Recovered is ₹0"); adversarially tested the refusal/safety path |
+| 5 | A real payment-completion confirmation path (webhook or polling), if a working route is found; minimal UI: batch results by outcome category, audit trail viewer |
 | 6 (time permitting) | Docker, structured logging/Prometheus, CI, additional flows |
 
 ## Known limitations
 
 - **No payment-completion confirmation path yet.** Even `--execute-real`
   only proves an order/link was *created* — actual payment completion needs
-  a webhook receiver or status-polling loop (build-order step 4). Until
-  then, Confirmed Recovered is honestly ₹0 for the whole batch, by design.
+  a webhook receiver or status-polling loop (build-order step 4). A
+  headless-browser attempt at driving Razorpay's own Checkout UI was
+  investigated and found blocked in this environment — see "Why Confirmed
+  Recovered is ₹0" above for the full account.
 - **Groq's forced tool-calling is not 100% reliable.** In verification runs,
   the ambiguous-case LLM calls succeeded roughly 40–60% of the time; the
   rest hit Groq's `tool_use_failed` (the model didn't call the tool that

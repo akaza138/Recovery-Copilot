@@ -20,8 +20,15 @@ ONLY the Razorpay action/result layer:
                    and STAND_DOWN decisions never call Razorpay in either
                    mode — see src/pipeline.py's _execute_action. Every real
                    action is REAL + PENDING, never SUCCEEDED (see
-                   src/razorpay_action.py) — confirmed recovered stays ₹0
-                   until a real payment-completion path exists.
+                   src/razorpay_action.py).
+
+Confirmed Recovered is ₹0 by design, in both modes, always — see
+CONFIRMED_RECOVERED_ZERO_NOTE below for why, and README.md's "Why Confirmed
+Recovered is ₹0" section for the full investigation (Razorpay's own docs
+confirm there is no server-side way to complete a test-mode payment;
+completion requires the hosted Checkout UI, which was attempted via headless
+browser and found to be hard-blocked at the network layer in this
+environment — a genuine, investigated dead end, not an unbuilt feature).
 
 Resets its own SQLite DB (data/batch_run.db, independent of the Day-2
 single-case data/recovery_copilot.db) at the start of every run, so the same
@@ -50,6 +57,17 @@ from src.simulated_action import SimulatedActionExecutor
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 DEFAULT_DB_PATH = DATA_DIR / "batch_run.db"
 DEFAULT_REPORT_PATH = DATA_DIR / "batch_report.json"
+
+CONFIRMED_RECOVERED_ZERO_NOTE = (
+    "  ^ This is INR 0.00 BY DESIGN, not a bug or an unbuilt feature (investigated Day 4). Razorpay's\n"
+    "    own docs confirm there is no server-side API to complete a test-mode payment - it requires the\n"
+    "    customer to go through the hosted Checkout UI (test card + a mock bank OTP page). A headless-\n"
+    "    browser attempt at that flow was made and found hard-blocked at the network layer in this\n"
+    "    environment. This system's job stops at 'the customer now has a working way to pay' (a real,\n"
+    "    Razorpay-confirmed order or payment link) - completing the payment is the CUSTOMER's action,\n"
+    "    not the agent's, and this project will not submit card data server-side to fake it. See\n"
+    "    README.md, 'Why Confirmed Recovered is INR 0'."
+)
 
 
 def _select_records(records: list[dict], *, only_ambiguous: bool, limit: int | None) -> list[dict]:
@@ -146,6 +164,8 @@ def print_report(metrics: BatchMetrics, *, execute_real: bool) -> None:
     print("|---|---:|")
     print(f"| Revenue-at-risk events | {metrics.revenue_at_risk_events} |")
     print(f"| Confirmed recovered | {_fmt_inr(metrics.confirmed_recovered_amount)} |")
+    if metrics.confirmed_recovered_amount == 0:
+        print(CONFIRMED_RECOVERED_ZERO_NOTE)
     print(f"| Recovery rate | {_fmt_pct(metrics.recovery_rate)} |")
     print(f"| Auto-recovery attempts | {metrics.auto_recovery_attempts} |")
     print(f"| Successful recoveries | {metrics.successful_recoveries} |")
