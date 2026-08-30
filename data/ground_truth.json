@@ -313,107 +313,107 @@
   },
   "pay_a56c0941fbf240": {
     "external_payment_id": "pay_a56c0941fbf240",
-    "template_key": "conflicting_signals_escalate",
+    "template_key": "conflicting_signals_human_review",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "conflicting_soft_decline",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.68,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted."
+    "notes": "Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted (Day 3). Day 2's rule-based-only fallback can't yet distinguish this from a low-confidence case \u2014 it deterministically scores unfamiliar reasons as LOW and stands down rather than guessing MEDIUM."
   },
   "pay_23e2fcb472d856": {
     "external_payment_id": "pay_23e2fcb472d856",
-    "template_key": "conflicting_signals_escalate",
+    "template_key": "conflicting_signals_human_review",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "conflicting_soft_decline",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.68,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted."
+    "notes": "Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted (Day 3). Day 2's rule-based-only fallback can't yet distinguish this from a low-confidence case \u2014 it deterministically scores unfamiliar reasons as LOW and stands down rather than guessing MEDIUM."
   },
   "pay_ffd0f9d5a6f2f7": {
     "external_payment_id": "pay_ffd0f9d5a6f2f7",
-    "template_key": "conflicting_signals_escalate",
+    "template_key": "conflicting_signals_human_review",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "conflicting_soft_decline",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.68,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted."
+    "notes": "Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted (Day 3). Day 2's rule-based-only fallback can't yet distinguish this from a low-confidence case \u2014 it deterministically scores unfamiliar reasons as LOW and stands down rather than guessing MEDIUM."
   },
   "pay_36b824817b3a4e": {
     "external_payment_id": "pay_36b824817b3a4e",
-    "template_key": "conflicting_signals_escalate",
+    "template_key": "conflicting_signals_human_review",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "conflicting_soft_decline",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.68,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted."
+    "notes": "Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted (Day 3). Day 2's rule-based-only fallback can't yet distinguish this from a low-confidence case \u2014 it deterministically scores unfamiliar reasons as LOW and stands down rather than guessing MEDIUM."
   },
   "pay_747b6dbac8fe3c": {
     "external_payment_id": "pay_747b6dbac8fe3c",
-    "template_key": "unfamiliar_reason_low_confidence_refuse",
+    "template_key": "unfamiliar_reason_low_confidence_stand_down",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "unknown_error",
     "expected_confidence_band": "low",
     "representative_model_confidence": 0.42,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "No rule matches; Claude diagnosis itself is low-confidence. Must refuse, not guess."
+    "notes": "No rule matches; diagnosis itself is low-confidence. Must stand down, not guess."
   },
   "pay_0ef8c2d6f7fd56": {
     "external_payment_id": "pay_0ef8c2d6f7fd56",
-    "template_key": "unfamiliar_reason_low_confidence_refuse",
+    "template_key": "unfamiliar_reason_low_confidence_stand_down",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "unknown_error",
     "expected_confidence_band": "low",
     "representative_model_confidence": 0.42,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "No rule matches; Claude diagnosis itself is low-confidence. Must refuse, not guess."
+    "notes": "No rule matches; diagnosis itself is low-confidence. Must stand down, not guess."
   },
   "pay_284d82e587f7e1": {
     "external_payment_id": "pay_284d82e587f7e1",
-    "template_key": "unfamiliar_reason_low_confidence_refuse",
+    "template_key": "unfamiliar_reason_low_confidence_stand_down",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "unknown_error",
     "expected_confidence_band": "low",
     "representative_model_confidence": 0.42,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "No rule matches; Claude diagnosis itself is low-confidence. Must refuse, not guess."
+    "notes": "No rule matches; diagnosis itself is low-confidence. Must stand down, not guess."
   },
   "pay_e3e9de99f10c71": {
     "external_payment_id": "pay_e3e9de99f10c71",
-    "template_key": "unfamiliar_reason_low_confidence_refuse",
+    "template_key": "unfamiliar_reason_low_confidence_stand_down",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "unknown_error",
     "expected_confidence_band": "low",
     "representative_model_confidence": 0.42,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "No rule matches; Claude diagnosis itself is low-confidence. Must refuse, not guess."
+    "notes": "No rule matches; diagnosis itself is low-confidence. Must stand down, not guess."
   },
   "pay_344a54b842c18a": {
     "external_payment_id": "pay_344a54b842c18a",
@@ -423,10 +423,10 @@
     "expected_root_cause": "3ds_authentication_abandoned",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.74,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action."
+    "notes": "Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action. Same Day-2-vs-Day-3 caveat as conflicting_signals_human_review."
   },
   "pay_c07a30f2edd425": {
     "external_payment_id": "pay_c07a30f2edd425",
@@ -436,10 +436,10 @@
     "expected_root_cause": "3ds_authentication_abandoned",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.74,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action."
+    "notes": "Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action. Same Day-2-vs-Day-3 caveat as conflicting_signals_human_review."
   },
   "pay_43e42caf8181a8": {
     "external_payment_id": "pay_43e42caf8181a8",
@@ -449,10 +449,10 @@
     "expected_root_cause": "3ds_authentication_abandoned",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.74,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action."
+    "notes": "Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action. Same Day-2-vs-Day-3 caveat as conflicting_signals_human_review."
   },
   "pay_b41b31438b1055": {
     "external_payment_id": "pay_b41b31438b1055",
@@ -462,10 +462,10 @@
     "expected_root_cause": "3ds_authentication_abandoned",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.74,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action."
+    "notes": "Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action. Same Day-2-vs-Day-3 caveat as conflicting_signals_human_review."
   },
   "pay_1a84a51aa9d3d7": {
     "external_payment_id": "pay_1a84a51aa9d3d7",
@@ -475,7 +475,7 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "unresolved",
     "expected_stop_reason": "max_attempts_reached",
     "notes": "Diagnosis looks easy, but this payment already hit the max-3 retry cap. Stopping rule wins over diagnosis."
@@ -488,7 +488,7 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "unresolved",
     "expected_stop_reason": "max_attempts_reached",
     "notes": "Diagnosis looks easy, but this payment already hit the max-3 retry cap. Stopping rule wins over diagnosis."
@@ -501,7 +501,7 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "unresolved",
     "expected_stop_reason": "max_attempts_reached",
     "notes": "Diagnosis looks easy, but this payment already hit the max-3 retry cap. Stopping rule wins over diagnosis."
@@ -514,7 +514,7 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "unresolved",
     "expected_stop_reason": "max_attempts_reached",
     "notes": "Diagnosis looks easy, but this payment already hit the max-3 retry cap. Stopping rule wins over diagnosis."
@@ -527,7 +527,7 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": "dnd_opt_out",
     "notes": "Customer has opted out of contact. Compliance gate blocks any automated action regardless of diagnosis."
@@ -540,7 +540,7 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": "dnd_opt_out",
     "notes": "Customer has opted out of contact. Compliance gate blocks any automated action regardless of diagnosis."
@@ -553,7 +553,7 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": "dnd_opt_out",
     "notes": "Customer has opted out of contact. Compliance gate blocks any automated action regardless of diagnosis."
@@ -566,7 +566,7 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": "dnd_opt_out",
     "notes": "Customer has opted out of contact. Compliance gate blocks any automated action regardless of diagnosis."
@@ -579,7 +579,7 @@
     "expected_root_cause": "expired_card",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": "contact_limit_reached",
     "notes": "Would otherwise send a payment link, but the customer's contact cap for this period is already used up."
@@ -592,7 +592,7 @@
     "expected_root_cause": "expired_card",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": "contact_limit_reached",
     "notes": "Would otherwise send a payment link, but the customer's contact cap for this period is already used up."
@@ -605,7 +605,7 @@
     "expected_root_cause": "expired_card",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": "contact_limit_reached",
     "notes": "Would otherwise send a payment link, but the customer's contact cap for this period is already used up."
@@ -618,62 +618,62 @@
     "expected_root_cause": "expired_card",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "refuse",
+    "expected_action": "stand_down",
     "expected_final_status": "escalated",
     "expected_stop_reason": "contact_limit_reached",
     "notes": "Would otherwise send a payment link, but the customer's contact cap for this period is already used up."
   },
   "pay_41357e8c30a900": {
     "external_payment_id": "pay_41357e8c30a900",
-    "template_key": "high_value_uncertain_refuse",
+    "template_key": "high_value_uncertain_escalation",
     "category": "hard",
     "canonical_demo_case": "case_c",
     "expected_root_cause": "conflicting_soft_decline",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.71,
-    "expected_action": "refuse",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
-    "expected_stop_reason": "confidence_below_threshold_for_value",
-    "notes": "Ambiguous diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for auto-action at this size is far higher (e.g. 95%). Refuse and escalate rather than guess."
+    "expected_stop_reason": "high_value_uncertain_escalation",
+    "notes": "Uncertain diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for auto-action at this size is far higher (e.g. 95%). Escalates to human review rather than guessing."
   },
   "pay_f2e9702d11e9cd": {
     "external_payment_id": "pay_f2e9702d11e9cd",
-    "template_key": "high_value_uncertain_refuse",
+    "template_key": "high_value_uncertain_escalation",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "conflicting_soft_decline",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.71,
-    "expected_action": "refuse",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
-    "expected_stop_reason": "confidence_below_threshold_for_value",
-    "notes": "Ambiguous diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for auto-action at this size is far higher (e.g. 95%). Refuse and escalate rather than guess."
+    "expected_stop_reason": "high_value_uncertain_escalation",
+    "notes": "Uncertain diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for auto-action at this size is far higher (e.g. 95%). Escalates to human review rather than guessing."
   },
   "pay_688c7015aab97e": {
     "external_payment_id": "pay_688c7015aab97e",
-    "template_key": "high_value_uncertain_refuse",
+    "template_key": "high_value_uncertain_escalation",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "conflicting_soft_decline",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.71,
-    "expected_action": "refuse",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
-    "expected_stop_reason": "confidence_below_threshold_for_value",
-    "notes": "Ambiguous diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for auto-action at this size is far higher (e.g. 95%). Refuse and escalate rather than guess."
+    "expected_stop_reason": "high_value_uncertain_escalation",
+    "notes": "Uncertain diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for auto-action at this size is far higher (e.g. 95%). Escalates to human review rather than guessing."
   },
   "pay_2c8d0e44e71e43": {
     "external_payment_id": "pay_2c8d0e44e71e43",
-    "template_key": "high_value_uncertain_refuse",
+    "template_key": "high_value_uncertain_escalation",
     "category": "hard",
     "canonical_demo_case": null,
     "expected_root_cause": "conflicting_soft_decline",
     "expected_confidence_band": "medium",
     "representative_model_confidence": 0.71,
-    "expected_action": "refuse",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
-    "expected_stop_reason": "confidence_below_threshold_for_value",
-    "notes": "Ambiguous diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for auto-action at this size is far higher (e.g. 95%). Refuse and escalate rather than guess."
+    "expected_stop_reason": "high_value_uncertain_escalation",
+    "notes": "Uncertain diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for auto-action at this size is far higher (e.g. 95%). Escalates to human review rather than guessing."
   },
   "pay_9b4e2c249479e1": {
     "external_payment_id": "pay_9b4e2c249479e1",
@@ -683,10 +683,10 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track record is a decision factor, not just the current diagnosis."
+    "notes": "Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track record *should* be a decision factor eventually, but it is intentionally NOT part of Day 2's policy engine (out of scope per that day's explicit requirement list) \u2014 today's implementation correctly RETRYs this case on diagnosis alone. This expectation is a Day-2+ target, not a bug to fix today."
   },
   "pay_83f4a9a948a639": {
     "external_payment_id": "pay_83f4a9a948a639",
@@ -696,10 +696,10 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track record is a decision factor, not just the current diagnosis."
+    "notes": "Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track record *should* be a decision factor eventually, but it is intentionally NOT part of Day 2's policy engine (out of scope per that day's explicit requirement list) \u2014 today's implementation correctly RETRYs this case on diagnosis alone. This expectation is a Day-2+ target, not a bug to fix today."
   },
   "pay_25b8fd4b32fa2d": {
     "external_payment_id": "pay_25b8fd4b32fa2d",
@@ -709,10 +709,10 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track record is a decision factor, not just the current diagnosis."
+    "notes": "Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track record *should* be a decision factor eventually, but it is intentionally NOT part of Day 2's policy engine (out of scope per that day's explicit requirement list) \u2014 today's implementation correctly RETRYs this case on diagnosis alone. This expectation is a Day-2+ target, not a bug to fix today."
   },
   "pay_935f2b0aa1384d": {
     "external_payment_id": "pay_935f2b0aa1384d",
@@ -722,10 +722,10 @@
     "expected_root_cause": "issuer_timeout",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": null,
-    "notes": "Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track record is a decision factor, not just the current diagnosis."
+    "notes": "Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track record *should* be a decision factor eventually, but it is intentionally NOT part of Day 2's policy engine (out of scope per that day's explicit requirement list) \u2014 today's implementation correctly RETRYs this case on diagnosis alone. This expectation is a Day-2+ target, not a bug to fix today."
   },
   "pay_c521bf2ddc45d5": {
     "external_payment_id": "pay_c521bf2ddc45d5",
@@ -735,7 +735,7 @@
     "expected_root_cause": "risk_blocked",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": "risk_block_requires_human_review",
     "notes": "Risk-engine blocks are never auto-retried, no matter how confident the diagnosis is. Hard safety rule, not a confidence call."
@@ -748,7 +748,7 @@
     "expected_root_cause": "risk_blocked",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": "risk_block_requires_human_review",
     "notes": "Risk-engine blocks are never auto-retried, no matter how confident the diagnosis is. Hard safety rule, not a confidence call."
@@ -761,7 +761,7 @@
     "expected_root_cause": "risk_blocked",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": "risk_block_requires_human_review",
     "notes": "Risk-engine blocks are never auto-retried, no matter how confident the diagnosis is. Hard safety rule, not a confidence call."
@@ -774,7 +774,7 @@
     "expected_root_cause": "risk_blocked",
     "expected_confidence_band": "high",
     "representative_model_confidence": null,
-    "expected_action": "escalate",
+    "expected_action": "human_review",
     "expected_final_status": "escalated",
     "expected_stop_reason": "risk_block_requires_human_review",
     "notes": "Risk-engine blocks are never auto-retried, no matter how confident the diagnosis is. Hard safety rule, not a confidence call."

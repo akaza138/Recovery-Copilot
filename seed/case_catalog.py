@@ -43,7 +43,7 @@ class CaseTemplate:
     expected_root_cause: str = ""  # defaults to profile.key if unset
     expected_confidence_band: str = "high"  # "high" | "medium" | "low"
     representative_confidence: float | None = None  # only meaningful when Claude-diagnosed
-    expected_action: str = "retry"  # "retry" | "payment_link" | "escalate" | "refuse"
+    expected_action: str = "retry"  # "retry" | "payment_link" | "human_review" | "stand_down"
     expected_final_status: str = "confirmed_recovered"
     stop_reason: str | None = None
     notes: str = ""
@@ -108,24 +108,26 @@ EASY_TEMPLATES = [
 
 HARD_TEMPLATES = [
     CaseTemplate(
-        template_key="conflicting_signals_escalate",
+        template_key="conflicting_signals_human_review",
         category="hard",
         profile=AMBIGUOUS_PROFILES["conflicting_soft_decline"],
         expected_confidence_band="medium",
         representative_confidence=0.68,
-        expected_action="escalate",
+        expected_action="human_review",
         expected_final_status="escalated",
-        notes="Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call warranted.",
+        notes="Issuer text suggests 'retry', error class suggests permanent failure. Genuinely conflicting; Claude call "
+        "warranted (Day 3). Day 2's rule-based-only fallback can't yet distinguish this from a low-confidence case — "
+        "it deterministically scores unfamiliar reasons as LOW and stands down rather than guessing MEDIUM.",
     ),
     CaseTemplate(
-        template_key="unfamiliar_reason_low_confidence_refuse",
+        template_key="unfamiliar_reason_low_confidence_stand_down",
         category="hard",
         profile=AMBIGUOUS_PROFILES["unknown_error"],
         expected_confidence_band="low",
         representative_confidence=0.42,
-        expected_action="refuse",
+        expected_action="stand_down",
         expected_final_status="escalated",
-        notes="No rule matches; Claude diagnosis itself is low-confidence. Must refuse, not guess.",
+        notes="No rule matches; diagnosis itself is low-confidence. Must stand down, not guess.",
     ),
     CaseTemplate(
         template_key="abandoned_3ds_medium_confidence",
@@ -133,9 +135,10 @@ HARD_TEMPLATES = [
         profile=AMBIGUOUS_PROFILES["3ds_authentication_abandoned"],
         expected_confidence_band="medium",
         representative_confidence=0.74,
-        expected_action="escalate",
+        expected_action="human_review",
         expected_final_status="escalated",
-        notes="Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action.",
+        notes="Could be a customer drop-off (retryable) or a risk-avoidance signal; not clear-cut enough for auto-action. "
+        "Same Day-2-vs-Day-3 caveat as conflicting_signals_human_review.",
     ),
     CaseTemplate(
         template_key="retry_cap_already_reached",
@@ -143,7 +146,7 @@ HARD_TEMPLATES = [
         profile=KNOWN_PROFILES["issuer_timeout"],
         retry_count_so_far=3,
         expected_confidence_band="high",
-        expected_action="refuse",
+        expected_action="stand_down",
         expected_final_status="unresolved",
         stop_reason="max_attempts_reached",
         notes="Diagnosis looks easy, but this payment already hit the max-3 retry cap. Stopping rule wins over diagnosis.",
@@ -154,7 +157,7 @@ HARD_TEMPLATES = [
         profile=KNOWN_PROFILES["issuer_timeout"],
         customer=CustomerSpec(dnd_opt_out=True),
         expected_confidence_band="high",
-        expected_action="refuse",
+        expected_action="stand_down",
         expected_final_status="escalated",
         stop_reason="dnd_opt_out",
         notes="Customer has opted out of contact. Compliance gate blocks any automated action regardless of diagnosis.",
@@ -165,23 +168,23 @@ HARD_TEMPLATES = [
         profile=KNOWN_PROFILES["expired_card"],
         customer=CustomerSpec(max_contact_attempts=3, contact_count=3),
         expected_confidence_band="high",
-        expected_action="refuse",
+        expected_action="stand_down",
         expected_final_status="escalated",
         stop_reason="contact_limit_reached",
         notes="Would otherwise send a payment link, but the customer's contact cap for this period is already used up.",
     ),
     CaseTemplate(
-        template_key="high_value_uncertain_refuse",
+        template_key="high_value_uncertain_escalation",
         category="hard",
         profile=AMBIGUOUS_PROFILES["conflicting_soft_decline"],
         amount_range=HIGH_VALUE_AMOUNT_RANGE,
         expected_confidence_band="medium",
         representative_confidence=0.71,
-        expected_action="refuse",
+        expected_action="human_review",
         expected_final_status="escalated",
-        stop_reason="confidence_below_threshold_for_value",
-        notes="Ambiguous diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for "
-        "auto-action at this size is far higher (e.g. 95%). Refuse and escalate rather than guess.",
+        stop_reason="high_value_uncertain_escalation",
+        notes="Uncertain diagnosis (~71% model-reported confidence) on a high-value payment; policy's threshold for "
+        "auto-action at this size is far higher (e.g. 95%). Escalates to human review rather than guessing.",
     ),
     CaseTemplate(
         template_key="previously_failed_serial_customer",
@@ -189,17 +192,19 @@ HARD_TEMPLATES = [
         profile=KNOWN_PROFILES["issuer_timeout"],
         customer=CustomerSpec(prior_recovery_attempts=6, prior_recovery_successes=0),
         expected_confidence_band="high",
-        expected_action="escalate",
+        expected_action="human_review",
         expected_final_status="escalated",
-        notes="Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. "
-        "Track record is a decision factor, not just the current diagnosis.",
+        notes="Diagnosis alone looks easy, but this customer has 6 prior recovery attempts and 0 successes. Track "
+        "record *should* be a decision factor eventually, but it is intentionally NOT part of Day 2's policy engine "
+        "(out of scope per that day's explicit requirement list) — today's implementation correctly RETRYs this case "
+        "on diagnosis alone. This expectation is a Day-2+ target, not a bug to fix today.",
     ),
     CaseTemplate(
         template_key="risk_blocked_never_auto",
         category="hard",
         profile=KNOWN_PROFILES["risk_blocked"],
         expected_confidence_band="high",
-        expected_action="escalate",
+        expected_action="human_review",
         expected_final_status="escalated",
         stop_reason="risk_block_requires_human_review",
         notes="Risk-engine blocks are never auto-retried, no matter how confident the diagnosis is. Hard safety rule, not a confidence call.",
@@ -214,7 +219,7 @@ HARD_INSTANCES_PER_TEMPLATE = 4
 CANONICAL_CASE_TEMPLATE = {
     "issuer_timeout_retry_success": "case_a",
     "expired_card_payment_link_success": "case_b",
-    "high_value_uncertain_refuse": "case_c",
+    "high_value_uncertain_escalation": "case_c",
 }
 
 

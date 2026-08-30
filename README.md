@@ -24,9 +24,12 @@ Docker/Prometheus/CI until this works end to end. See the build order below.
 
 ## Status
 
-Day 1: data model, synthetic dataset (60 records), and the Razorpay
-test-mode connectivity check. The diagnosis engine, policy engine, and
-Razorpay action execution are not implemented yet.
+Day 2: the vertical slice runs end to end for one payment — diagnose ->
+policy -> real Razorpay test-mode action -> observe -> append-only audit
+record — via `python -m src.run_vertical_slice`. See
+[src/](src/) for the diagnosis engine, policy engine, and Razorpay action
+executor. Not yet built: the full-batch runner, Claude-assisted diagnosis
+for unfamiliar failure reasons, and the dashboard.
 
 ## Stack
 
@@ -61,7 +64,7 @@ Three tables:
     (RULE_BASED/CLAUDE), `model_reported_confidence` (raw, nullable — never
     read downstream) and `confidence_band` (HIGH/MEDIUM/LOW — the only thing
     the policy engine is allowed to act on)
-  - **decision**: `decision_action` (RETRY/PAYMENT_LINK/ESCALATE/REFUSE) and
+  - **decision**: `decision_action` (RETRY/PAYMENT_LINK/HUMAN_REVIEW/STAND_DOWN) and
     `decision_factors` (a JSON snapshot of every input used — payment value,
     failure type, confidence band, attempt count, cooldown, contact
     count/limit, compliance status — captured at decision time, not
@@ -124,6 +127,32 @@ not the `razorpay` PyPI package, which pulls in a legacy `pkg_resources`
 import current `setuptools` no longer ships. Refuses to run against
 anything that isn't a `rzp_test_...` key.
 
+## Running the vertical slice
+
+```bash
+python -m src.run_vertical_slice            # canonical Case A (transient failure -> retry)
+python -m src.run_vertical_slice --case b     # canonical Case B (non-retryable -> payment link)
+python -m src.run_vertical_slice --case c      # canonical Case C (high-value + uncertain -> human review)
+python -m src.run_vertical_slice --payment-id pay_xxx   # any specific dataset record
+```
+
+Prints `INPUT` / `DIAGNOSIS` / `POLICY` / `ACTION` / `RESULT` / `AUDIT` for
+one payment and persists the audit record to a local SQLite file
+(`data/recovery_copilot.db`) via the same `Customer` / `FailedPayment` /
+`RecoveryAttempt` models the rest of the system uses — independent of the
+Postgres-pointed `DATABASE_URL` in `.env`, so this runs without Docker.
+Re-running against the same payment id accumulates `RecoveryAttempt` rows on
+that case and will eventually hit the retry-cap / cooldown gates for real.
+
+**Honesty constraint, load-bearing:** [src/razorpay_action.py](src/razorpay_action.py)
+never reports `ActionResult.SUCCEEDED`. Creating a Razorpay order or payment
+link is something the API response genuinely confirms; a *completed*
+payment is not — that requires the customer to finish checkout, and this
+project will not submit card data server-side to fake that. So a
+successfully placed RETRY or PAYMENT_LINK action is `REAL` + `PENDING`,
+never `SUCCEEDED`, until a later step adds a real confirmation path (webhook
+receipt or status polling).
+
 ## Running the API
 
 ```bash
@@ -141,19 +170,25 @@ pytest -q
 ```
 
 Runs against an in-memory SQLite database (via a cross-dialect UUID type in
-[app/db/types.py](app/db/types.py)), so no Postgres container is required. Covers
-the models, the case catalog (record count, no answer-leakage into the
-dataset, the three canonical demo cases, determinism for a given seed), and
-the health endpoint.
+[app/db/types.py](app/db/types.py)), so no Postgres container is required. 51
+tests covering: the models, the case catalog (record count, no
+answer-leakage into the dataset, the three canonical demo cases, determinism
+for a given seed), the diagnosis engine, the policy engine (every gate in
+the requirement list, individually and in combination), the Razorpay action
+executor (mocked transport — never hits the network, never returns
+`SUCCEEDED` regardless of response shape), the vertical-slice pipeline
+end-to-end (successful retry, policy refusal, DND refusal, retry-cap
+refusal, audit record creation, no fake recovered result), and the health
+endpoint.
 
 ## Build order
 
 | Step | Focus |
 | --- | --- |
-| 1 (today) | Synthetic dataset + data model (this); confirm Razorpay test-mode keys work |
-| 2 | Vertical slice: one failed payment through diagnose → policy → Razorpay test-mode action → result → audit record, runnable from the CLI |
-| 3 | Extend to the full 60-record batch; wire in Claude for ambiguous cases with HIGH/MEDIUM/LOW confidence banding; get Cases A and B confirmed in test mode |
-| 4 | Harden the policy engine's refusal path — stopping rules, cooldowns, confidence gate, compliance checks — with tests that try to break it. Produces Case C. |
+| 1 (done) | Synthetic dataset + data model; confirmed Razorpay test-mode keys work |
+| 2 (done) | Vertical slice: one failed payment through diagnose → policy → real Razorpay test-mode action → result → append-only audit record, runnable from the CLI |
+| 3 | Extend to the full 60-record batch runner; wire in Claude for the failure reasons the rule table doesn't recognize, with HIGH/MEDIUM/LOW confidence banding; add a real payment-completion confirmation path (webhook or polling) so `CONFIRMED_RECOVERED` becomes reachable |
+| 4 | Harden the policy engine's refusal path further — tests that try to break it — and decide whether customer track record becomes a policy factor |
 | 5 | Minimal UI: batch results by the four outcome categories, audit trail viewer |
 | 6 (time permitting) | Docker, structured logging/Prometheus, CI, README polish, additional flows |
 

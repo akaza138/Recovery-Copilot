@@ -66,7 +66,7 @@ def upgrade() -> None:
 
     diagnosis_source_enum = postgresql.ENUM("rule_based", "claude", name="diagnosis_source")
     confidence_band_enum = postgresql.ENUM("high", "medium", "low", name="confidence_band")
-    decision_action_enum = postgresql.ENUM("retry", "payment_link", "escalate", "refuse", name="decision_action")
+    decision_action_enum = postgresql.ENUM("retry", "payment_link", "human_review", "stand_down", name="decision_action")
     action_mode_enum = postgresql.ENUM("real", "simulated", name="action_mode")
     action_result_enum = postgresql.ENUM("succeeded", "failed", "pending", "not_executed", name="action_result")
     for enum_type in (diagnosis_source_enum, confidence_band_enum, decision_action_enum, action_mode_enum, action_result_enum):

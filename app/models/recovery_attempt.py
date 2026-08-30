@@ -23,8 +23,8 @@ class ConfidenceBand(str, enum.Enum):
 class DecisionAction(str, enum.Enum):
     RETRY = "retry"
     PAYMENT_LINK = "payment_link"
-    ESCALATE = "escalate"
-    REFUSE = "refuse"
+    HUMAN_REVIEW = "human_review"  # uncertain diagnosis, or a safety-critical case (e.g. risk block) — a person decides next
+    STAND_DOWN = "stand_down"  # policy refuses to act and does not queue for human attention (compliance block, cap hit, too-low confidence)
 
 
 class ActionMode(str, enum.Enum):
@@ -41,7 +41,7 @@ class ActionResult(str, enum.Enum):
     SUCCEEDED = "succeeded"
     FAILED = "failed"
     PENDING = "pending"
-    NOT_EXECUTED = "not_executed"  # ESCALATE / REFUSE take no action
+    NOT_EXECUTED = "not_executed"  # HUMAN_REVIEW / STAND_DOWN take no Razorpay action
 
 
 class RecoveryAttempt(Base):

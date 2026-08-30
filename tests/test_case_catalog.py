@@ -56,12 +56,12 @@ def test_case_b_skips_retry_for_non_retryable_failure():
     assert gt["expected_final_status"] == "confirmed_recovered"
 
 
-def test_case_c_refuses_high_value_uncertain_payment():
+def test_case_c_escalates_high_value_uncertain_payment():
     cases = generate_cases()
     dataset_by_id = {c["dataset_record"]["external_payment_id"]: c["dataset_record"] for c in cases}
     gt = next(c["ground_truth"] for c in cases if c["ground_truth"]["canonical_demo_case"] == "case_c")
 
-    assert gt["expected_action"] == "refuse"
+    assert gt["expected_action"] == "human_review"
     assert gt["expected_confidence_band"] == "medium"
     assert gt["representative_model_confidence"] is not None
     assert gt["representative_model_confidence"] < 0.95  # below any plausible auto-action threshold
