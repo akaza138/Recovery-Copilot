@@ -1,8 +1,8 @@
 # Application form answers — Recovery Copilot
 
 Pulled from the README rather than written fresh, so the form can't drift
-from what the repo actually shows. Update the repo URL and video link once
-those exist; everything else is ready to paste.
+from what the repo actually shows. Repo URL is filled in below; update the
+video link once the pitch is recorded.
 
 ## Project name
 
@@ -28,8 +28,12 @@ automatic actions** across the full batch, not a cherry-picked subset.
 
 ## GitHub repo URL
 
-*Not yet pushed — this repo has been developed locally and has no remote
-configured. `<fill in once pushed and made public>`.*
+https://github.com/akaza138/sentinel
+
+Pushed and verified (`git ls-remote` confirms `origin/master` matches local
+HEAD). *Visibility not confirmed from here — double-check the repo is set
+to Public in GitHub's settings before submitting, since that wasn't
+verifiable without a browser/API session to GitHub itself.*
 
 ## 5-minute pitch video
 
