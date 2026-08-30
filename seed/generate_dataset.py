@@ -1,151 +1,115 @@
-"""Generates the synthetic revenue-at-risk batch: customers plus 50+ events
-spread across failed payments, failed subscription mandates, and abandoned
-checkouts, each carrying a Razorpay-shaped webhook payload.
+"""Generates the synthetic failed-payment batch: 50+ records spread across
+easy and deliberately-hard cases (see case_catalog.py), each carrying a
+Razorpay-shaped `payment.failed` webhook payload.
+
+Writes two files:
+  - data/synthetic_failed_payments.json  — what the engine is allowed to see
+  - data/ground_truth.json               — expected diagnosis/decision/outcome,
+                                            keyed by external_payment_id, used
+                                            to score the batch later. Never
+                                            fed into the engine itself.
 
 Usage:
-    python -m seed.generate_dataset [--customers 20] [--events 60] [--reset]
+    python -m seed.generate_dataset [--out-dir data] [--seed 42] [--load-db]
+
+`--load-db` additionally loads the batch into Postgres via the SQLAlchemy
+models (requires the full app dependency stack + DATABASE_URL); the default
+JSON-only path has no such dependency, since the dataset needs to exist and
+be inspectable before the DB-backed engine does.
 """
 
 import argparse
-import random
-import uuid
+import json
+from pathlib import Path
 
-from faker import Faker
-
-from app.db.base import Base
-from app.db.session import SessionLocal, engine
-from app.models.customer import Customer
-from app.models.event import EventType, RevenueEvent
-from seed.payloads import (
-    FAILED_MANDATE_PROFILES,
-    FAILED_PAYMENT_PROFILES,
-    build_abandoned_checkout_payload,
-    build_failed_mandate_payload,
-    build_failed_payment_payload,
-)
-
-CURRENCY = "INR"
-AMOUNT_RANGE = (5_000, 25_00_000)  # paise: ₹50 to ₹25,000
+from seed.case_catalog import generate_cases
 
 
-def _make_customers(fake: Faker, count: int) -> list[Customer]:
-    customers = []
-    for _ in range(count):
-        customers.append(
-            Customer(
-                id=uuid.uuid4(),
-                external_customer_id=f"cust_{uuid.uuid4().hex[:14]}",
-                name=fake.name(),
-                email=fake.email(),
-                phone=fake.msisdn()[:10],
-                max_contact_attempts=random.choice([2, 3, 3, 4, 5]),
-                dnd_opt_out=random.random() < 0.15,
-            )
-        )
-    return customers
+def write_json_dataset(out_dir: Path, cases: list[dict]) -> tuple[Path, Path]:
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    dataset_path = out_dir / "synthetic_failed_payments.json"
+    ground_truth_path = out_dir / "ground_truth.json"
+
+    dataset = [case["dataset_record"] for case in cases]
+    ground_truth = {case["ground_truth"]["external_payment_id"]: case["ground_truth"] for case in cases}
+
+    dataset_path.write_text(json.dumps(dataset, indent=2), encoding="utf-8")
+    ground_truth_path.write_text(json.dumps(ground_truth, indent=2), encoding="utf-8")
+
+    return dataset_path, ground_truth_path
 
 
-def _make_event(fake: Faker, customer: Customer, event_type: EventType) -> RevenueEvent:
-    amount = random.randint(*AMOUNT_RANGE)
+def load_into_db(cases: list[dict]) -> None:
+    import uuid
+    from datetime import datetime
 
-    if event_type == EventType.FAILED_PAYMENT:
-        profile = random.choice(FAILED_PAYMENT_PROFILES)
-        payload = build_failed_payment_payload(
-            amount=amount, currency=CURRENCY, email=customer.email, contact=customer.phone, profile=profile
-        )
-        payment = payload["payload"]["payment"]["entity"]
-        external_id = payment["id"]
-        retry_count = random.choice([0, 0, 0, 1, 2])
+    from app.db.base import Base
+    from app.db.session import SessionLocal, engine
+    from app.models.customer import Customer
+    from app.models.failed_payment import FailedPayment, FailedPaymentStatus
 
-    elif event_type == EventType.FAILED_MANDATE:
-        profile = random.choice(FAILED_MANDATE_PROFILES)
-        billing_cycle = random.randint(1, 12)
-        payload = build_failed_mandate_payload(
-            amount=amount,
-            currency=CURRENCY,
-            email=customer.email,
-            contact=customer.phone,
-            profile=profile,
-            billing_cycle=billing_cycle,
-        )
-        payment = payload["payload"]["payment"]["entity"]
-        external_id = payment["id"]
-        retry_count = random.choice([0, 0, 1, 1, 2])
-
-    else:  # ABANDONED_CHECKOUT
-        expire_after = random.choice([900, 1800, 3600, 86400])  # 15m, 30m, 1h, 24h
-        payload = build_abandoned_checkout_payload(
-            amount=amount, currency=CURRENCY, email=customer.email, contact=customer.phone, expire_after_seconds=expire_after
-        )
-        plink = payload["payload"]["payment_link"]["entity"]
-        external_id = plink["id"]
-        profile = None
-        retry_count = 0
-
-    return RevenueEvent(
-        id=uuid.uuid4(),
-        external_event_id=external_id,
-        event_type=event_type,
-        customer_id=customer.id,
-        amount=amount,
-        currency=CURRENCY,
-        error_code=profile.error_code if profile else None,
-        error_reason=profile.error_reason if profile else "checkout_abandoned",
-        error_description=profile.error_description if profile else "Payment link expired before the customer completed checkout.",
-        retry_count=retry_count,
-        raw_payload=payload,
-    )
-
-
-def generate(*, num_customers: int, num_events: int, reset: bool) -> None:
     Base.metadata.create_all(bind=engine)  # convenience for local/dev runs; Alembic remains the source of truth for schema.
-
-    fake = Faker()
-    Faker.seed(42)
-    random.seed(42)
 
     db = SessionLocal()
     try:
-        if reset:
-            db.query(RevenueEvent).delete()
-            db.query(Customer).delete()
-            db.commit()
-
-        customers = _make_customers(fake, num_customers)
-        db.add_all(customers)
-        db.flush()
-
-        # Roughly even thirds across the three in-scope event types, biased
-        # slightly toward failed payments since that's the deepest path.
-        weights = {
-            EventType.FAILED_PAYMENT: 0.4,
-            EventType.FAILED_MANDATE: 0.3,
-            EventType.ABANDONED_CHECKOUT: 0.3,
-        }
-        event_types = random.choices(
-            population=list(weights.keys()), weights=list(weights.values()), k=num_events
-        )
-
-        events = [_make_event(fake, random.choice(customers), event_type) for event_type in event_types]
-        db.add_all(events)
+        db.query(FailedPayment).delete()
+        db.query(Customer).delete()
         db.commit()
 
-        print(f"Seeded {len(customers)} customers and {len(events)} events:")
-        for event_type in EventType:
-            n = sum(1 for e in events if e.event_type == event_type)
-            print(f"  {event_type.value}: {n}")
+        for case in cases:
+            record = case["dataset_record"]
+            customer_data = record["customer"]
+
+            customer = Customer(id=uuid.uuid4(), **customer_data)
+            db.add(customer)
+            db.flush()
+
+            db.add(
+                FailedPayment(
+                    id=uuid.uuid4(),
+                    external_payment_id=record["external_payment_id"],
+                    order_id=record["order_id"],
+                    customer_id=customer.id,
+                    amount=record["amount"],
+                    currency=record["currency"],
+                    failure_code=record["failure_code"],
+                    failure_reason=record["failure_reason"],
+                    failure_description=record["failure_description"],
+                    retry_count=record["retry_count"],
+                    status=FailedPaymentStatus.OPEN,
+                    raw_payload=record["raw_payload"],
+                    failed_at=datetime.fromisoformat(record["failed_at"]),
+                )
+            )
+
+        db.commit()
+        print(f"Loaded {len(cases)} customers/failed_payments into the database.")
     finally:
         db.close()
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--customers", type=int, default=20)
-    parser.add_argument("--events", type=int, default=60)
-    parser.add_argument("--reset", action="store_true", help="Delete existing events/customers before seeding.")
+    parser.add_argument("--out-dir", type=Path, default=Path("data"))
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--load-db", action="store_true", help="Also load the batch into Postgres via the SQLAlchemy models.")
     args = parser.parse_args()
 
-    generate(num_customers=args.customers, num_events=args.events, reset=args.reset)
+    cases = generate_cases(seed=args.seed)
+    dataset_path, ground_truth_path = write_json_dataset(args.out_dir, cases)
+
+    by_category: dict[str, int] = {}
+    for case in cases:
+        category = case["ground_truth"]["category"]
+        by_category[category] = by_category.get(category, 0) + 1
+
+    print(f"Wrote {len(cases)} records to {dataset_path} and {ground_truth_path}")
+    for category, count in sorted(by_category.items()):
+        print(f"  {category}: {count}")
+
+    if args.load_db:
+        load_into_db(cases)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,3182 @@
+[
+  {
+    "external_payment_id": "pay_1a3d1fa7bc8960",
+    "order_id": "order_8b9d2434e465e1",
+    "amount": 1345975,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T19:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_1a3d1fa7bc8960",
+            "entity": "payment",
+            "amount": 1345975,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_8b9d2434e465e1",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "donaldgarcia@example.net",
+            "contact": "9600133890",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_46685257bdd640",
+      "name": "Allison Hill",
+      "email": "donaldgarcia@example.net",
+      "phone": "9600133890",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_9a1de644815ef6",
+    "order_id": "order_b74d0fb132e706",
+    "amount": 187323,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T15:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_9a1de644815ef6",
+            "entity": "payment",
+            "amount": 187323,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_b74d0fb132e706",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "blakeerik@example.com",
+            "contact": "4235116155",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_07a0ca6e0822e8",
+      "name": "Jerry Ramirez",
+      "email": "blakeerik@example.com",
+      "phone": "4235116155",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_de8a774bcf36d5",
+    "order_id": "order_28df6ec4ce4a2b",
+    "amount": 1367906,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T17:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_de8a774bcf36d5",
+            "entity": "payment",
+            "amount": 1367906,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_28df6ec4ce4a2b",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "smiller@example.net",
+            "contact": "9310341316",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_386ecbe06b65a6",
+      "name": "Kimberly Dudley",
+      "email": "smiller@example.net",
+      "phone": "9310341316",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_1a2a73ed562b0f",
+    "order_id": "order_5be6128e18c267",
+    "amount": 1469104,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T23:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_1a2a73ed562b0f",
+            "entity": "payment",
+            "amount": 1469104,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_5be6128e18c267",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "lynchgeorge@example.net",
+            "contact": "2764835030",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_27cd8130472293",
+      "name": "Henry Santiago",
+      "email": "lynchgeorge@example.net",
+      "phone": "2764835030",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_ec1b8ca1f91e1d",
+    "order_id": "order_4b0dbb418d5288",
+    "amount": 726327,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "expired_card",
+    "failure_description": "The card has expired and cannot be charged again.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T16:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_ec1b8ca1f91e1d",
+            "entity": "payment",
+            "amount": 726327,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_4b0dbb418d5288",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "jason76@example.net",
+            "contact": "2423884969",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The card has expired and cannot be charged again.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "expired_card",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_0b1f9163ce9ff5",
+      "name": "Thomas Bradley",
+      "email": "jason76@example.net",
+      "phone": "2423884969",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_a9488d990bbb25",
+    "order_id": "order_fc377a4c4a1554",
+    "amount": 1323353,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "expired_card",
+    "failure_description": "The card has expired and cannot be charged again.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T02:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_a9488d990bbb25",
+            "entity": "payment",
+            "amount": 1323353,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_fc377a4c4a1554",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "hernandezernest@example.net",
+            "contact": "9166978480",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The card has expired and cannot be charged again.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "expired_card",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_5c941cf0dc98d2",
+      "name": "Brenda Snyder PhD",
+      "email": "hernandezernest@example.net",
+      "phone": "9166978480",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_d58842dea2bc37",
+    "order_id": "order_5af305535ec42e",
+    "amount": 172335,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "expired_card",
+    "failure_description": "The card has expired and cannot be charged again.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T02:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_d58842dea2bc37",
+            "entity": "payment",
+            "amount": 172335,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_5af305535ec42e",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "shawnmckay@example.net",
+            "contact": "8281489325",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The card has expired and cannot be charged again.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "expired_card",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_19db3ad0ddd1df",
+      "name": "Gina Carter",
+      "email": "shawnmckay@example.net",
+      "phone": "8281489325",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_88bd64072bcfbe",
+    "order_id": "order_7656af7229d4be",
+    "amount": 444368,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "expired_card",
+    "failure_description": "The card has expired and cannot be charged again.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T17:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_88bd64072bcfbe",
+            "entity": "payment",
+            "amount": 444368,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_7656af7229d4be",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "hickmannatasha@example.com",
+            "contact": "0391171822",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The card has expired and cannot be charged again.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "expired_card",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_efc89849b3aa7e",
+      "name": "Linda Burns",
+      "email": "hickmannatasha@example.com",
+      "phone": "0391171822",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_d7c524a5530431",
+    "order_id": "order_3aa2e4f90e51f3",
+    "amount": 800775,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "invalid_cvv",
+    "failure_description": "The CVV entered does not match the card on file.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T03:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_d7c524a5530431",
+            "entity": "payment",
+            "amount": 800775,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_3aa2e4f90e51f3",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "sarahcampos@example.net",
+            "contact": "4657871331",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The CVV entered does not match the card on file.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "invalid_cvv",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_a3d70628ece66f",
+      "name": "Shane Henderson",
+      "email": "sarahcampos@example.net",
+      "phone": "4657871331",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_9132b63ef16287",
+    "order_id": "order_366eb16f508eba",
+    "amount": 72319,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "invalid_cvv",
+    "failure_description": "The CVV entered does not match the card on file.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T18:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_9132b63ef16287",
+            "entity": "payment",
+            "amount": 72319,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_366eb16f508eba",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "perezrebecca@example.com",
+            "contact": "8347382997",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The CVV entered does not match the card on file.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "invalid_cvv",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_448aaa9e66b2bc",
+      "name": "Leah Smith",
+      "email": "perezrebecca@example.com",
+      "phone": "8347382997",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_3f22faf823bed0",
+    "order_id": "order_434308bc89fa6a",
+    "amount": 1379554,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "invalid_cvv",
+    "failure_description": "The CVV entered does not match the card on file.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T16:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_3f22faf823bed0",
+            "entity": "payment",
+            "amount": 1379554,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_434308bc89fa6a",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "ujenkins@example.org",
+            "contact": "0651333872",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The CVV entered does not match the card on file.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "invalid_cvv",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_ea1fca65e27a98",
+      "name": "Brent Jordan",
+      "email": "ujenkins@example.org",
+      "phone": "0651333872",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_2369b584ff5e9f",
+    "order_id": "order_c17af08a1745d6",
+    "amount": 1230965,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "invalid_cvv",
+    "failure_description": "The CVV entered does not match the card on file.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T04:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_2369b584ff5e9f",
+            "entity": "payment",
+            "amount": 1230965,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_c17af08a1745d6",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "williamsyvette@example.org",
+            "contact": "3267736026",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The CVV entered does not match the card on file.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "invalid_cvv",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_663f1c97956269",
+      "name": "Shannon Jones",
+      "email": "williamsyvette@example.org",
+      "phone": "3267736026",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_98ae43346c12ac",
+    "order_id": "order_988c24c961b1cd",
+    "amount": 103810,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "incorrect_otp",
+    "failure_description": "The customer entered an incorrect OTP during authentication.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T06:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_98ae43346c12ac",
+            "entity": "payment",
+            "amount": 103810,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_988c24c961b1cd",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "smoore@example.org",
+            "contact": "9805009788",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer entered an incorrect OTP during authentication.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "incorrect_otp",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_a0a04dc427209b",
+      "name": "Rachel Mitchell",
+      "email": "smoore@example.org",
+      "phone": "9805009788",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_ae8492171d5343",
+    "order_id": "order_444ea7c8c03987",
+    "amount": 986571,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "incorrect_otp",
+    "failure_description": "The customer entered an incorrect OTP during authentication.",
+    "retry_count": 0,
+    "failed_at": "2026-08-30T01:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_ae8492171d5343",
+            "entity": "payment",
+            "amount": 986571,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_444ea7c8c03987",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "richarddavid@example.net",
+            "contact": "9909169985",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer entered an incorrect OTP during authentication.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "incorrect_otp",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_8da0365bf89897",
+      "name": "Cody Larson",
+      "email": "richarddavid@example.net",
+      "phone": "9909169985",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_b8db0672f42d47",
+    "order_id": "order_f8cda88b436d76",
+    "amount": 1349194,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "incorrect_otp",
+    "failure_description": "The customer entered an incorrect OTP during authentication.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T06:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_b8db0672f42d47",
+            "entity": "payment",
+            "amount": 1349194,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_f8cda88b436d76",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "stephen10@example.com",
+            "contact": "1838425135",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer entered an incorrect OTP during authentication.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "incorrect_otp",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_6f4cc69a4b22d3",
+      "name": "James Powers",
+      "email": "stephen10@example.com",
+      "phone": "1838425135",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_d777a4774c66e0",
+    "order_id": "order_32ebd6899be578",
+    "amount": 1054805,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "incorrect_otp",
+    "failure_description": "The customer entered an incorrect OTP during authentication.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T13:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_d777a4774c66e0",
+            "entity": "payment",
+            "amount": 1054805,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_32ebd6899be578",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "contrerasangela@example.net",
+            "contact": "2411824493",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer entered an incorrect OTP during authentication.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "incorrect_otp",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_e9a1fa6f81f76d",
+      "name": "Michele Carr",
+      "email": "contrerasangela@example.net",
+      "phone": "2411824493",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_52fbe43b99546e",
+    "order_id": "order_edd968311ca35c",
+    "amount": 325527,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "insufficient_funds",
+    "failure_description": "Payment failed as the account has insufficient funds.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T07:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_52fbe43b99546e",
+            "entity": "payment",
+            "amount": 325527,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_edd968311ca35c",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "davisrodney@example.com",
+            "contact": "0524278680",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "Payment failed as the account has insufficient funds.",
+            "error_source": "bank",
+            "error_step": "payment_authorization",
+            "error_reason": "insufficient_funds",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_8a14be62295b47",
+      "name": "Danielle Odonnell",
+      "email": "davisrodney@example.com",
+      "phone": "0524278680",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_e0c53cb83da9c2",
+    "order_id": "order_15ed626914296c",
+    "amount": 766225,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "insufficient_funds",
+    "failure_description": "Payment failed as the account has insufficient funds.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T11:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_e0c53cb83da9c2",
+            "entity": "payment",
+            "amount": 766225,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_15ed626914296c",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "russellwilliams@example.com",
+            "contact": "5331586923",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "Payment failed as the account has insufficient funds.",
+            "error_source": "bank",
+            "error_step": "payment_authorization",
+            "error_reason": "insufficient_funds",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_ce88cb2dd4e808",
+      "name": "Sandra Aguilar",
+      "email": "russellwilliams@example.com",
+      "phone": "5331586923",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_a8e56e0c20de43",
+    "order_id": "order_2a45c2ab8cbfed",
+    "amount": 1024195,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "insufficient_funds",
+    "failure_description": "Payment failed as the account has insufficient funds.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T06:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_a8e56e0c20de43",
+            "entity": "payment",
+            "amount": 1024195,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_2a45c2ab8cbfed",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "vpham@example.org",
+            "contact": "2160733754",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "Payment failed as the account has insufficient funds.",
+            "error_source": "bank",
+            "error_step": "payment_authorization",
+            "error_reason": "insufficient_funds",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_c2b6d2c5fa5d31",
+      "name": "Norman Cook",
+      "email": "vpham@example.org",
+      "phone": "2160733754",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_badcc32ac1590f",
+    "order_id": "order_4fcca39ab683d2",
+    "amount": 560864,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "insufficient_funds",
+    "failure_description": "Payment failed as the account has insufficient funds.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T23:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_badcc32ac1590f",
+            "entity": "payment",
+            "amount": 560864,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_4fcca39ab683d2",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "rasmussenjoshua@example.net",
+            "contact": "8501429401",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "Payment failed as the account has insufficient funds.",
+            "error_source": "bank",
+            "error_step": "payment_authorization",
+            "error_reason": "insufficient_funds",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_6c52c49f9b49bd",
+      "name": "Jennifer Ramirez",
+      "email": "rasmussenjoshua@example.net",
+      "phone": "8501429401",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_1efa2197739498",
+    "order_id": "order_568cc69b106400",
+    "amount": 841747,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "card_declined_do_not_honor",
+    "failure_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T18:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_1efa2197739498",
+            "entity": "payment",
+            "amount": 841747,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_568cc69b106400",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "cruzbarbara@example.com",
+            "contact": "6088356159",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
+            "error_source": "bank",
+            "error_step": "payment_authorization",
+            "error_reason": "card_declined_do_not_honor",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_5f987c71a65e68",
+      "name": "Emily Obrien",
+      "email": "cruzbarbara@example.com",
+      "phone": "6088356159",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_a18ff6b6b53510",
+    "order_id": "order_e7c99b26114125",
+    "amount": 49112,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "card_declined_do_not_honor",
+    "failure_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T22:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_a18ff6b6b53510",
+            "entity": "payment",
+            "amount": 49112,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_e7c99b26114125",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "angela36@example.net",
+            "contact": "2994680443",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
+            "error_source": "bank",
+            "error_step": "payment_authorization",
+            "error_reason": "card_declined_do_not_honor",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_96a402f23ae8cc",
+      "name": "Mary Nguyen",
+      "email": "angela36@example.net",
+      "phone": "2994680443",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_36d8393a7c441f",
+    "order_id": "order_ef7ddc76b92da2",
+    "amount": 70877,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "card_declined_do_not_honor",
+    "failure_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T20:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_36d8393a7c441f",
+            "entity": "payment",
+            "amount": 70877,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_ef7ddc76b92da2",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "williamleon@example.net",
+            "contact": "1489513433",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
+            "error_source": "bank",
+            "error_step": "payment_authorization",
+            "error_reason": "card_declined_do_not_honor",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_839fbc501223b5",
+      "name": "Julie Ramos",
+      "email": "williamleon@example.net",
+      "phone": "1489513433",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_1825bc5430beb4",
+    "order_id": "order_5ab33edf6e595e",
+    "amount": 1202564,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "card_declined_do_not_honor",
+    "failure_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T14:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_1825bc5430beb4",
+            "entity": "payment",
+            "amount": 1202564,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_5ab33edf6e595e",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "gibsonolivia@example.net",
+            "contact": "6763201632",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
+            "error_source": "bank",
+            "error_step": "payment_authorization",
+            "error_reason": "card_declined_do_not_honor",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_c8dcd19f3e3511",
+      "name": "John Atkinson",
+      "email": "gibsonolivia@example.net",
+      "phone": "6763201632",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_a56c0941fbf240",
+    "order_id": "order_ba6c34ab671230",
+    "amount": 893308,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T20:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_a56c0941fbf240",
+            "entity": "payment",
+            "amount": 893308,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_ba6c34ab671230",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "lauriecontreras@example.net",
+            "contact": "7986872774",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_source": "issuer",
+            "error_step": "payment_authorization",
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_baa4b71add2467",
+      "name": "Sylvia Martinez",
+      "email": "lauriecontreras@example.net",
+      "phone": "7986872774",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_23e2fcb472d856",
+    "order_id": "order_766ecb15474ebc",
+    "amount": 716569,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T02:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_23e2fcb472d856",
+            "entity": "payment",
+            "amount": 716569,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_766ecb15474ebc",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "josephflores@example.net",
+            "contact": "2236231665",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_source": "issuer",
+            "error_step": "payment_authorization",
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_3fa7f1041bf90e",
+      "name": "Mr. Jeremiah Reeves",
+      "email": "josephflores@example.net",
+      "phone": "2236231665",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_ffd0f9d5a6f2f7",
+    "order_id": "order_f810238303c72b",
+    "amount": 528882,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T04:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_ffd0f9d5a6f2f7",
+            "entity": "payment",
+            "amount": 528882,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_f810238303c72b",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "gateskathy@example.com",
+            "contact": "0546688937",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_source": "issuer",
+            "error_step": "payment_authorization",
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_71710434134c6c",
+      "name": "Ross Price",
+      "email": "gateskathy@example.com",
+      "phone": "0546688937",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_36b824817b3a4e",
+    "order_id": "order_0f02bad0e7067e",
+    "amount": 200586,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T05:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_36b824817b3a4e",
+            "entity": "payment",
+            "amount": 200586,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_0f02bad0e7067e",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "marycalhoun@example.net",
+            "contact": "6990162720",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_source": "issuer",
+            "error_step": "payment_authorization",
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_3c835dc0d9441f",
+      "name": "Mr. Michael Yates",
+      "email": "marycalhoun@example.net",
+      "phone": "6990162720",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_747b6dbac8fe3c",
+    "order_id": "order_f512c4c3b253d2",
+    "amount": 350269,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "unknown",
+    "failure_description": "An unexpected error occurred while processing the payment.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T17:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_747b6dbac8fe3c",
+            "entity": "payment",
+            "amount": 350269,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_f512c4c3b253d2",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "aramirez@example.com",
+            "contact": "7080531003",
+            "error_code": "SERVER_ERROR",
+            "error_description": "An unexpected error occurred while processing the payment.",
+            "error_source": "gateway",
+            "error_step": "payment_authorization",
+            "error_reason": "unknown",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_63f2ae24fc3d33",
+      "name": "Gabriel Juarez",
+      "email": "aramirez@example.com",
+      "phone": "7080531003",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_0ef8c2d6f7fd56",
+    "order_id": "order_0f9aea4b8acd4e",
+    "amount": 1170530,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "unknown",
+    "failure_description": "An unexpected error occurred while processing the payment.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T02:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_0ef8c2d6f7fd56",
+            "entity": "payment",
+            "amount": 1170530,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_0f9aea4b8acd4e",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "stevenscott@example.com",
+            "contact": "9912419049",
+            "error_code": "SERVER_ERROR",
+            "error_description": "An unexpected error occurred while processing the payment.",
+            "error_source": "gateway",
+            "error_step": "payment_authorization",
+            "error_reason": "unknown",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_27a0c3d77c967f",
+      "name": "Cameron Caldwell",
+      "email": "stevenscott@example.com",
+      "phone": "9912419049",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_284d82e587f7e1",
+    "order_id": "order_14822f5382010c",
+    "amount": 662676,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "unknown",
+    "failure_description": "An unexpected error occurred while processing the payment.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T10:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_284d82e587f7e1",
+            "entity": "payment",
+            "amount": 662676,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_14822f5382010c",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "terrykevin@example.net",
+            "contact": "9058651850",
+            "error_code": "SERVER_ERROR",
+            "error_description": "An unexpected error occurred while processing the payment.",
+            "error_source": "gateway",
+            "error_step": "payment_authorization",
+            "error_reason": "unknown",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_7a0ecfea958ca9",
+      "name": "Michael Burton",
+      "email": "terrykevin@example.net",
+      "phone": "9058651850",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_e3e9de99f10c71",
+    "order_id": "order_9832685694340a",
+    "amount": 394703,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "unknown",
+    "failure_description": "An unexpected error occurred while processing the payment.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T20:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_e3e9de99f10c71",
+            "entity": "payment",
+            "amount": 394703,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_9832685694340a",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "bzimmerman@example.org",
+            "contact": "9877694531",
+            "error_code": "SERVER_ERROR",
+            "error_description": "An unexpected error occurred while processing the payment.",
+            "error_source": "gateway",
+            "error_step": "payment_authorization",
+            "error_reason": "unknown",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_acdabacc1165e2",
+      "name": "Jack Snow",
+      "email": "bzimmerman@example.org",
+      "phone": "9877694531",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_344a54b842c18a",
+    "order_id": "order_3d1a85dd506e5a",
+    "amount": 88344,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "authentication_abandoned",
+    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T08:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_344a54b842c18a",
+            "entity": "payment",
+            "amount": 88344,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_3d1a85dd506e5a",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "anthony52@example.com",
+            "contact": "5454948083",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "authentication_abandoned",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_a8499b926b5252",
+      "name": "Laura Barnett",
+      "email": "anthony52@example.com",
+      "phone": "5454948083",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_c07a30f2edd425",
+    "order_id": "order_7552332702627f",
+    "amount": 562034,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "authentication_abandoned",
+    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T12:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_c07a30f2edd425",
+            "entity": "payment",
+            "amount": 562034,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_7552332702627f",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "bwest@example.org",
+            "contact": "3634957885",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "authentication_abandoned",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_a53f8a28abf3e3",
+      "name": "Peter Vaughn DDS",
+      "email": "bwest@example.org",
+      "phone": "3634957885",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_43e42caf8181a8",
+    "order_id": "order_e18050815958a4",
+    "amount": 1307665,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "authentication_abandoned",
+    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T17:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_43e42caf8181a8",
+            "entity": "payment",
+            "amount": 1307665,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_e18050815958a4",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "davidlee@example.org",
+            "contact": "3374989413",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "authentication_abandoned",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_19985f15ff002d",
+      "name": "Jesse Parker",
+      "email": "davidlee@example.org",
+      "phone": "3374989413",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_b41b31438b1055",
+    "order_id": "order_fcbb4e59fbddcf",
+    "amount": 149265,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "authentication_abandoned",
+    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T06:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_b41b31438b1055",
+            "entity": "payment",
+            "amount": 149265,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_fcbb4e59fbddcf",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "brandon08@example.com",
+            "contact": "7109477752",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "authentication_abandoned",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_48f4ef125e9953",
+      "name": "Adrian Ferguson",
+      "email": "brandon08@example.com",
+      "phone": "7109477752",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_1a84a51aa9d3d7",
+    "order_id": "order_43b409ef2260e7",
+    "amount": 1376487,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 3,
+    "failed_at": "2026-08-27T04:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_1a84a51aa9d3d7",
+            "entity": "payment",
+            "amount": 1376487,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_43b409ef2260e7",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "hernandezlisa@example.com",
+            "contact": "3186999386",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_d12dbc9aaaf915",
+      "name": "Austin Vasquez",
+      "email": "hernandezlisa@example.com",
+      "phone": "3186999386",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_35ebd32d9ad620",
+    "order_id": "order_afffcfd2341ef4",
+    "amount": 247071,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 3,
+    "failed_at": "2026-08-29T07:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_35ebd32d9ad620",
+            "entity": "payment",
+            "amount": 247071,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_afffcfd2341ef4",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "lynchjody@example.org",
+            "contact": "4123281206",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_8da01097be0f05",
+      "name": "Wanda Torres",
+      "email": "lynchjody@example.org",
+      "phone": "4123281206",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_0d01280fd89a40",
+    "order_id": "order_d450281c6c6f76",
+    "amount": 1335093,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 3,
+    "failed_at": "2026-08-28T18:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_0d01280fd89a40",
+            "entity": "payment",
+            "amount": 1335093,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_d450281c6c6f76",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "ojones@example.com",
+            "contact": "6183242102",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_7d106c6081627c",
+      "name": "David Mann",
+      "email": "ojones@example.com",
+      "phone": "6183242102",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_295d6fbf430f80",
+    "order_id": "order_b4a69f3c8d3aed",
+    "amount": 585240,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 3,
+    "failed_at": "2026-08-29T10:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_295d6fbf430f80",
+            "entity": "payment",
+            "amount": 585240,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_b4a69f3c8d3aed",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "holly48@example.net",
+            "contact": "7190659401",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_c56811cd5563f6",
+      "name": "Jessica Harrison",
+      "email": "holly48@example.net",
+      "phone": "7190659401",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_5e84f058d5a804",
+    "order_id": "order_6e06809725e979",
+    "amount": 901924,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T07:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_5e84f058d5a804",
+            "entity": "payment",
+            "amount": 901924,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_6e06809725e979",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "barbara27@example.net",
+            "contact": "4296717565",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_13432e611ca3c4",
+      "name": "Yvonne Chambers",
+      "email": "barbara27@example.net",
+      "phone": "4296717565",
+      "dnd_opt_out": true,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_ae9bec3635c793",
+    "order_id": "order_5a8aaeca1a50ae",
+    "amount": 272272,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T21:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_ae9bec3635c793",
+            "entity": "payment",
+            "amount": 272272,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_5a8aaeca1a50ae",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "jcervantes@example.org",
+            "contact": "1545168087",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_e623a6895d59cd",
+      "name": "Michael Roberts",
+      "email": "jcervantes@example.org",
+      "phone": "1545168087",
+      "dnd_opt_out": true,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_dd56cc943c9ad1",
+    "order_id": "order_cf8ebc5accc565",
+    "amount": 1179160,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T07:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_dd56cc943c9ad1",
+            "entity": "payment",
+            "amount": 1179160,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_cf8ebc5accc565",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "nwolf@example.com",
+            "contact": "4771093248",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_f94d6204680859",
+      "name": "Lisa Jimenez",
+      "email": "nwolf@example.com",
+      "phone": "4771093248",
+      "dnd_opt_out": true,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_cd5f4822696608",
+    "order_id": "order_cf8d446abc2cbb",
+    "amount": 376305,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T08:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_cd5f4822696608",
+            "entity": "payment",
+            "amount": 376305,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_cf8d446abc2cbb",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "pvalentine@example.org",
+            "contact": "4846773782",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_2dea9493065866",
+      "name": "Willie Durham",
+      "email": "pvalentine@example.org",
+      "phone": "4846773782",
+      "dnd_opt_out": true,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_dbccc47709e9db",
+    "order_id": "order_d10bd1d0331734",
+    "amount": 525444,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "expired_card",
+    "failure_description": "The card has expired and cannot be charged again.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T13:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_dbccc47709e9db",
+            "entity": "payment",
+            "amount": 525444,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_d10bd1d0331734",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "kendra65@example.net",
+            "contact": "0449972787",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The card has expired and cannot be charged again.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "expired_card",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_b386f7a4c99160",
+      "name": "Sherry Shields",
+      "email": "kendra65@example.net",
+      "phone": "0449972787",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 3,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_3170f437a8f7ef",
+    "order_id": "order_dd463c09475287",
+    "amount": 970325,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "expired_card",
+    "failure_description": "The card has expired and cannot be charged again.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T21:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_3170f437a8f7ef",
+            "entity": "payment",
+            "amount": 970325,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_dd463c09475287",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "tinaallen@example.com",
+            "contact": "6057662702",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The card has expired and cannot be charged again.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "expired_card",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_cb9bc326d20eac",
+      "name": "Jamie Cantu",
+      "email": "tinaallen@example.com",
+      "phone": "6057662702",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 3,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_d7fa2d8dfb2ca0",
+    "order_id": "order_0710d430f071d8",
+    "amount": 150585,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "expired_card",
+    "failure_description": "The card has expired and cannot be charged again.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T09:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_d7fa2d8dfb2ca0",
+            "entity": "payment",
+            "amount": 150585,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_0710d430f071d8",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "jsmith@example.com",
+            "contact": "1745961586",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The card has expired and cannot be charged again.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "expired_card",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_59e4b6714774bc",
+      "name": "Shelly Alexander",
+      "email": "jsmith@example.com",
+      "phone": "1745961586",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 3,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_6f3f920c98b8e4",
+    "order_id": "order_504d281fc9535b",
+    "amount": 246889,
+    "currency": "INR",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "expired_card",
+    "failure_description": "The card has expired and cannot be charged again.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T17:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_6f3f920c98b8e4",
+            "entity": "payment",
+            "amount": 246889,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_504d281fc9535b",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "wendy16@example.org",
+            "contact": "7240050455",
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The card has expired and cannot be charged again.",
+            "error_source": "customer",
+            "error_step": "payment_authorization",
+            "error_reason": "expired_card",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_2db69edb42deff",
+      "name": "Barry Welch",
+      "email": "wendy16@example.org",
+      "phone": "7240050455",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 3,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_41357e8c30a900",
+    "order_id": "order_006ed6e36fa177",
+    "amount": 12321474,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T01:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_41357e8c30a900",
+            "entity": "payment",
+            "amount": 12321474,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_006ed6e36fa177",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "gregorylynch@example.com",
+            "contact": "7923747407",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_source": "issuer",
+            "error_step": "payment_authorization",
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_1d9af65982ec9f",
+      "name": "Kylie Sparks",
+      "email": "gregorylynch@example.com",
+      "phone": "7923747407",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_f2e9702d11e9cd",
+    "order_id": "order_9f871ce75487fd",
+    "amount": 13722815,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T01:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_f2e9702d11e9cd",
+            "entity": "payment",
+            "amount": 13722815,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_9f871ce75487fd",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "danielle64@example.com",
+            "contact": "3671369594",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_source": "issuer",
+            "error_step": "payment_authorization",
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_afd5dea589d7fd",
+      "name": "Tony Huerta",
+      "email": "danielle64@example.com",
+      "phone": "3671369594",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_688c7015aab97e",
+    "order_id": "order_4bb00f20b27c40",
+    "amount": 10266630,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T12:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_688c7015aab97e",
+            "entity": "payment",
+            "amount": 10266630,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_4bb00f20b27c40",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "lozanojulie@example.com",
+            "contact": "9533942104",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_source": "issuer",
+            "error_step": "payment_authorization",
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_b841d0a01fe771",
+      "name": "Keith Jennings",
+      "email": "lozanojulie@example.com",
+      "phone": "9533942104",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_2c8d0e44e71e43",
+    "order_id": "order_67f48ad54d0b0d",
+    "amount": 14301497,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T02:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_2c8d0e44e71e43",
+            "entity": "payment",
+            "amount": 14301497,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_67f48ad54d0b0d",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "julie23@example.org",
+            "contact": "8842474517",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_source": "issuer",
+            "error_step": "payment_authorization",
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_aa38d0a16ba25e",
+      "name": "Carlos Browning",
+      "email": "julie23@example.org",
+      "phone": "8842474517",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_9b4e2c249479e1",
+    "order_id": "order_7118e364770977",
+    "amount": 1154107,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T00:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_9b4e2c249479e1",
+            "entity": "payment",
+            "amount": 1154107,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_7118e364770977",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "christopher60@example.com",
+            "contact": "7549651370",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_49732d6c4dcabf",
+      "name": "Misty Whitney",
+      "email": "christopher60@example.com",
+      "phone": "7549651370",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 6,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_83f4a9a948a639",
+    "order_id": "order_55cee5db9e87e0",
+    "amount": 932276,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-29T05:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_83f4a9a948a639",
+            "entity": "payment",
+            "amount": 932276,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_55cee5db9e87e0",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "tblankenship@example.net",
+            "contact": "1200471138",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_7922bac282dc4c",
+      "name": "Connie Brown",
+      "email": "tblankenship@example.net",
+      "phone": "1200471138",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 6,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_25b8fd4b32fa2d",
+    "order_id": "order_fbe33b243eae00",
+    "amount": 200847,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T11:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_25b8fd4b32fa2d",
+            "entity": "payment",
+            "amount": 200847,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_fbe33b243eae00",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "umatthews@example.org",
+            "contact": "1796405377",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_3c20592fc04a96",
+      "name": "Travis Horton",
+      "email": "umatthews@example.org",
+      "phone": "1796405377",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 6,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_935f2b0aa1384d",
+    "order_id": "order_624c69b6b24445",
+    "amount": 1001433,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T16:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_935f2b0aa1384d",
+            "entity": "payment",
+            "amount": 1001433,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_624c69b6b24445",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "sandersjames@example.org",
+            "contact": "1390053293",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_12a4def0c4bbb7",
+      "name": "Mrs. Stephanie Newman",
+      "email": "sandersjames@example.org",
+      "phone": "1390053293",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 6,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_c521bf2ddc45d5",
+    "order_id": "order_6cd66193c7468f",
+    "amount": 1041784,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "payment_blocked_risk",
+    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+    "retry_count": 0,
+    "failed_at": "2026-08-30T02:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_c521bf2ddc45d5",
+            "entity": "payment",
+            "amount": 1041784,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_6cd66193c7468f",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "kristinacarlson@example.com",
+            "contact": "2842102053",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+            "error_source": "business",
+            "error_step": "payment_authorization",
+            "error_reason": "payment_blocked_risk",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_a7f36ae925c73c",
+      "name": "Robin Hall",
+      "email": "kristinacarlson@example.com",
+      "phone": "2842102053",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_3fcb75468eb225",
+    "order_id": "order_74daaebf1f115b",
+    "amount": 463943,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "payment_blocked_risk",
+    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T08:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_3fcb75468eb225",
+            "entity": "payment",
+            "amount": 463943,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_74daaebf1f115b",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "reesethomas@example.com",
+            "contact": "7839084700",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+            "error_source": "business",
+            "error_step": "payment_authorization",
+            "error_reason": "payment_blocked_risk",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_b227462cf53d43",
+      "name": "Anthony Harmon",
+      "email": "reesethomas@example.com",
+      "phone": "7839084700",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_c1581092f335cb",
+    "order_id": "order_d0a444329cd6c8",
+    "amount": 284632,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "payment_blocked_risk",
+    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T03:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_c1581092f335cb",
+            "entity": "payment",
+            "amount": 284632,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_d0a444329cd6c8",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "lammarc@example.org",
+            "contact": "2499856984",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+            "error_source": "business",
+            "error_step": "payment_authorization",
+            "error_reason": "payment_blocked_risk",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_87f8424daae65f",
+      "name": "Katherine Browning",
+      "email": "lammarc@example.org",
+      "phone": "2499856984",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_dc8aee30be6033",
+    "order_id": "order_c074718e425a60",
+    "amount": 1063596,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "payment_blocked_risk",
+    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T17:29:02.587322+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_dc8aee30be6033",
+            "entity": "payment",
+            "amount": 1063596,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_c074718e425a60",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "russellbeasley@example.com",
+            "contact": "7661565452",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+            "error_source": "business",
+            "error_step": "payment_authorization",
+            "error_reason": "payment_blocked_risk",
+            "created_at": 1788060542
+          }
+        }
+      },
+      "created_at": 1788060542
+    },
+    "customer": {
+      "external_customer_id": "cust_8c41561be827a1",
+      "name": "Ricky Wilson",
+      "email": "russellbeasley@example.com",
+      "phone": "7661565452",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  }
+]
