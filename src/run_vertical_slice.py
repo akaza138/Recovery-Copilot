@@ -7,13 +7,21 @@ Usage:
     python -m src.run_vertical_slice --case b               # canonical Case B (non-retryable, payment link)
     python -m src.run_vertical_slice --case c                # canonical Case C (high-value + uncertain, human review)
     python -m src.run_vertical_slice --payment-id pay_xxx      # a specific dataset record
+    python -m src.run_vertical_slice --reset-db                 # start from a clean local DB first
 
 Persists to a local SQLite file (data/recovery_copilot.db) via the same
 Customer / FailedPayment / RecoveryAttempt models the rest of the system
 uses — independent of the Postgres-pointed DATABASE_URL in .env, so this
-runs without Docker. Re-running against the same payment id accumulates
-RecoveryAttempt rows on that same case and will eventually hit the retry
-cap / cooldown gates for real — a good way to see STAND_DOWN fire live.
+runs without Docker.
+
+That file is deliberately NOT reset between runs: re-running the same
+payment id accumulates RecoveryAttempt rows on the same case and will
+eventually trip the retry-cap / cooldown gates for real, which is the best
+way to watch STAND_DOWN fire against genuine state rather than a fixture.
+The trade-off is that rows written under an older schema can outlive the
+schema itself — an enum value that has since been renamed will fail to
+load. `--reset-db` clears that, and the CLI catches the failure and says so
+rather than surfacing a raw SQLAlchemy traceback.
 """
 
 import argparse
@@ -29,6 +37,28 @@ from src.razorpay_action import RazorpayActionClient
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 DEFAULT_DB_PATH = DATA_DIR / "recovery_copilot.db"
+
+
+def reset_db(db_path: Path) -> None:
+    """Drops the local SQLite file so the next run starts from a clean
+    schema. Deleting the file (rather than DROP TABLE) also clears any
+    enum types/rows written under a schema this build no longer knows."""
+    db_path = Path(db_path)
+    if db_path.exists():
+        db_path.unlink()
+
+
+def _stale_db_message(db_path: str, error: Exception) -> str:
+    return (
+        f"\nERROR: could not read the local vertical-slice database at {db_path}\n"
+        f"  {type(error).__name__}: {error}\n\n"
+        "This almost always means the file holds rows written under an older schema — most often an\n"
+        "enum value that has since been renamed (e.g. a diagnosis_source of 'RULE_BASED', which is\n"
+        "now 'RULE'). The demo dataset uses a fixed seed, so Cases A/B/C always reuse the same payment\n"
+        "ids and will keep hitting those old rows.\n\n"
+        "Fix: re-run with --reset-db to drop and recreate the file.\n"
+        f"    python -m src.run_vertical_slice --reset-db\n"
+    )
 
 
 def _section(title: str) -> None:
@@ -57,9 +87,10 @@ def _print_result(result: VerticalSliceResult) -> None:
     d = result.diagnosis
     _section("DIAGNOSIS")
     print(f"root_cause:       {d.root_cause}")
-    print(f"confidence:       {d.confidence:.2f} (raw, rule-derived — never passed to the policy engine directly)")
+    print(f"confidence:       {d.confidence:.2f} (raw, model/rule-reported — never passed to the policy engine directly)")
     print(f"confidence_band:  {d.confidence_band.value.upper()}")
     print(f"source:           {d.source.value}")
+    print(f"retryable:        {d.retryable}")
     print(f"evidence:         {d.evidence}")
 
     p = result.policy_decision
@@ -97,7 +128,16 @@ def main() -> int:
     parser.add_argument("--case", choices=["a", "b", "c"], default="a", help="Canonical demo case to run (default: a).")
     parser.add_argument("--payment-id", default=None, help="Run a specific external_payment_id instead of a canonical case.")
     parser.add_argument("--db-path", default=str(DEFAULT_DB_PATH), help="SQLite file to persist to.")
+    parser.add_argument(
+        "--reset-db",
+        action="store_true",
+        help="Drop and recreate the local SQLite file before running (clears rows written under an older schema).",
+    )
     args = parser.parse_args()
+
+    if args.reset_db:
+        reset_db(Path(args.db_path))
+        print(f"Reset local database: {args.db_path}")
 
     engine = create_engine(f"sqlite:///{args.db_path}")
     Base.metadata.create_all(bind=engine)
@@ -109,7 +149,13 @@ def main() -> int:
         _print_input(dataset_record)
 
         razorpay_client = RazorpayActionClient()
-        result = run_pipeline(db, dataset_record, action_executor=razorpay_client)
+        try:
+            result = run_pipeline(db, dataset_record, action_executor=razorpay_client)
+        except LookupError as exc:
+            # SQLAlchemy raises LookupError when a stored enum value isn't in the current Python enum.
+            # Surface the actionable fix instead of a raw traceback; see this module's docstring.
+            print(_stale_db_message(args.db_path, exc))
+            return 1
 
         _print_result(result)
         print(f"\n(DB: {args.db_path})")

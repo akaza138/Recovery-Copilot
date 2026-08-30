@@ -385,13 +385,26 @@ python -m src.run_vertical_slice            # canonical Case A (transient failur
 python -m src.run_vertical_slice --case b     # canonical Case B (non-retryable -> payment link)
 python -m src.run_vertical_slice --case c      # canonical Case C (high-value + uncertain -> human review)
 python -m src.run_vertical_slice --payment-id pay_xxx   # any specific dataset record
+python -m src.run_vertical_slice --reset-db               # start from a clean local DB first
 ```
 
 Prints `INPUT` / `DIAGNOSIS` / `POLICY` / `ACTION` / `RESULT` / `AUDIT` and
 persists to a local SQLite file (`data/recovery_copilot.db`, independent of
-`DATABASE_URL`, so this runs without Docker). Re-running against the same
-payment id accumulates `RecoveryAttempt` rows and will eventually hit the
-retry-cap / cooldown gates for real.
+`DATABASE_URL`, so this runs without Docker).
+
+**This accumulation is intentional, not an oversight.** Re-running against
+the same payment id (the dataset uses a fixed seed, so Cases A/B/C always
+resolve to the same payment ids) adds another `RecoveryAttempt` row on the
+same case and will eventually trip the retry-cap / cooldown gates for real
+— the best way to watch `STAND_DOWN` fire against genuine accumulated
+state rather than a hand-set fixture value.
+
+**The trade-off: the file can go stale across a schema change.** A row
+written before an enum value was renamed (this genuinely happened once —
+`DiagnosisSource.RULE_BASED` became `RULE` on Day 3) fails to load with
+`LookupError: 'RULE_BASED' is not among the defined enum values`. The CLI
+catches this specific failure and prints the file path and the fix instead
+of a raw traceback; run `--reset-db` to drop and recreate the file.
 
 ## Running the batch
 

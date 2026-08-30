@@ -111,7 +111,27 @@ def test_http_error_falls_back_not_crashes():
 
     assert diagnosis.source == DiagnosisSource.LLM_FALLBACK
     assert diagnosis.confidence_band == ConfidenceBand.LOW
-    assert "401" in diagnosis.evidence or "invalid" in diagnosis.evidence.lower() or "StatusError" in diagnosis.evidence or "Error" in diagnosis.evidence
+    assert "401" in diagnosis.evidence
+    assert "invalid api key" in diagnosis.evidence  # the response BODY, not just the status line
+
+
+def test_http_error_evidence_surfaces_the_response_body_not_just_the_status_line():
+    """The status line alone ("Client error '400 Bad Request'") gives no
+    diagnostic information — the fix under test is that Groq's response
+    body (which says exactly what was wrong: bad model id, malformed tool
+    schema, etc.) makes it into the fallback evidence."""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            400,
+            json={"error": {"message": "The model `bogus-model` does not exist or you do not have access to it.", "code": "model_not_found"}},
+        )
+
+    diagnosis = diagnose_ambiguous_case(FAILURE_SIGNAL, client=_client(handler))
+
+    assert diagnosis.source == DiagnosisSource.LLM_FALLBACK
+    assert "does not exist or you do not have access to it" in diagnosis.evidence
+    assert "model_not_found" in diagnosis.evidence
 
 
 def test_connection_error_falls_back():

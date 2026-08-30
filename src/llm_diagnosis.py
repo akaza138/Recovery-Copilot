@@ -29,7 +29,15 @@ downstream (i.e. the policy engine) may use it.
 On any failure — missing API key, network/timeout error, an API error, or a
 response that fails structural validation — this module returns an explicit
 LLM_FALLBACK diagnosis at LOW confidence. It never lets an LLM failure look
-like a successful diagnosis.
+like a successful diagnosis. HTTP errors carry the response body (not just
+the status line) into the fallback evidence, since Groq's body says exactly
+what went wrong (bad model id, malformed tool schema, etc.) — the status
+line alone ("Client error '400 Bad Request'") is not actionable.
+
+Model id is configurable via the GROQ_MODEL env var (default
+"openai/gpt-oss-20b", confirmed to support forced tool-calling — see Known
+Limitations in the README for its ~40-60% observed reliability on this
+call shape, handled entirely by the fallback path above).
 """
 
 import json
@@ -132,7 +140,14 @@ def _call_llm(failure_signal: dict, *, client: Any, model: str) -> dict:
             "tool_choice": {"type": "function", "function": {"name": "report_diagnosis"}},
         },
     )
-    response.raise_for_status()
+    try:
+        response.raise_for_status()
+    except httpx.HTTPStatusError as exc:
+        # httpx's own message is just the status line ("Client error '400 Bad Request' for url
+        # '...'") — no diagnostic content. Groq's response body says exactly what was wrong
+        # (bad model id, malformed tool schema, etc.), so it has to be surfaced here or every
+        # HTTP error looks identical and unfixable from the fallback evidence text alone.
+        raise LLMDiagnosisError(f"{exc}. Response body: {response.text}") from exc
     body = response.json()
 
     tool_calls = body["choices"][0]["message"].get("tool_calls") or []
