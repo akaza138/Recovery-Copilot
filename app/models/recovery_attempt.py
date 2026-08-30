@@ -10,8 +10,9 @@ from app.db.types import GUID
 
 
 class DiagnosisSource(str, enum.Enum):
-    RULE_BASED = "rule_based"
-    CLAUDE = "claude"
+    RULE = "rule"
+    LLM = "llm"
+    LLM_FALLBACK = "llm_fallback"  # LLM call failed/timed out/returned invalid output; safe fallback, not a real diagnosis
 
 
 class ConfidenceBand(str, enum.Enum):

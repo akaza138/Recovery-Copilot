@@ -8,7 +8,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T19:52:06.516417+00:00",
+    "failed_at": "2026-08-29T02:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -34,11 +34,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_46685257bdd640",
@@ -61,7 +61,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T15:52:06.516417+00:00",
+    "failed_at": "2026-08-29T22:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -87,11 +87,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_07a0ca6e0822e8",
@@ -114,7 +114,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T17:52:06.516417+00:00",
+    "failed_at": "2026-08-28T00:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -140,11 +140,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_386ecbe06b65a6",
@@ -167,7 +167,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T23:52:06.516417+00:00",
+    "failed_at": "2026-08-29T06:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -193,11 +193,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_27cd8130472293",
@@ -220,7 +220,7 @@
     "failure_reason": "expired_card",
     "failure_description": "The card has expired and cannot be charged again.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T16:52:06.516417+00:00",
+    "failed_at": "2026-08-27T23:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -246,11 +246,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "expired_card",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_0b1f9163ce9ff5",
@@ -273,7 +273,7 @@
     "failure_reason": "expired_card",
     "failure_description": "The card has expired and cannot be charged again.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T02:52:06.516417+00:00",
+    "failed_at": "2026-08-29T09:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -299,11 +299,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "expired_card",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_5c941cf0dc98d2",
@@ -326,7 +326,7 @@
     "failure_reason": "expired_card",
     "failure_description": "The card has expired and cannot be charged again.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T02:52:06.516417+00:00",
+    "failed_at": "2026-08-28T09:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -352,11 +352,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "expired_card",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_19db3ad0ddd1df",
@@ -379,7 +379,7 @@
     "failure_reason": "expired_card",
     "failure_description": "The card has expired and cannot be charged again.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T17:52:06.516417+00:00",
+    "failed_at": "2026-08-30T00:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -405,11 +405,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "expired_card",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_efc89849b3aa7e",
@@ -432,7 +432,7 @@
     "failure_reason": "invalid_cvv",
     "failure_description": "The CVV entered does not match the card on file.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T03:52:06.516417+00:00",
+    "failed_at": "2026-08-27T10:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -458,11 +458,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "invalid_cvv",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_a3d70628ece66f",
@@ -485,7 +485,7 @@
     "failure_reason": "invalid_cvv",
     "failure_description": "The CVV entered does not match the card on file.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T18:52:06.516417+00:00",
+    "failed_at": "2026-08-30T01:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -511,11 +511,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "invalid_cvv",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_448aaa9e66b2bc",
@@ -538,7 +538,7 @@
     "failure_reason": "invalid_cvv",
     "failure_description": "The CVV entered does not match the card on file.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T16:52:06.516417+00:00",
+    "failed_at": "2026-08-27T23:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -564,11 +564,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "invalid_cvv",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_ea1fca65e27a98",
@@ -591,7 +591,7 @@
     "failure_reason": "invalid_cvv",
     "failure_description": "The CVV entered does not match the card on file.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T04:52:06.516417+00:00",
+    "failed_at": "2026-08-28T11:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -617,11 +617,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "invalid_cvv",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_663f1c97956269",
@@ -644,7 +644,7 @@
     "failure_reason": "incorrect_otp",
     "failure_description": "The customer entered an incorrect OTP during authentication.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T06:52:06.516417+00:00",
+    "failed_at": "2026-08-29T13:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -670,11 +670,11 @@
             "error_source": "customer",
             "error_step": "payment_authentication",
             "error_reason": "incorrect_otp",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_a0a04dc427209b",
@@ -697,7 +697,7 @@
     "failure_reason": "incorrect_otp",
     "failure_description": "The customer entered an incorrect OTP during authentication.",
     "retry_count": 0,
-    "failed_at": "2026-08-30T01:52:06.516417+00:00",
+    "failed_at": "2026-08-30T08:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -723,11 +723,11 @@
             "error_source": "customer",
             "error_step": "payment_authentication",
             "error_reason": "incorrect_otp",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_8da0365bf89897",
@@ -750,7 +750,7 @@
     "failure_reason": "incorrect_otp",
     "failure_description": "The customer entered an incorrect OTP during authentication.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T06:52:06.516417+00:00",
+    "failed_at": "2026-08-29T13:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -776,11 +776,11 @@
             "error_source": "customer",
             "error_step": "payment_authentication",
             "error_reason": "incorrect_otp",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_6f4cc69a4b22d3",
@@ -803,7 +803,7 @@
     "failure_reason": "incorrect_otp",
     "failure_description": "The customer entered an incorrect OTP during authentication.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T13:52:06.516417+00:00",
+    "failed_at": "2026-08-29T20:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -829,11 +829,11 @@
             "error_source": "customer",
             "error_step": "payment_authentication",
             "error_reason": "incorrect_otp",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_e9a1fa6f81f76d",
@@ -856,7 +856,7 @@
     "failure_reason": "insufficient_funds",
     "failure_description": "Payment failed as the account has insufficient funds.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T07:52:06.516417+00:00",
+    "failed_at": "2026-08-27T14:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -882,11 +882,11 @@
             "error_source": "bank",
             "error_step": "payment_authorization",
             "error_reason": "insufficient_funds",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_8a14be62295b47",
@@ -909,7 +909,7 @@
     "failure_reason": "insufficient_funds",
     "failure_description": "Payment failed as the account has insufficient funds.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T11:52:06.516417+00:00",
+    "failed_at": "2026-08-28T18:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -935,11 +935,11 @@
             "error_source": "bank",
             "error_step": "payment_authorization",
             "error_reason": "insufficient_funds",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_ce88cb2dd4e808",
@@ -962,7 +962,7 @@
     "failure_reason": "insufficient_funds",
     "failure_description": "Payment failed as the account has insufficient funds.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T06:52:06.516417+00:00",
+    "failed_at": "2026-08-27T13:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -988,11 +988,11 @@
             "error_source": "bank",
             "error_step": "payment_authorization",
             "error_reason": "insufficient_funds",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_c2b6d2c5fa5d31",
@@ -1015,7 +1015,7 @@
     "failure_reason": "insufficient_funds",
     "failure_description": "Payment failed as the account has insufficient funds.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T23:52:06.516417+00:00",
+    "failed_at": "2026-08-29T06:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1041,11 +1041,11 @@
             "error_source": "bank",
             "error_step": "payment_authorization",
             "error_reason": "insufficient_funds",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_6c52c49f9b49bd",
@@ -1068,7 +1068,7 @@
     "failure_reason": "card_declined_do_not_honor",
     "failure_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
     "retry_count": 0,
-    "failed_at": "2026-08-27T18:52:06.516417+00:00",
+    "failed_at": "2026-08-28T01:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1094,11 +1094,11 @@
             "error_source": "bank",
             "error_step": "payment_authorization",
             "error_reason": "card_declined_do_not_honor",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_5f987c71a65e68",
@@ -1121,7 +1121,7 @@
     "failure_reason": "card_declined_do_not_honor",
     "failure_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
     "retry_count": 0,
-    "failed_at": "2026-08-28T22:52:06.516417+00:00",
+    "failed_at": "2026-08-29T05:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1147,11 +1147,11 @@
             "error_source": "bank",
             "error_step": "payment_authorization",
             "error_reason": "card_declined_do_not_honor",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_96a402f23ae8cc",
@@ -1174,7 +1174,7 @@
     "failure_reason": "card_declined_do_not_honor",
     "failure_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
     "retry_count": 0,
-    "failed_at": "2026-08-28T20:52:06.516417+00:00",
+    "failed_at": "2026-08-29T03:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1200,11 +1200,11 @@
             "error_source": "bank",
             "error_step": "payment_authorization",
             "error_reason": "card_declined_do_not_honor",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_839fbc501223b5",
@@ -1227,7 +1227,7 @@
     "failure_reason": "card_declined_do_not_honor",
     "failure_description": "The issuing bank declined the transaction with a permanent hold code (do not honor).",
     "retry_count": 0,
-    "failed_at": "2026-08-27T14:52:06.516417+00:00",
+    "failed_at": "2026-08-27T21:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1253,11 +1253,11 @@
             "error_source": "bank",
             "error_step": "payment_authorization",
             "error_reason": "card_declined_do_not_honor",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_c8dcd19f3e3511",
@@ -1276,11 +1276,11 @@
     "order_id": "order_ba6c34ab671230",
     "amount": 893308,
     "currency": "INR",
-    "failure_code": "SERVER_ERROR",
-    "failure_reason": "issuer_soft_decline",
-    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "authentication_abandoned",
+    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T20:52:06.516417+00:00",
+    "failed_at": "2026-08-30T03:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1301,16 +1301,16 @@
             "captured": false,
             "email": "lauriecontreras@example.net",
             "contact": "7986872774",
-            "error_code": "SERVER_ERROR",
-            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
-            "error_source": "issuer",
-            "error_step": "payment_authorization",
-            "error_reason": "issuer_soft_decline",
-            "created_at": 1788061926
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "authentication_abandoned",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_baa4b71add2467",
@@ -1329,11 +1329,11 @@
     "order_id": "order_766ecb15474ebc",
     "amount": 716569,
     "currency": "INR",
-    "failure_code": "SERVER_ERROR",
-    "failure_reason": "issuer_soft_decline",
-    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "authentication_abandoned",
+    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T02:52:06.516417+00:00",
+    "failed_at": "2026-08-29T09:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1354,16 +1354,16 @@
             "captured": false,
             "email": "josephflores@example.net",
             "contact": "2236231665",
-            "error_code": "SERVER_ERROR",
-            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
-            "error_source": "issuer",
-            "error_step": "payment_authorization",
-            "error_reason": "issuer_soft_decline",
-            "created_at": 1788061926
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "authentication_abandoned",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_3fa7f1041bf90e",
@@ -1382,11 +1382,11 @@
     "order_id": "order_f810238303c72b",
     "amount": 528882,
     "currency": "INR",
-    "failure_code": "SERVER_ERROR",
-    "failure_reason": "issuer_soft_decline",
-    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "authentication_abandoned",
+    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T04:52:06.516417+00:00",
+    "failed_at": "2026-08-27T11:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1407,16 +1407,16 @@
             "captured": false,
             "email": "gateskathy@example.com",
             "contact": "0546688937",
-            "error_code": "SERVER_ERROR",
-            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
-            "error_source": "issuer",
-            "error_step": "payment_authorization",
-            "error_reason": "issuer_soft_decline",
-            "created_at": 1788061926
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "authentication_abandoned",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_71710434134c6c",
@@ -1435,11 +1435,11 @@
     "order_id": "order_0f02bad0e7067e",
     "amount": 200586,
     "currency": "INR",
-    "failure_code": "SERVER_ERROR",
-    "failure_reason": "issuer_soft_decline",
-    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "failure_code": "BAD_REQUEST_ERROR",
+    "failure_reason": "authentication_abandoned",
+    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T05:52:06.516417+00:00",
+    "failed_at": "2026-08-29T12:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1460,16 +1460,16 @@
             "captured": false,
             "email": "marycalhoun@example.net",
             "contact": "6990162720",
-            "error_code": "SERVER_ERROR",
-            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
-            "error_source": "issuer",
-            "error_step": "payment_authorization",
-            "error_reason": "issuer_soft_decline",
-            "created_at": 1788061926
+            "error_code": "BAD_REQUEST_ERROR",
+            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+            "error_source": "customer",
+            "error_step": "payment_authentication",
+            "error_reason": "authentication_abandoned",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_3c835dc0d9441f",
@@ -1489,10 +1489,10 @@
     "amount": 350269,
     "currency": "INR",
     "failure_code": "SERVER_ERROR",
-    "failure_reason": "unknown",
-    "failure_description": "An unexpected error occurred while processing the payment.",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T17:52:06.516417+00:00",
+    "failed_at": "2026-08-29T00:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1514,15 +1514,15 @@
             "email": "aramirez@example.com",
             "contact": "7080531003",
             "error_code": "SERVER_ERROR",
-            "error_description": "An unexpected error occurred while processing the payment.",
-            "error_source": "gateway",
+            "error_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
+            "error_source": "issuer",
             "error_step": "payment_authorization",
-            "error_reason": "unknown",
-            "created_at": 1788061926
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_63f2ae24fc3d33",
@@ -1542,10 +1542,10 @@
     "amount": 1170530,
     "currency": "INR",
     "failure_code": "SERVER_ERROR",
-    "failure_reason": "unknown",
-    "failure_description": "An unexpected error occurred while processing the payment.",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T02:52:06.516417+00:00",
+    "failed_at": "2026-08-29T09:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1567,15 +1567,15 @@
             "email": "stevenscott@example.com",
             "contact": "9912419049",
             "error_code": "SERVER_ERROR",
-            "error_description": "An unexpected error occurred while processing the payment.",
-            "error_source": "gateway",
+            "error_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
+            "error_source": "issuer",
             "error_step": "payment_authorization",
-            "error_reason": "unknown",
-            "created_at": 1788061926
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_27a0c3d77c967f",
@@ -1595,10 +1595,10 @@
     "amount": 662676,
     "currency": "INR",
     "failure_code": "SERVER_ERROR",
-    "failure_reason": "unknown",
-    "failure_description": "An unexpected error occurred while processing the payment.",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T10:52:06.516417+00:00",
+    "failed_at": "2026-08-27T17:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1620,15 +1620,15 @@
             "email": "terrykevin@example.net",
             "contact": "9058651850",
             "error_code": "SERVER_ERROR",
-            "error_description": "An unexpected error occurred while processing the payment.",
-            "error_source": "gateway",
+            "error_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
+            "error_source": "issuer",
             "error_step": "payment_authorization",
-            "error_reason": "unknown",
-            "created_at": 1788061926
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_7a0ecfea958ca9",
@@ -1648,10 +1648,10 @@
     "amount": 394703,
     "currency": "INR",
     "failure_code": "SERVER_ERROR",
-    "failure_reason": "unknown",
-    "failure_description": "An unexpected error occurred while processing the payment.",
+    "failure_reason": "issuer_soft_decline",
+    "failure_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T20:52:06.516417+00:00",
+    "failed_at": "2026-08-29T03:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1673,15 +1673,15 @@
             "email": "bzimmerman@example.org",
             "contact": "9877694531",
             "error_code": "SERVER_ERROR",
-            "error_description": "An unexpected error occurred while processing the payment.",
-            "error_source": "gateway",
+            "error_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
+            "error_source": "issuer",
             "error_step": "payment_authorization",
-            "error_reason": "unknown",
-            "created_at": 1788061926
+            "error_reason": "issuer_soft_decline",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_acdabacc1165e2",
@@ -1700,11 +1700,11 @@
     "order_id": "order_3d1a85dd506e5a",
     "amount": 88344,
     "currency": "INR",
-    "failure_code": "BAD_REQUEST_ERROR",
-    "failure_reason": "authentication_abandoned",
-    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "unknown",
+    "failure_description": "An unexpected error occurred while processing the payment.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T08:52:06.516417+00:00",
+    "failed_at": "2026-08-27T15:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1725,16 +1725,16 @@
             "captured": false,
             "email": "anthony52@example.com",
             "contact": "5454948083",
-            "error_code": "BAD_REQUEST_ERROR",
-            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
-            "error_source": "customer",
-            "error_step": "payment_authentication",
-            "error_reason": "authentication_abandoned",
-            "created_at": 1788061926
+            "error_code": "SERVER_ERROR",
+            "error_description": "An unexpected error occurred while processing the payment.",
+            "error_source": "gateway",
+            "error_step": "payment_authorization",
+            "error_reason": "unknown",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_a8499b926b5252",
@@ -1753,11 +1753,11 @@
     "order_id": "order_7552332702627f",
     "amount": 562034,
     "currency": "INR",
-    "failure_code": "BAD_REQUEST_ERROR",
-    "failure_reason": "authentication_abandoned",
-    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "unknown",
+    "failure_description": "An unexpected error occurred while processing the payment.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T12:52:06.516417+00:00",
+    "failed_at": "2026-08-28T19:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1778,16 +1778,16 @@
             "captured": false,
             "email": "bwest@example.org",
             "contact": "3634957885",
-            "error_code": "BAD_REQUEST_ERROR",
-            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
-            "error_source": "customer",
-            "error_step": "payment_authentication",
-            "error_reason": "authentication_abandoned",
-            "created_at": 1788061926
+            "error_code": "SERVER_ERROR",
+            "error_description": "An unexpected error occurred while processing the payment.",
+            "error_source": "gateway",
+            "error_step": "payment_authorization",
+            "error_reason": "unknown",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_a53f8a28abf3e3",
@@ -1806,11 +1806,11 @@
     "order_id": "order_e18050815958a4",
     "amount": 1307665,
     "currency": "INR",
-    "failure_code": "BAD_REQUEST_ERROR",
-    "failure_reason": "authentication_abandoned",
-    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "unknown",
+    "failure_description": "An unexpected error occurred while processing the payment.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T17:52:06.516417+00:00",
+    "failed_at": "2026-08-30T00:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1831,16 +1831,16 @@
             "captured": false,
             "email": "davidlee@example.org",
             "contact": "3374989413",
-            "error_code": "BAD_REQUEST_ERROR",
-            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
-            "error_source": "customer",
-            "error_step": "payment_authentication",
-            "error_reason": "authentication_abandoned",
-            "created_at": 1788061926
+            "error_code": "SERVER_ERROR",
+            "error_description": "An unexpected error occurred while processing the payment.",
+            "error_source": "gateway",
+            "error_step": "payment_authorization",
+            "error_reason": "unknown",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_19985f15ff002d",
@@ -1859,11 +1859,11 @@
     "order_id": "order_fcbb4e59fbddcf",
     "amount": 149265,
     "currency": "INR",
-    "failure_code": "BAD_REQUEST_ERROR",
-    "failure_reason": "authentication_abandoned",
-    "failure_description": "The customer did not complete 3-D Secure authentication before the session expired.",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "unknown",
+    "failure_description": "An unexpected error occurred while processing the payment.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T06:52:06.516417+00:00",
+    "failed_at": "2026-08-29T13:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1884,16 +1884,16 @@
             "captured": false,
             "email": "brandon08@example.com",
             "contact": "7109477752",
-            "error_code": "BAD_REQUEST_ERROR",
-            "error_description": "The customer did not complete 3-D Secure authentication before the session expired.",
-            "error_source": "customer",
-            "error_step": "payment_authentication",
-            "error_reason": "authentication_abandoned",
-            "created_at": 1788061926
+            "error_code": "SERVER_ERROR",
+            "error_description": "An unexpected error occurred while processing the payment.",
+            "error_source": "gateway",
+            "error_step": "payment_authorization",
+            "error_reason": "unknown",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_48f4ef125e9953",
@@ -1916,7 +1916,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 3,
-    "failed_at": "2026-08-27T04:52:06.516417+00:00",
+    "failed_at": "2026-08-27T11:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1942,11 +1942,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_d12dbc9aaaf915",
@@ -1969,7 +1969,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 3,
-    "failed_at": "2026-08-29T07:52:06.516417+00:00",
+    "failed_at": "2026-08-29T14:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -1995,11 +1995,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_8da01097be0f05",
@@ -2022,7 +2022,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 3,
-    "failed_at": "2026-08-28T18:52:06.516417+00:00",
+    "failed_at": "2026-08-29T01:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2048,11 +2048,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_7d106c6081627c",
@@ -2075,7 +2075,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 3,
-    "failed_at": "2026-08-29T10:52:06.516417+00:00",
+    "failed_at": "2026-08-29T17:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2101,11 +2101,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_c56811cd5563f6",
@@ -2128,7 +2128,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T07:52:06.516417+00:00",
+    "failed_at": "2026-08-29T14:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2154,11 +2154,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_13432e611ca3c4",
@@ -2181,7 +2181,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T21:52:06.516417+00:00",
+    "failed_at": "2026-08-30T04:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2207,11 +2207,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_e623a6895d59cd",
@@ -2234,7 +2234,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T07:52:06.516417+00:00",
+    "failed_at": "2026-08-29T14:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2260,11 +2260,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_f94d6204680859",
@@ -2287,7 +2287,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T08:52:06.516417+00:00",
+    "failed_at": "2026-08-28T15:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2313,11 +2313,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_2dea9493065866",
@@ -2340,7 +2340,7 @@
     "failure_reason": "expired_card",
     "failure_description": "The card has expired and cannot be charged again.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T13:52:06.516417+00:00",
+    "failed_at": "2026-08-29T20:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2366,11 +2366,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "expired_card",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_b386f7a4c99160",
@@ -2393,7 +2393,7 @@
     "failure_reason": "expired_card",
     "failure_description": "The card has expired and cannot be charged again.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T21:52:06.516417+00:00",
+    "failed_at": "2026-08-29T04:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2419,11 +2419,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "expired_card",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_cb9bc326d20eac",
@@ -2446,7 +2446,7 @@
     "failure_reason": "expired_card",
     "failure_description": "The card has expired and cannot be charged again.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T09:52:06.516417+00:00",
+    "failed_at": "2026-08-27T16:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2472,11 +2472,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "expired_card",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_59e4b6714774bc",
@@ -2499,7 +2499,7 @@
     "failure_reason": "expired_card",
     "failure_description": "The card has expired and cannot be charged again.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T17:52:06.516417+00:00",
+    "failed_at": "2026-08-29T00:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2525,11 +2525,11 @@
             "error_source": "customer",
             "error_step": "payment_authorization",
             "error_reason": "expired_card",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_2db69edb42deff",
@@ -2550,9 +2550,9 @@
     "currency": "INR",
     "failure_code": "SERVER_ERROR",
     "failure_reason": "issuer_soft_decline",
-    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "failure_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T01:52:06.516417+00:00",
+    "failed_at": "2026-08-28T08:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2574,15 +2574,15 @@
             "email": "gregorylynch@example.com",
             "contact": "7923747407",
             "error_code": "SERVER_ERROR",
-            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
             "error_source": "issuer",
             "error_step": "payment_authorization",
             "error_reason": "issuer_soft_decline",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_1d9af65982ec9f",
@@ -2603,9 +2603,9 @@
     "currency": "INR",
     "failure_code": "SERVER_ERROR",
     "failure_reason": "issuer_soft_decline",
-    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "failure_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T01:52:06.516417+00:00",
+    "failed_at": "2026-08-29T08:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2627,15 +2627,15 @@
             "email": "danielle64@example.com",
             "contact": "3671369594",
             "error_code": "SERVER_ERROR",
-            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
             "error_source": "issuer",
             "error_step": "payment_authorization",
             "error_reason": "issuer_soft_decline",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_afd5dea589d7fd",
@@ -2656,9 +2656,9 @@
     "currency": "INR",
     "failure_code": "SERVER_ERROR",
     "failure_reason": "issuer_soft_decline",
-    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "failure_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T12:52:06.516417+00:00",
+    "failed_at": "2026-08-28T19:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2680,15 +2680,15 @@
             "email": "lozanojulie@example.com",
             "contact": "9533942104",
             "error_code": "SERVER_ERROR",
-            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
             "error_source": "issuer",
             "error_step": "payment_authorization",
             "error_reason": "issuer_soft_decline",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_b841d0a01fe771",
@@ -2709,9 +2709,9 @@
     "currency": "INR",
     "failure_code": "SERVER_ERROR",
     "failure_reason": "issuer_soft_decline",
-    "failure_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+    "failure_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T02:52:06.516417+00:00",
+    "failed_at": "2026-08-28T09:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2733,15 +2733,15 @@
             "email": "julie23@example.org",
             "contact": "8842474517",
             "error_code": "SERVER_ERROR",
-            "error_description": "Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            "error_description": "Gateway returned a generic decline code with no specific reason text. Historically, this exact code has meant a temporary network handoff glitch about half the time, and a permanently rejected card the other half \u2014 the response alone gives no way to tell which.",
             "error_source": "issuer",
             "error_step": "payment_authorization",
             "error_reason": "issuer_soft_decline",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_aa38d0a16ba25e",
@@ -2764,7 +2764,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T00:52:06.516417+00:00",
+    "failed_at": "2026-08-29T07:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2790,11 +2790,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_49732d6c4dcabf",
@@ -2817,7 +2817,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-29T05:52:06.516417+00:00",
+    "failed_at": "2026-08-29T12:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2843,11 +2843,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_7922bac282dc4c",
@@ -2870,7 +2870,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-28T11:52:06.516417+00:00",
+    "failed_at": "2026-08-28T18:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2896,11 +2896,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_3c20592fc04a96",
@@ -2923,7 +2923,7 @@
     "failure_reason": "issuer_timeout",
     "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
     "retry_count": 0,
-    "failed_at": "2026-08-27T16:52:06.516417+00:00",
+    "failed_at": "2026-08-27T23:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2949,11 +2949,11 @@
             "error_source": "issuer",
             "error_step": "payment_authentication",
             "error_reason": "issuer_timeout",
-            "created_at": 1788061926
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_12a4def0c4bbb7",
@@ -2972,11 +2972,11 @@
     "order_id": "order_6cd66193c7468f",
     "amount": 1041784,
     "currency": "INR",
-    "failure_code": "SERVER_ERROR",
-    "failure_reason": "payment_blocked_risk",
-    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
-    "retry_count": 0,
-    "failed_at": "2026-08-30T02:52:06.516417+00:00",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 2,
+    "failed_at": "2026-08-30T09:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -2997,16 +2997,16 @@
             "captured": false,
             "email": "kristinacarlson@example.com",
             "contact": "2842102053",
-            "error_code": "SERVER_ERROR",
-            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
-            "error_source": "business",
-            "error_step": "payment_authorization",
-            "error_reason": "payment_blocked_risk",
-            "created_at": 1788061926
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_a7f36ae925c73c",
@@ -3025,11 +3025,11 @@
     "order_id": "order_74daaebf1f115b",
     "amount": 463943,
     "currency": "INR",
-    "failure_code": "SERVER_ERROR",
-    "failure_reason": "payment_blocked_risk",
-    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
-    "retry_count": 0,
-    "failed_at": "2026-08-27T08:52:06.516417+00:00",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 2,
+    "failed_at": "2026-08-27T15:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -3050,16 +3050,16 @@
             "captured": false,
             "email": "reesethomas@example.com",
             "contact": "7839084700",
-            "error_code": "SERVER_ERROR",
-            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
-            "error_source": "business",
-            "error_step": "payment_authorization",
-            "error_reason": "payment_blocked_risk",
-            "created_at": 1788061926
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_b227462cf53d43",
@@ -3078,11 +3078,11 @@
     "order_id": "order_d0a444329cd6c8",
     "amount": 284632,
     "currency": "INR",
-    "failure_code": "SERVER_ERROR",
-    "failure_reason": "payment_blocked_risk",
-    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
-    "retry_count": 0,
-    "failed_at": "2026-08-27T03:52:06.516417+00:00",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 2,
+    "failed_at": "2026-08-27T10:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -3103,16 +3103,16 @@
             "captured": false,
             "email": "lammarc@example.org",
             "contact": "2499856984",
-            "error_code": "SERVER_ERROR",
-            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
-            "error_source": "business",
-            "error_step": "payment_authorization",
-            "error_reason": "payment_blocked_risk",
-            "created_at": 1788061926
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_87f8424daae65f",
@@ -3131,11 +3131,11 @@
     "order_id": "order_c074718e425a60",
     "amount": 1063596,
     "currency": "INR",
-    "failure_code": "SERVER_ERROR",
-    "failure_reason": "payment_blocked_risk",
-    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
-    "retry_count": 0,
-    "failed_at": "2026-08-27T17:52:06.516417+00:00",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 2,
+    "failed_at": "2026-08-28T00:46:07.839367+00:00",
     "raw_payload": {
       "entity": "event",
       "event": "payment.failed",
@@ -3156,22 +3156,446 @@
             "captured": false,
             "email": "russellbeasley@example.com",
             "contact": "7661565452",
-            "error_code": "SERVER_ERROR",
-            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
-            "error_source": "business",
-            "error_step": "payment_authorization",
-            "error_reason": "payment_blocked_risk",
-            "created_at": 1788061926
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788086767
           }
         }
       },
-      "created_at": 1788061926
+      "created_at": 1788086767
     },
     "customer": {
       "external_customer_id": "cust_8c41561be827a1",
       "name": "Ricky Wilson",
       "email": "russellbeasley@example.com",
       "phone": "7661565452",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_a07295e97c0e8c",
+    "order_id": "order_13d5f2f7709b7d",
+    "amount": 523499,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 1,
+    "failed_at": "2026-08-30T10:41:07.839367+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_a07295e97c0e8c",
+            "entity": "payment",
+            "amount": 523499,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_13d5f2f7709b7d",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "lisa80@example.net",
+            "contact": "1656049451",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788086767
+          }
+        }
+      },
+      "created_at": 1788086767
+    },
+    "customer": {
+      "external_customer_id": "cust_c40c5d9146fde0",
+      "name": "Anna Davis",
+      "email": "lisa80@example.net",
+      "phone": "1656049451",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_236c7b8714a0bc",
+    "order_id": "order_b1a6b1f1620e99",
+    "amount": 604215,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 1,
+    "failed_at": "2026-08-30T10:41:07.839367+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_236c7b8714a0bc",
+            "entity": "payment",
+            "amount": 604215,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_b1a6b1f1620e99",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "megan51@example.com",
+            "contact": "6899809402",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788086767
+          }
+        }
+      },
+      "created_at": 1788086767
+    },
+    "customer": {
+      "external_customer_id": "cust_51d87c6455fa1a",
+      "name": "John Boone",
+      "email": "megan51@example.com",
+      "phone": "6899809402",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_7746d0ba8ae890",
+    "order_id": "order_d5385b0e34f319",
+    "amount": 325455,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 1,
+    "failed_at": "2026-08-30T10:41:07.839367+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_7746d0ba8ae890",
+            "entity": "payment",
+            "amount": 325455,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_d5385b0e34f319",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "vjones@example.net",
+            "contact": "1836675254",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788086767
+          }
+        }
+      },
+      "created_at": 1788086767
+    },
+    "customer": {
+      "external_customer_id": "cust_6a34c85410714d",
+      "name": "Christopher Thomas",
+      "email": "vjones@example.net",
+      "phone": "1836675254",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_db52ca5805000b",
+    "order_id": "order_6160a6b4936071",
+    "amount": 886104,
+    "currency": "INR",
+    "failure_code": "GATEWAY_ERROR",
+    "failure_reason": "issuer_timeout",
+    "failure_description": "The bank did not respond in time. This is usually a temporary issue.",
+    "retry_count": 1,
+    "failed_at": "2026-08-30T10:41:07.839367+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_db52ca5805000b",
+            "entity": "payment",
+            "amount": 886104,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_6160a6b4936071",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "craigjoseph@example.net",
+            "contact": "7976438156",
+            "error_code": "GATEWAY_ERROR",
+            "error_description": "The bank did not respond in time. This is usually a temporary issue.",
+            "error_source": "issuer",
+            "error_step": "payment_authentication",
+            "error_reason": "issuer_timeout",
+            "created_at": 1788086767
+          }
+        }
+      },
+      "created_at": 1788086767
+    },
+    "customer": {
+      "external_customer_id": "cust_95863a76c51155",
+      "name": "Anthony Moore",
+      "email": "craigjoseph@example.net",
+      "phone": "7976438156",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_d5f25073f41402",
+    "order_id": "order_bc10fa52bf5d2f",
+    "amount": 1005299,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "payment_blocked_risk",
+    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T08:46:07.839367+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_d5f25073f41402",
+            "entity": "payment",
+            "amount": 1005299,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_bc10fa52bf5d2f",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "smithkevin@example.org",
+            "contact": "4451076226",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+            "error_source": "business",
+            "error_step": "payment_authorization",
+            "error_reason": "payment_blocked_risk",
+            "created_at": 1788086767
+          }
+        }
+      },
+      "created_at": 1788086767
+    },
+    "customer": {
+      "external_customer_id": "cust_4c71e0fe5a0cdd",
+      "name": "Mr. Andrew Foster",
+      "email": "smithkevin@example.org",
+      "phone": "4451076226",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_7c5308bf6f92f2",
+    "order_id": "order_ab3b4d37560c95",
+    "amount": 1150322,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "payment_blocked_risk",
+    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T19:46:07.839367+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_7c5308bf6f92f2",
+            "entity": "payment",
+            "amount": 1150322,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_ab3b4d37560c95",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "chensley@example.com",
+            "contact": "7159696641",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+            "error_source": "business",
+            "error_step": "payment_authorization",
+            "error_reason": "payment_blocked_risk",
+            "created_at": 1788086767
+          }
+        }
+      },
+      "created_at": 1788086767
+    },
+    "customer": {
+      "external_customer_id": "cust_3875394ce5d6f6",
+      "name": "Mary Gomez",
+      "email": "chensley@example.com",
+      "phone": "7159696641",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_9f4c3b79fb1098",
+    "order_id": "order_64de82e6e82c7d",
+    "amount": 1429263,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "payment_blocked_risk",
+    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+    "retry_count": 0,
+    "failed_at": "2026-08-27T22:46:07.839367+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_9f4c3b79fb1098",
+            "entity": "payment",
+            "amount": 1429263,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_64de82e6e82c7d",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "christopher13@example.com",
+            "contact": "8164535218",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+            "error_source": "business",
+            "error_step": "payment_authorization",
+            "error_reason": "payment_blocked_risk",
+            "created_at": 1788086767
+          }
+        }
+      },
+      "created_at": 1788086767
+    },
+    "customer": {
+      "external_customer_id": "cust_2a405f12b963f3",
+      "name": "Travis Stevens",
+      "email": "christopher13@example.com",
+      "phone": "8164535218",
+      "dnd_opt_out": false,
+      "max_contact_attempts": 3,
+      "contact_count": 0,
+      "prior_recovery_attempts": 0,
+      "prior_recovery_successes": 0
+    }
+  },
+  {
+    "external_payment_id": "pay_2e85cb217631de",
+    "order_id": "order_53cd6268610cf3",
+    "amount": 1246289,
+    "currency": "INR",
+    "failure_code": "SERVER_ERROR",
+    "failure_reason": "payment_blocked_risk",
+    "failure_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+    "retry_count": 0,
+    "failed_at": "2026-08-28T03:46:07.839367+00:00",
+    "raw_payload": {
+      "entity": "event",
+      "event": "payment.failed",
+      "contains": [
+        "payment"
+      ],
+      "payload": {
+        "payment": {
+          "entity": {
+            "id": "pay_2e85cb217631de",
+            "entity": "payment",
+            "amount": 1246289,
+            "currency": "INR",
+            "status": "failed",
+            "order_id": "order_53cd6268610cf3",
+            "method": "card",
+            "amount_refunded": 0,
+            "captured": false,
+            "email": "joelthomas@example.org",
+            "contact": "9212779979",
+            "error_code": "SERVER_ERROR",
+            "error_description": "Payment was blocked by Razorpay's risk engine as a precautionary measure.",
+            "error_source": "business",
+            "error_step": "payment_authorization",
+            "error_reason": "payment_blocked_risk",
+            "created_at": 1788086767
+          }
+        }
+      },
+      "created_at": 1788086767
+    },
+    "customer": {
+      "external_customer_id": "cust_157d94a106f028",
+      "name": "Ricardo Bell",
+      "email": "joelthomas@example.org",
+      "phone": "9212779979",
       "dnd_opt_out": false,
       "max_contact_attempts": 3,
       "contact_count": 0,

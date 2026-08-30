@@ -112,6 +112,19 @@ KNOWN_PROFILES: dict[str, ErrorProfile] = {
             error_step="payment_authorization",
             retryable_hint="never_auto",
         ),
+        ErrorProfile(
+            # Originally modeled as "ambiguous" (Day 3), but real LLM diagnosis consistently and
+            # confidently resolved it toward retryable customer-side abandonment (a well-understood,
+            # commonly-retryable e-commerce pattern — the customer got distracted or the OTP session
+            # timed out), not a genuinely uncertain case. Moved into the rule table to match reality.
+            key="3ds_authentication_abandoned",
+            error_code="BAD_REQUEST_ERROR",
+            error_reason="authentication_abandoned",
+            error_description="The customer did not complete 3-D Secure authentication before the session expired.",
+            error_source="customer",
+            error_step="payment_authentication",
+            retryable_hint="retryable",
+        ),
     ]
 }
 
@@ -128,19 +141,14 @@ AMBIGUOUS_PROFILES: dict[str, ErrorProfile] = {
             retryable_hint="ambiguous",
         ),
         ErrorProfile(
-            key="3ds_authentication_abandoned",
-            error_code="BAD_REQUEST_ERROR",
-            error_reason="authentication_abandoned",
-            error_description="The customer did not complete 3-D Secure authentication before the session expired.",
-            error_source="customer",
-            error_step="payment_authentication",
-            retryable_hint="ambiguous",
-        ),
-        ErrorProfile(
             key="conflicting_soft_decline",
             error_code="SERVER_ERROR",
             error_reason="issuer_soft_decline",
-            error_description="Issuer response: 'please try again' (soft decline), but flagged under a permanent-failure error class.",
+            error_description=(
+                "Gateway returned a generic decline code with no specific reason text. Historically, this "
+                "exact code has meant a temporary network handoff glitch about half the time, and a "
+                "permanently rejected card the other half — the response alone gives no way to tell which."
+            ),
             error_source="issuer",
             error_step="payment_authorization",
             retryable_hint="ambiguous",

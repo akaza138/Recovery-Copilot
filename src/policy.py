@@ -1,6 +1,8 @@
 """Deterministic policy engine. This is the only place in the system allowed
-to decide an action — the diagnosis engine (rule-based today, Claude-assisted
-later) proposes a root cause and confidence band; this module decides.
+to decide an action — the diagnosis engine (rules, or Claude for cases the
+rules don't recognize) proposes a root cause and confidence band; this
+module decides. The LLM is advisory, not authoritative: it cannot bypass any
+gate here, because it never sees this module's inputs or output.
 
 `PolicyInput` is deliberately the *entire* interface: no raw model-reported
 confidence float, no direct access to ORM objects, no fields beyond what a
@@ -15,6 +17,8 @@ from app.models.recovery_attempt import ConfidenceBand, DecisionAction
 DEFAULT_HIGH_VALUE_THRESHOLD_PAISE = 50_00_000  # ₹50,000
 DEFAULT_MAX_ATTEMPTS = 3
 DEFAULT_COOLDOWN_SECONDS = 30 * 60  # 30 minutes between retry attempts on the same payment
+DEFAULT_SERIAL_FAILURE_ATTEMPT_THRESHOLD = 2  # 2+ prior failed recovery attempts -> human review, not another auto-action
+DEFAULT_SERIAL_FAILURE_LOOKBACK_DAYS = 30  # documented, not independently enforced — see note on PolicyInput.prior_recovery_attempts
 
 
 @dataclass(frozen=True)
@@ -22,6 +26,8 @@ class PolicyConfig:
     high_value_threshold: int = DEFAULT_HIGH_VALUE_THRESHOLD_PAISE
     max_attempts: int = DEFAULT_MAX_ATTEMPTS
     cooldown_seconds: int = DEFAULT_COOLDOWN_SECONDS
+    serial_failure_attempt_threshold: int = DEFAULT_SERIAL_FAILURE_ATTEMPT_THRESHOLD
+    serial_failure_lookback_days: int = DEFAULT_SERIAL_FAILURE_LOOKBACK_DAYS
 
 
 @dataclass(frozen=True)
@@ -34,12 +40,18 @@ class PolicyInput:
     never_auto: bool
     payment_value: int  # paise
     high_value_threshold: int
-    attempt_count: int  # attempts already made, before this evaluation
+    attempt_count: int  # attempts already made on THIS payment, before this evaluation
     max_attempts: int
     cooldown_elapsed: bool
     dnd_opt_out: bool
     contact_count: int
     max_contact_attempts: int
+    prior_recovery_attempts: int  # this CUSTOMER's failed recovery attempts before this batch (see Customer model).
+    # `serial_failure_lookback_days` documents the intended window, but this build has no dated attempt
+    # history to filter by date — Customer.prior_recovery_attempts is a pre-aggregated count assumed to
+    # already be scoped to the lookback by whatever process populates it. A real system would filter a
+    # dated attempt log at query time; this is a known simplification, not a hidden one.
+    serial_failure_attempt_threshold: int
 
 
 @dataclass(frozen=True)
@@ -81,7 +93,14 @@ def decide(policy_input: PolicyInput) -> PolicyDecision:
         candidate = DecisionAction.STAND_DOWN
         reason = "confidence_below_action_threshold"
 
-    # 4. Stopping rules / compliance gates that only apply to the specific candidate action.
+    # 4. Customer-level trust signal: a customer with a history of failed recovery attempts doesn't
+    #    get another blind auto-action (retry OR payment link) even if today's diagnosis looks clean —
+    #    a repeated-failure pattern is itself a reason for a human to look, regardless of confidence.
+    if candidate in (DecisionAction.RETRY, DecisionAction.PAYMENT_LINK):
+        if policy_input.prior_recovery_attempts >= policy_input.serial_failure_attempt_threshold:
+            return PolicyDecision(DecisionAction.HUMAN_REVIEW, "serial_recovery_failure_history", factors)
+
+    # 5. Stopping rules / compliance gates that only apply to the specific candidate action.
     if candidate == DecisionAction.RETRY:
         if policy_input.attempt_count >= policy_input.max_attempts:
             return PolicyDecision(DecisionAction.STAND_DOWN, "max_attempts_reached", factors)

@@ -109,7 +109,7 @@ def main() -> int:
         _print_input(dataset_record)
 
         razorpay_client = RazorpayActionClient()
-        result = run_pipeline(db, dataset_record, razorpay_client=razorpay_client)
+        result = run_pipeline(db, dataset_record, action_executor=razorpay_client)
 
         _print_result(result)
         print(f"\n(DB: {args.db_path})")

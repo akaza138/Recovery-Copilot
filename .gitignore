@@ -17,3 +17,4 @@ venv/
 postgres-data/
 *.log
 *.db
+data/batch_report.json

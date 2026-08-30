@@ -64,7 +64,7 @@ def upgrade() -> None:
     op.create_index("ix_failed_payments_external_payment_id", "failed_payments", ["external_payment_id"], unique=True)
     op.create_index("ix_failed_payments_status", "failed_payments", ["status"])
 
-    diagnosis_source_enum = postgresql.ENUM("rule_based", "claude", name="diagnosis_source")
+    diagnosis_source_enum = postgresql.ENUM("rule", "llm", "llm_fallback", name="diagnosis_source")
     confidence_band_enum = postgresql.ENUM("high", "medium", "low", name="confidence_band")
     decision_action_enum = postgresql.ENUM("retry", "payment_link", "human_review", "stand_down", name="decision_action")
     action_mode_enum = postgresql.ENUM("real", "simulated", name="action_mode")

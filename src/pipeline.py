@@ -1,7 +1,7 @@
 """Orchestrates one failed payment through diagnose -> policy -> action ->
 observe -> audit. Takes a DB session and a dataset record dict (as produced
 by seed/generate_dataset.py) and returns a VerticalSliceResult. Nothing here
-prints — that's the CLI's job (run_vertical_slice.py).
+prints — that's the callers' job (run_vertical_slice.py, run_batch.py).
 """
 
 import json
@@ -9,6 +9,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any, Protocol
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -18,7 +19,16 @@ from app.models.failed_payment import FailedPayment, FailedPaymentStatus
 from app.models.recovery_attempt import ActionMode, ActionResult, DecisionAction, DiagnosisSource, RecoveryAttempt
 from src.diagnosis import Diagnosis, diagnose
 from src.policy import PolicyConfig, PolicyDecision, PolicyInput, decide
-from src.razorpay_action import ActionOutcome, RazorpayActionClient
+from src.razorpay_action import ActionOutcome
+
+
+class ActionExecutor(Protocol):
+    """Either RazorpayActionClient (real, HTTPS) or SimulatedActionExecutor
+    (no network call) satisfies this — see src/razorpay_action.py and
+    src/simulated_action.py."""
+
+    def execute_retry(self, *, amount: int, currency: str, receipt: str) -> ActionOutcome: ...
+    def execute_payment_link(self, *, amount: int, currency: str, description: str) -> ActionOutcome: ...
 
 
 def load_dataset_record(*, data_dir: Path, case: str | None = None, payment_id: str | None = None) -> dict:
@@ -36,6 +46,14 @@ def load_dataset_record(*, data_dir: Path, case: str | None = None, payment_id: 
     if match is None:
         raise ValueError(f"No canonical demo case tagged {label!r} in ground_truth.json")
     return by_id[match["external_payment_id"]]
+
+
+def load_full_dataset(data_dir: Path) -> list[dict]:
+    return json.loads((data_dir / "synthetic_failed_payments.json").read_text(encoding="utf-8"))
+
+
+def load_ground_truth(data_dir: Path) -> dict:
+    return json.loads((data_dir / "ground_truth.json").read_text(encoding="utf-8"))
 
 
 def get_or_create_case(db: Session, dataset_record: dict) -> tuple[Customer, FailedPayment]:
@@ -127,18 +145,20 @@ def build_policy_input(
         dnd_opt_out=customer.dnd_opt_out,
         contact_count=customer.contact_count,
         max_contact_attempts=customer.max_contact_attempts,
+        prior_recovery_attempts=customer.prior_recovery_attempts,
+        serial_failure_attempt_threshold=config.serial_failure_attempt_threshold,
     )
 
 
 def _execute_action(
-    action: DecisionAction, razorpay_client: RazorpayActionClient, failed_payment: FailedPayment, reason: str
+    action: DecisionAction, action_executor: ActionExecutor, failed_payment: FailedPayment, reason: str
 ) -> ActionOutcome:
     if action == DecisionAction.RETRY:
-        return razorpay_client.execute_retry(
+        return action_executor.execute_retry(
             amount=failed_payment.amount, currency=failed_payment.currency, receipt=failed_payment.external_payment_id
         )
     if action == DecisionAction.PAYMENT_LINK:
-        return razorpay_client.execute_payment_link(
+        return action_executor.execute_payment_link(
             amount=failed_payment.amount,
             currency=failed_payment.currency,
             description=f"Complete your payment for {failed_payment.external_payment_id}",
@@ -158,8 +178,8 @@ def _apply_outcome(customer: Customer, failed_payment: FailedPayment, decision: 
         customer.contact_count += 1
 
     if outcome.action_result == ActionResult.SUCCEEDED:
-        # Never reachable from razorpay_action.py today (see its module docstring) — kept so the
-        # status transition exists and is tested for the day a real confirmation path lands.
+        # Reachable from the SIMULATED batch executor (src/simulated_action.py) — a MODELED outcome,
+        # never from the REAL executor (src/razorpay_action.py), which never reports SUCCEEDED.
         failed_payment.status = (
             FailedPaymentStatus.CONFIRMED_RECOVERED
             if outcome.action_mode == ActionMode.REAL
@@ -167,10 +187,17 @@ def _apply_outcome(customer: Customer, failed_payment: FailedPayment, decision: 
         )
         failed_payment.stop_reason = None
     elif decision.action == DecisionAction.STAND_DOWN:
-        failed_payment.status = (
-            FailedPaymentStatus.UNRESOLVED if decision.reason == "max_attempts_reached" else FailedPaymentStatus.ESCALATED
-        )
-        failed_payment.stop_reason = decision.reason
+        if decision.reason == "max_attempts_reached":
+            failed_payment.status = FailedPaymentStatus.UNRESOLVED
+            failed_payment.stop_reason = decision.reason
+        elif decision.reason == "cooldown_not_elapsed":
+            # A temporary pacing gate, not a terminal outcome: this case is still eligible, it just
+            # needs to wait out the cooldown window. Leave status/stop_reason untouched so it isn't
+            # miscounted as escalated or unresolved — it will be re-evaluated on a later run.
+            pass
+        else:
+            failed_payment.status = FailedPaymentStatus.ESCALATED
+            failed_payment.stop_reason = decision.reason
     elif decision.action == DecisionAction.HUMAN_REVIEW:
         failed_payment.status = FailedPaymentStatus.ESCALATED
         failed_payment.stop_reason = decision.reason
@@ -193,22 +220,23 @@ def run_pipeline(
     db: Session,
     dataset_record: dict,
     *,
-    razorpay_client: RazorpayActionClient,
+    action_executor: ActionExecutor,
     policy_config: PolicyConfig | None = None,
     now: datetime | None = None,
+    llm_client: Any | None = None,
 ) -> VerticalSliceResult:
     config = policy_config or PolicyConfig()
     now = now or datetime.now(timezone.utc)
 
     customer, failed_payment = get_or_create_case(db, dataset_record)
 
-    diagnosis = diagnose(failed_payment)
+    diagnosis = diagnose(failed_payment, llm_client=llm_client)
     policy_input = build_policy_input(customer, failed_payment, diagnosis, db, config=config, now=now)
     decision = decide(policy_input)
-    outcome = _execute_action(decision.action, razorpay_client, failed_payment, decision.reason)
+    outcome = _execute_action(decision.action, action_executor, failed_payment, decision.reason)
 
     attempt_number = _next_attempt_number(db, failed_payment)
-    model_reported_confidence = diagnosis.confidence if diagnosis.source == DiagnosisSource.CLAUDE else None
+    model_reported_confidence = diagnosis.confidence if diagnosis.source == DiagnosisSource.LLM else None
 
     recovery_attempt = RecoveryAttempt(
         id=uuid.uuid4(),

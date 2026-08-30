@@ -20,8 +20,8 @@ def _failed_payment(failure_reason: str, failure_code: str = "GATEWAY_ERROR"):
 
 
 def test_confidence_band_boundaries():
-    assert confidence_band(0.90) == ConfidenceBand.HIGH
-    assert confidence_band(0.899) == ConfidenceBand.MEDIUM
+    assert confidence_band(0.85) == ConfidenceBand.HIGH
+    assert confidence_band(0.8499) == ConfidenceBand.MEDIUM
     assert confidence_band(0.60) == ConfidenceBand.MEDIUM
     assert confidence_band(0.599) == ConfidenceBand.LOW
 
@@ -32,7 +32,7 @@ def test_known_transient_reason_is_high_confidence_retryable():
     assert diagnosis.confidence_band == ConfidenceBand.HIGH
     assert diagnosis.retryable is True
     assert diagnosis.never_auto is False
-    assert diagnosis.source == DiagnosisSource.RULE_BASED
+    assert diagnosis.source == DiagnosisSource.RULE
 
 
 def test_known_non_retryable_reason():
@@ -48,9 +48,16 @@ def test_risk_block_is_flagged_never_auto():
     assert diagnosis.confidence_band == ConfidenceBand.HIGH  # confident it's a risk block, just never auto-actioned
 
 
-def test_unfamiliar_reason_falls_back_to_low_confidence_unclassified():
+def test_unfamiliar_reason_dispatches_to_llm_path(monkeypatch):
+    """Rule-table misses hand off to src.llm_diagnosis — exercised in detail
+    in tests/test_llm_diagnosis.py. Here we only confirm the hand-off itself,
+    forcing the no-API-key fallback deterministically so this test doesn't
+    depend on whatever ANTHROPIC_API_KEY happens to be set in the environment."""
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+
     diagnosis = diagnose(_failed_payment("some_reason_no_rule_recognizes"))
-    assert diagnosis.root_cause == "unclassified_failure"
+
+    assert diagnosis.source == DiagnosisSource.LLM_FALLBACK
     assert diagnosis.confidence_band == ConfidenceBand.LOW
     assert diagnosis.retryable is False
-    assert "no rule matches" in diagnosis.evidence.lower()
+    assert diagnosis.never_auto is False

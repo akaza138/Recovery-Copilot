@@ -71,7 +71,7 @@ def test_successful_retry_path(db_session):
     'no fake recovered result' below for why not SUCCEEDED)."""
     record = _dataset_record(failure_reason="issuer_timeout")
 
-    result = run_pipeline(db_session, record, razorpay_client=_real_razorpay_mock())
+    result = run_pipeline(db_session, record, action_executor=_real_razorpay_mock())
 
     assert result.policy_decision.action == DecisionAction.RETRY
     assert result.action_outcome.action_mode == ActionMode.REAL
@@ -86,7 +86,7 @@ def test_policy_refusal_low_confidence_stands_down(db_session):
     refuses to guess and stands down rather than acting or escalating."""
     record = _dataset_record(failure_reason="some_reason_no_rule_recognizes", failure_code="SERVER_ERROR")
 
-    result = run_pipeline(db_session, record, razorpay_client=_real_razorpay_mock())
+    result = run_pipeline(db_session, record, action_executor=_real_razorpay_mock())
 
     assert result.policy_decision.action == DecisionAction.STAND_DOWN
     assert result.policy_decision.reason == "confidence_below_action_threshold"
@@ -100,7 +100,7 @@ def test_dnd_refusal(db_session):
     confident and retryable the diagnosis is."""
     record = _dataset_record(failure_reason="issuer_timeout", dnd_opt_out=True)
 
-    result = run_pipeline(db_session, record, razorpay_client=_real_razorpay_mock())
+    result = run_pipeline(db_session, record, action_executor=_real_razorpay_mock())
 
     assert result.policy_decision.action == DecisionAction.STAND_DOWN
     assert result.policy_decision.reason == "dnd_opt_out"
@@ -116,7 +116,7 @@ def test_retry_cap_refusal(db_session):
     though the underlying diagnosis still looks easy and retryable."""
     record = _dataset_record(failure_reason="issuer_timeout", retry_count=3)
 
-    result = run_pipeline(db_session, record, razorpay_client=_real_razorpay_mock(), policy_config=PolicyConfig(max_attempts=3))
+    result = run_pipeline(db_session, record, action_executor=_real_razorpay_mock(), policy_config=PolicyConfig(max_attempts=3))
 
     assert result.policy_decision.action == DecisionAction.STAND_DOWN
     assert result.policy_decision.reason == "max_attempts_reached"
@@ -130,7 +130,7 @@ def test_audit_record_creation(db_session):
     the full diagnosis/decision/action/result trail."""
     record = _dataset_record(failure_reason="expired_card")
 
-    result = run_pipeline(db_session, record, razorpay_client=_real_razorpay_mock())
+    result = run_pipeline(db_session, record, action_executor=_real_razorpay_mock())
 
     stored = db_session.get(RecoveryAttempt, result.recovery_attempt.id)
     assert stored is not None
@@ -147,7 +147,7 @@ def test_audit_record_creation(db_session):
     assert isinstance(stored.decision_factors, dict) and stored.decision_factors  # factors snapshot persisted
 
     # Running it again on the same payment appends a second row rather than mutating the first.
-    result2 = run_pipeline(db_session, record, razorpay_client=_real_razorpay_mock(), policy_config=PolicyConfig(cooldown_seconds=0))
+    result2 = run_pipeline(db_session, record, action_executor=_real_razorpay_mock(), policy_config=PolicyConfig(cooldown_seconds=0))
     assert result2.recovery_attempt.id != result.recovery_attempt.id
     assert result2.recovery_attempt.attempt_number == 2
     still_there = db_session.get(RecoveryAttempt, result.recovery_attempt.id)
@@ -169,7 +169,7 @@ def test_no_fake_recovered_result(db_session):
     ]
 
     for record in scenarios:
-        result = run_pipeline(db_session, record, razorpay_client=_real_razorpay_mock())
+        result = run_pipeline(db_session, record, action_executor=_real_razorpay_mock())
         assert result.action_outcome.action_result != ActionResult.SUCCEEDED
         assert result.failed_payment.status not in (
             FailedPaymentStatus.CONFIRMED_RECOVERED,

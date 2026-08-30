@@ -13,6 +13,8 @@ DEFAULT_KWARGS = dict(
     dnd_opt_out=False,
     contact_count=0,
     max_contact_attempts=3,
+    prior_recovery_attempts=0,
+    serial_failure_attempt_threshold=2,
 )
 
 
@@ -118,6 +120,43 @@ def test_risk_block_always_human_review_regardless_of_confidence():
         decision = decide(_input(confidence_band=band, never_auto=True))
         assert decision.action == DecisionAction.HUMAN_REVIEW
         assert decision.reason == "risk_block_requires_human_review"
+
+
+def test_serial_failure_history_escalates_instead_of_retrying():
+    """2+ prior failed recovery attempts on this customer (the configured
+    threshold) routes to HUMAN_REVIEW even though today's diagnosis alone
+    would otherwise auto-retry — resolves the Day-2 serial-customer gap."""
+    decision = decide(_input(confidence_band=ConfidenceBand.HIGH, retryable=True, prior_recovery_attempts=6))
+    assert decision.action == DecisionAction.HUMAN_REVIEW
+    assert decision.reason == "serial_recovery_failure_history"
+
+
+def test_serial_failure_history_also_overrides_payment_link():
+    decision = decide(_input(confidence_band=ConfidenceBand.HIGH, retryable=False, prior_recovery_attempts=2))
+    assert decision.action == DecisionAction.HUMAN_REVIEW
+    assert decision.reason == "serial_recovery_failure_history"
+
+
+def test_serial_failure_below_threshold_still_auto_acts():
+    decision = decide(_input(confidence_band=ConfidenceBand.HIGH, retryable=True, prior_recovery_attempts=1))
+    assert decision.action == DecisionAction.RETRY
+
+
+def test_serial_failure_threshold_is_configurable():
+    decision = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=True, prior_recovery_attempts=1, serial_failure_attempt_threshold=1)
+    )
+    assert decision.action == DecisionAction.HUMAN_REVIEW
+    assert decision.reason == "serial_recovery_failure_history"
+
+
+def test_serial_failure_does_not_apply_when_already_stood_down():
+    """The serial-failure gate only overrides an auto-action candidate — it
+    has nothing to override for a case that already stands down on its own
+    merits (confidence too low), so that reason should win, not be masked."""
+    decision = decide(_input(confidence_band=ConfidenceBand.LOW, prior_recovery_attempts=6))
+    assert decision.action == DecisionAction.STAND_DOWN
+    assert decision.reason == "confidence_below_action_threshold"
 
 
 def test_decision_factors_snapshot_is_json_serializable():
