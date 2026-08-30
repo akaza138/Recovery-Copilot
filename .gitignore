@@ -18,3 +18,5 @@ postgres-data/
 *.log
 *.db
 data/batch_report.json
+data/batch_report.html
+data/batch_report_demo.*

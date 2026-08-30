@@ -41,7 +41,12 @@ class CaseTemplate:
     amount_range: tuple[int, int] = NORMAL_AMOUNT_RANGE
     customer: CustomerSpec = field(default_factory=CustomerSpec)
     retry_count_so_far: int = 0
-    recent_minutes_ago: int | None = None  # overrides the default 1-72-hours-ago failed_at, for cooldown scenarios
+    # No "minutes ago" override exists here on purpose: a static, seeded-once dataset can't reliably
+    # represent "still inside the cooldown window" — failed_at is frozen at generation time, and real
+    # time keeps passing between generation and whenever the batch actually runs, so a scenario built
+    # that way silently stops testing what it claims to (found and removed on Day 5). Cooldown
+    # enforcement is correctly tested against real current time instead, at the pipeline level, in
+    # tests/test_adversarial_safety.py.
     expected_root_cause: str = ""  # defaults to profile.key if unset
     expected_confidence_band: str = "high"  # "high" | "medium" | "low"
     representative_confidence: float | None = None  # only meaningful when Claude-diagnosed
@@ -215,19 +220,6 @@ HARD_TEMPLATES = [
         "distinct from retry_cap_already_reached: still eligible, so the third attempt should still proceed.",
     ),
     CaseTemplate(
-        template_key="recent_failure_cooldown_active",
-        category="hard",
-        profile=KNOWN_PROFILES["issuer_timeout"],
-        retry_count_so_far=1,
-        recent_minutes_ago=5,  # well under PolicyConfig's default 30-minute cooldown
-        expected_confidence_band="high",
-        expected_action="stand_down",
-        expected_final_status="open",  # a temporary pacing gate, not a terminal outcome — see pipeline._apply_outcome
-        stop_reason="cooldown_not_elapsed",
-        notes="Failed and was retried only 5 minutes ago — still inside the cooldown window, so this attempt must "
-        "stand down and wait rather than hammering the gateway again immediately.",
-    ),
-    CaseTemplate(
         template_key="risk_blocked_never_auto",
         category="hard",
         profile=KNOWN_PROFILES["risk_blocked"],
@@ -280,10 +272,7 @@ def generate_cases(*, seed: int = 42) -> list[dict]:
             for i in range(instances_per):
                 amount = random.randint(*template.amount_range)
                 customer = _build_customer(fake, template.customer)
-                if template.recent_minutes_ago is not None:
-                    failed_at = now - timedelta(minutes=template.recent_minutes_ago)
-                else:
-                    failed_at = now - timedelta(hours=random.randint(1, 72))
+                failed_at = now - timedelta(hours=random.randint(1, 72))
 
                 payload = build_failed_payment_payload(
                     amount=amount,

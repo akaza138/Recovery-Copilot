@@ -35,15 +35,18 @@ Docker/Prometheus/CI until this works end to end. See the build order below.
 
 ## Status
 
-Day 4: the refusal/safety path has been adversarially tested (see "Policy
-engine" below), and the "Confirmed Recovered is ₹0" question has been
-investigated and resolved explicitly — see "Why Confirmed Recovered is ₹0".
-Day 3 built full-batch evaluation: `python -m src.run_batch` runs the entire
-68-record synthetic dataset through diagnose → policy → action → observe →
-audit and reports honest, non-cherry-picked metrics. Rule-based diagnosis
-and LLM-backed diagnosis (for failure reasons the rule table doesn't
-recognize) are both wired for real. Not yet built: a payment-completion
-confirmation path (webhook/polling — see Known limitations), the dashboard.
+Day 5: a minimal UI (`python -m src.generate_report_html`) renders the batch
+results and a click-to-expand audit trail as a single static HTML file —
+see "UI: batch results and audit trail" below. Day 4 adversarially tested
+the refusal/safety path (see "Policy engine") and investigated/resolved the
+"Confirmed Recovered is ₹0" question explicitly — see "Why Confirmed
+Recovered is ₹0". Day 3 built full-batch evaluation: `python -m src.run_batch`
+runs the entire 64-record synthetic dataset through diagnose → policy →
+action → observe → audit and reports honest, non-cherry-picked metrics.
+Rule-based diagnosis and LLM-backed diagnosis (for failure reasons the rule
+table doesn't recognize) are both wired for real. Not yet built: a
+payment-completion confirmation path (webhook/polling — see Known
+limitations); Docker/CI stay out of scope until the core loop is fully proven.
 
 ## Stack
 
@@ -233,10 +236,24 @@ always**, until a real completion-confirmation path exists (a webhook
 receiver or status-polling loop — see Known limitations). The batch report
 prints this explanation directly under the metric, not as a footnote.
 
+**Day 5 re-check.** Before accepting the block as final, the question was
+revisited: was `net::ERR_BLOCKED_BY_CLIENT` specific to the build sandbox's
+browser, or a genuine Razorpay limitation? The plan was to test from an
+unrestricted browser (Claude in Chrome, a different network/extension
+environment than the sandboxed tool that hit the block). That tool reported
+"not connected" on repeated attempts — no working browser connection was
+available to run the check from. This is inconclusive, not a second
+confirmation of the block: the sandbox-specific-block hypothesis was never
+actually tested. The ₹0-by-design framing stands as the honest position
+either way — it doesn't depend on *why* completion isn't automatable here,
+only on the fact that it isn't, today, in this environment. Re-attempting
+this check (from a machine with a working, unrestricted browser) remains
+open for whoever picks this up next.
+
 ## Synthetic dataset
 
-[seed/case_catalog.py](seed/case_catalog.py) defines 17 case templates (7 easy,
-10 deliberately hard), expanded into **68 records** by
+[seed/case_catalog.py](seed/case_catalog.py) defines 16 case templates (7 easy,
+9 deliberately hard), expanded into **64 records** by
 [seed/generate_dataset.py](seed/generate_dataset.py):
 
 ```bash
@@ -252,11 +269,29 @@ Writes two files:
   `external_payment_id`. Used to score the batch; never fed to the engine.
 
 Hard cases cover: two flavors of genuinely conflicting/unfamiliar signal, a
-payment mid-cap (2 of 3 retries used) vs. one already at the cap, a payment
-inside its cooldown window, an opted-out (DND) customer, a customer whose
-contact limit is used up, a high-value payment with an uncertain diagnosis,
-a customer with a serial-failure history, and a risk-engine block (never
-auto-retried, regardless of confidence).
+payment mid-cap (2 of 3 retries used) vs. one already at the cap, an
+opted-out (DND) customer, a customer whose contact limit is used up, a
+high-value payment with an uncertain diagnosis, a customer with a
+serial-failure history, and a risk-engine block (never auto-retried,
+regardless of confidence). Cooldown enforcement is *not* represented as a
+static dataset scenario — see the note below — but is tested against real
+wall-clock time at the pipeline level instead
+([tests/test_adversarial_safety.py](tests/test_adversarial_safety.py)).
+
+**A template was removed mid-build for being unreliable, not for being
+wrong.** A `recent_failure_cooldown_active` scenario originally set
+`failed_at` to "5 minutes before dataset generation" to simulate a payment
+still inside its cooldown window. It worked the day it was written, then
+silently stopped working: `failed_at` is frozen at generation time, real
+time keeps passing between generation and whenever the batch actually runs,
+and once more than 30 minutes had elapsed the "cooldown active" case just
+looked like an ordinary eligible retry — surfaced as a false-positive
+"incorrect automatic action" days later (Day 5) with 4/4 consistent
+mismatches. A static, seeded-once dataset can't reliably represent "still
+inside a time window" against an unknown future run time, so the scenario
+was removed rather than patched around. The comment in
+`seed/case_catalog.py`'s `CaseTemplate` explains why, as a guard against
+reintroducing the same bug.
 
 **One template moved categories mid-build**: `authentication_abandoned` (a
 customer dropping 3-D Secure authentication) was originally modeled as
@@ -310,7 +345,7 @@ retry-cap / cooldown gates for real.
 ## Running the batch
 
 ```bash
-python -m src.run_batch                    # full 68-record batch, simulated action/result layer
+python -m src.run_batch                    # full 64-record batch, simulated action/result layer
 python -m src.run_batch --execute-real       # real Razorpay test-mode calls for approved auto-actions
 python -m src.run_batch --only-ambiguous      # only records the rule table can't classify (LLM path)
 python -m src.run_batch --limit 10             # cap how many records get processed
@@ -363,6 +398,38 @@ artifact for the run.
   *policy action* is scored (that's what incorrect-automatic-actions
   depends on).
 
+## UI: batch results and audit trail
+
+```bash
+python -m src.generate_report_html      # data/batch_report.json -> data/batch_report.html
+```
+
+Deliberately minimal, per the build order — a single self-contained static
+HTML file ([src/generate_report_html.py](src/generate_report_html.py)), no framework, no
+build step, no server required to *view* it (open the file, or serve `data/`
+with any static file server — a `static-report` entry is already in
+`.claude/launch.json` for `python -m http.server`). This is the whole Day-5
+UI; a real dashboard stays out of scope.
+
+- **Batch results**: the exact same metrics table `run_batch` prints,
+  rendered — not reinvented. A green/red safety banner surfaces "incorrect
+  automatic actions" at the top, and that row is never omitted or rounded
+  into a rate.
+- **Audit trail viewer**: every record, click to expand its full evidence
+  chain — event (failure code/reason/description) → diagnosis (root cause,
+  RULE/LLM/LLM_FALLBACK source, confidence band, the raw model-reported
+  number labeled as never read by the policy engine, evidence text) →
+  policy decision (action, reason, the complete factors snapshot) → action
+  (mode, result, evidence, Razorpay reference if any) → observed outcome.
+  The three canonical demo cases are tagged `CASE A`/`CASE B`/`CASE C` so
+  Case C — the ~₹1.2L refusal — is easy to find and its `high_value_
+  uncertain_escalation` reason and full factor list are visible without
+  reading code.
+- **REAL vs SIMULATED, never visually identical**: distinct badge styles
+  (solid blue vs. dashed gray) applied consistently everywhere an action
+  appears — see [tests/test_generate_report_html.py](tests/test_generate_report_html.py).
+- No "autonomous agent" language anywhere in the page copy (tested).
+
 ## Running the API
 
 ```bash
@@ -382,7 +449,7 @@ pytest -q
 Runs against an in-memory SQLite database, so no Postgres container and no
 external API is required — Groq and Razorpay are both mocked at the
 transport layer (`httpx.MockTransport`) in every automated test; only the
-manual verification runs below hit real APIs. 104 tests covering: the
+manual verification runs below hit real APIs. 115 tests covering: the
 models, the case catalog, the diagnosis engine (rule table + LLM dispatch),
 the policy engine (every gate individually and in combination), the LLM
 diagnosis module (successful/low-confidence/malformed/HTTP-error/
@@ -403,10 +470,10 @@ filtering, ground truth never reaching the LLM), adversarial safety tests
 | --- | --- |
 | 1 (done) | Synthetic dataset + data model; confirmed Razorpay test-mode keys work |
 | 2 (done) | Vertical slice: one failed payment through diagnose → policy → real Razorpay test-mode action → result → append-only audit record, runnable from the CLI |
-| 3 (done) | Full 68-record batch runner; real LLM diagnosis for the rule table's blind spots; serial-failure policy factor; honest batch metrics |
+| 3 (done) | Full 64-record batch runner; real LLM diagnosis for the rule table's blind spots; serial-failure policy factor; honest batch metrics |
 | 4 (done) | Investigated real test-payment completion (found genuinely blocked — see "Why Confirmed Recovered is ₹0"); adversarially tested the refusal/safety path |
-| 5 | A real payment-completion confirmation path (webhook or polling), if a working route is found; minimal UI: batch results by outcome category, audit trail viewer |
-| 6 (time permitting) | Docker, structured logging/Prometheus, CI, additional flows |
+| 5 (done) | Re-checked the checkout block from an unrestricted browser (inconclusive — no working browser connection available; ₹0-by-design framing stands); minimal UI: batch results + click-to-expand audit trail, as a static HTML file |
+| 6 (time permitting) | A real payment-completion confirmation path (webhook or polling), if a working route is ever found; Docker, structured logging/Prometheus, CI, additional flows |
 
 ## Known limitations
 

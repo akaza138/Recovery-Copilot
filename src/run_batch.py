@@ -59,14 +59,15 @@ DEFAULT_DB_PATH = DATA_DIR / "batch_run.db"
 DEFAULT_REPORT_PATH = DATA_DIR / "batch_report.json"
 
 CONFIRMED_RECOVERED_ZERO_NOTE = (
-    "  ^ This is INR 0.00 BY DESIGN, not a bug or an unbuilt feature (investigated Day 4). Razorpay's\n"
+    "  ^ This is INR 0.00 BY DESIGN, not a bug or an unbuilt feature (investigated Day 4/5). Razorpay's\n"
     "    own docs confirm there is no server-side API to complete a test-mode payment - it requires the\n"
     "    customer to go through the hosted Checkout UI (test card + a mock bank OTP page). A headless-\n"
     "    browser attempt at that flow was made and found hard-blocked at the network layer in this\n"
-    "    environment. This system's job stops at 'the customer now has a working way to pay' (a real,\n"
-    "    Razorpay-confirmed order or payment link) - completing the payment is the CUSTOMER's action,\n"
-    "    not the agent's, and this project will not submit card data server-side to fake it. See\n"
-    "    README.md, 'Why Confirmed Recovered is INR 0'."
+    "    environment; a Day-5 recheck from an unrestricted browser was inconclusive (no working browser\n"
+    "    connection available). This system's job stops at 'the customer now has a working way to pay'\n"
+    "    (a real, Razorpay-confirmed order or payment link) - completing the payment is the CUSTOMER's\n"
+    "    action, not the agent's, and this project will not submit card data server-side to fake it.\n"
+    "    See README.md, 'Why Confirmed Recovered is INR 0'."
 )
 
 
@@ -129,14 +130,32 @@ def run_batch(
                 "external_payment_id": outcome.external_payment_id,
                 "template_key": gt.get("template_key"),
                 "category": gt.get("category"),
+                "canonical_demo_case": gt.get("canonical_demo_case"),
                 "amount": outcome.amount,
+                "currency": result.failed_payment.currency,
+                # event
+                "failure_code": result.failed_payment.failure_code,
+                "failure_reason": result.failed_payment.failure_reason,
+                "failure_description": result.failed_payment.failure_description,
+                # diagnosis
                 "diagnosis_root_cause": outcome.diagnosis_root_cause,
                 "diagnosis_source": outcome.diagnosis_source.value,
                 "confidence_band": outcome.confidence_band,
+                "model_reported_confidence": result.diagnosis.confidence if result.diagnosis.source.value == "llm" else None,
+                "diagnosis_evidence": result.diagnosis.evidence,
+                # policy
                 "decision_action": outcome.decision_action.value,
                 "decision_reason": outcome.decision_reason,
+                "decision_factors": result.policy_decision.factors,
+                # action
                 "action_mode": outcome.action_mode.value,
                 "action_result": outcome.action_result.value,
+                "action_evidence": result.action_outcome.evidence,
+                "razorpay_reference": result.action_outcome.razorpay_reference,
+                # observed outcome
+                "failed_payment_status": result.failed_payment.status.value,
+                "stop_reason": result.failed_payment.stop_reason,
+                # scoring
                 "expected_action": gt.get("expected_action"),
             }
         )

@@ -779,60 +779,8 @@
     "expected_stop_reason": null,
     "notes": "Two prior retry attempts on this same payment (below the max-3 cap) \u2014 a 'repeated failures' case distinct from retry_cap_already_reached: still eligible, so the third attempt should still proceed."
   },
-  "pay_a07295e97c0e8c": {
-    "external_payment_id": "pay_a07295e97c0e8c",
-    "template_key": "recent_failure_cooldown_active",
-    "category": "hard",
-    "canonical_demo_case": null,
-    "expected_root_cause": "issuer_timeout",
-    "expected_confidence_band": "high",
-    "representative_model_confidence": null,
-    "expected_action": "stand_down",
-    "expected_final_status": "open",
-    "expected_stop_reason": "cooldown_not_elapsed",
-    "notes": "Failed and was retried only 5 minutes ago \u2014 still inside the cooldown window, so this attempt must stand down and wait rather than hammering the gateway again immediately."
-  },
-  "pay_236c7b8714a0bc": {
-    "external_payment_id": "pay_236c7b8714a0bc",
-    "template_key": "recent_failure_cooldown_active",
-    "category": "hard",
-    "canonical_demo_case": null,
-    "expected_root_cause": "issuer_timeout",
-    "expected_confidence_band": "high",
-    "representative_model_confidence": null,
-    "expected_action": "stand_down",
-    "expected_final_status": "open",
-    "expected_stop_reason": "cooldown_not_elapsed",
-    "notes": "Failed and was retried only 5 minutes ago \u2014 still inside the cooldown window, so this attempt must stand down and wait rather than hammering the gateway again immediately."
-  },
-  "pay_7746d0ba8ae890": {
-    "external_payment_id": "pay_7746d0ba8ae890",
-    "template_key": "recent_failure_cooldown_active",
-    "category": "hard",
-    "canonical_demo_case": null,
-    "expected_root_cause": "issuer_timeout",
-    "expected_confidence_band": "high",
-    "representative_model_confidence": null,
-    "expected_action": "stand_down",
-    "expected_final_status": "open",
-    "expected_stop_reason": "cooldown_not_elapsed",
-    "notes": "Failed and was retried only 5 minutes ago \u2014 still inside the cooldown window, so this attempt must stand down and wait rather than hammering the gateway again immediately."
-  },
-  "pay_db52ca5805000b": {
-    "external_payment_id": "pay_db52ca5805000b",
-    "template_key": "recent_failure_cooldown_active",
-    "category": "hard",
-    "canonical_demo_case": null,
-    "expected_root_cause": "issuer_timeout",
-    "expected_confidence_band": "high",
-    "representative_model_confidence": null,
-    "expected_action": "stand_down",
-    "expected_final_status": "open",
-    "expected_stop_reason": "cooldown_not_elapsed",
-    "notes": "Failed and was retried only 5 minutes ago \u2014 still inside the cooldown window, so this attempt must stand down and wait rather than hammering the gateway again immediately."
-  },
-  "pay_d5f25073f41402": {
-    "external_payment_id": "pay_d5f25073f41402",
+  "pay_464c04af3d3f37": {
+    "external_payment_id": "pay_464c04af3d3f37",
     "template_key": "risk_blocked_never_auto",
     "category": "hard",
     "canonical_demo_case": null,
@@ -844,8 +792,8 @@
     "expected_stop_reason": "risk_block_requires_human_review",
     "notes": "Risk-engine blocks are never auto-retried, no matter how confident the diagnosis is. Hard safety rule, not a confidence call."
   },
-  "pay_7c5308bf6f92f2": {
-    "external_payment_id": "pay_7c5308bf6f92f2",
+  "pay_3b33f3d8269cd6": {
+    "external_payment_id": "pay_3b33f3d8269cd6",
     "template_key": "risk_blocked_never_auto",
     "category": "hard",
     "canonical_demo_case": null,
@@ -857,8 +805,8 @@
     "expected_stop_reason": "risk_block_requires_human_review",
     "notes": "Risk-engine blocks are never auto-retried, no matter how confident the diagnosis is. Hard safety rule, not a confidence call."
   },
-  "pay_9f4c3b79fb1098": {
-    "external_payment_id": "pay_9f4c3b79fb1098",
+  "pay_34f3193c0ff0a5": {
+    "external_payment_id": "pay_34f3193c0ff0a5",
     "template_key": "risk_blocked_never_auto",
     "category": "hard",
     "canonical_demo_case": null,
@@ -870,8 +818,8 @@
     "expected_stop_reason": "risk_block_requires_human_review",
     "notes": "Risk-engine blocks are never auto-retried, no matter how confident the diagnosis is. Hard safety rule, not a confidence call."
   },
-  "pay_2e85cb217631de": {
-    "external_payment_id": "pay_2e85cb217631de",
+  "pay_5a0cdd7cf15784": {
+    "external_payment_id": "pay_5a0cdd7cf15784",
     "template_key": "risk_blocked_never_auto",
     "category": "hard",
     "canonical_demo_case": null,
