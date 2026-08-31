@@ -2,19 +2,22 @@
 doesn't recognize (src/diagnosis.py dispatches here when RULE_TABLE has no
 entry for a payment's failure_reason).
 
-Currently wired to Groq's OpenAI-compatible chat completions API — the
-working LLM credential available at build time (GROQ_API_KEY). The
-diagnosis contract (root_cause / confidence / retryable / evidence,
-recorded as DiagnosisSource.LLM) is provider-agnostic and doesn't name Groq
-anywhere outside this module; swapping to Anthropic/Claude directly is a
-contained change to _call_llm() below, not a system-wide one.
+Two providers, selected automatically (select_provider(), below):
+Anthropic/Claude if ANTHROPIC_API_KEY is configured (preferred default —
+Claude's forced tool-calling has proven more reliable in practice), Groq's
+OpenAI-compatible API otherwise (used throughout early development; kept
+working as the fallback provider). Both speak the exact same diagnosis
+contract (root_cause / confidence / retryable / evidence, recorded as
+DiagnosisSource.LLM) — nothing about that contract, the confidence banding,
+or the LLM_FALLBACK behavior below differs by provider.
 
 Scope boundary, load-bearing: this module ONLY diagnoses. It returns a root
 cause, a raw confidence number, and evidence — nothing else. It cannot
 choose an action, cannot see or influence policy inputs (DND, contact
 limits, retry counts, cooldowns), and never calls Razorpay. The policy
 engine (src/policy.py) remains the sole decision authority regardless of
-what this module reports. The LLM is advisory, not authoritative.
+what this module reports, or which provider produced it. The LLM is
+advisory, not authoritative.
 
 Sends ONLY the failure signal (code / reason / description / amount /
 currency / retry count on this payment) — never customer PII (name, email,
@@ -26,22 +29,34 @@ It is never treated as a calibrated probability; src/diagnosis.py's
 confidence_band() converts it into HIGH/MEDIUM/LOW before anything
 downstream (i.e. the policy engine) may use it.
 
-On any failure — missing API key, network/timeout error, an API error, or a
-response that fails structural validation — this module returns an explicit
-LLM_FALLBACK diagnosis at LOW confidence. It never lets an LLM failure look
-like a successful diagnosis. HTTP errors carry the response body (not just
-the status line) into the fallback evidence, since Groq's body says exactly
-what went wrong (bad model id, malformed tool schema, etc.) — the status
-line alone ("Client error '400 Bad Request'") is not actionable.
+Reliability: a single call to either provider can fail to produce a usable
+structured response (Groq's forced tool-calling in particular has an
+observed ~40-60% single-call success rate for some models — see the README's
+Known limitations for the measured number). A bounded retry (2 attempts
+total, one short backoff) applies ONLY to that failure shape — the model
+responded but didn't produce a valid tool call, or the response body was
+malformed — since that's usually a one-off hiccup worth one more try. A
+transport error (timeout, connection failure) or a genuine API error
+(bad credentials, unknown model, rate limit, server error) is NOT retried;
+it falls back immediately, because retrying those doesn't fix anything and
+just adds latency.
 
-Model id is configurable via the GROQ_MODEL env var (default
-"openai/gpt-oss-20b", confirmed to support forced tool-calling — see Known
-Limitations in the README for its ~40-60% observed reliability on this
-call shape, handled entirely by the fallback path above).
+On any unresolved failure — missing API key, transport/API error, or a
+response that still fails structural validation after the retry — this
+module returns an explicit LLM_FALLBACK diagnosis at LOW confidence. It
+never lets an LLM failure look like a successful diagnosis. HTTP errors
+carry the response body (not just the status line) into the fallback
+evidence, since both providers' error bodies say exactly what went wrong
+(bad model id, malformed tool schema, invalid credentials, etc.) — the
+status line alone ("Client error '400 Bad Request'") is not actionable.
+
+Model ids are configurable via ANTHROPIC_MODEL / GROQ_MODEL env vars
+(defaults below are both confirmed to support forced tool-calling).
 """
 
 import json
 import os
+import time
 from typing import Any
 
 import httpx
@@ -50,51 +65,50 @@ from app.models.recovery_attempt import ConfidenceBand, DiagnosisSource
 from src.diagnosis import Diagnosis, confidence_band
 
 GROQ_API_BASE = "https://api.groq.com/openai/v1"
-DEFAULT_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
+ANTHROPIC_API_BASE = "https://api.anthropic.com/v1"
+ANTHROPIC_VERSION = "2023-06-01"
+
+DEFAULT_GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
+DEFAULT_ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
+
 REQUEST_TIMEOUT_SECONDS = 20.0
+MAX_ATTEMPTS_ON_RETRYABLE_ERROR = 2  # total attempts (1 initial + 1 retry), not "2 retries"
+RETRY_BACKOFF_SECONDS = 0.5
 
 FALLBACK_ROOT_CAUSE = "llm_diagnosis_unavailable"
 FALLBACK_CONFIDENCE = 0.0  # explicit zero, not a real estimate — forced to LOW band regardless of threshold
 
-_DIAGNOSIS_TOOL = {
-    "type": "function",
-    "function": {
-        "name": "report_diagnosis",
-        "description": "Report a structured diagnosis for one failed payment.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "root_cause": {
-                    "type": "string",
-                    "description": (
-                        "A short, snake_case label for the most likely root cause "
-                        "(e.g. 'issuer_soft_decline', 'customer_dropped_authentication')."
-                    ),
-                },
-                "confidence": {
-                    "type": "number",
-                    "description": (
-                        "Your genuine confidence in this diagnosis, from 0.0 (pure guess) to 1.0 (certain). "
-                        "A genuinely ambiguous case should score low — do not round up to sound more useful."
-                    ),
-                },
-                "retryable": {
-                    "type": "boolean",
-                    "description": (
-                        "Whether this class of failure typically resolves if the exact same payment method is "
-                        "retried as-is, as opposed to requiring the customer to take a different action (a new "
-                        "card, a new payment method, fixing something on their end)."
-                    ),
-                },
-                "evidence": {
-                    "type": "string",
-                    "description": "One or two sentences on what in the failure signal supports this diagnosis.",
-                },
-            },
-            "required": ["root_cause", "confidence", "retryable", "evidence"],
-        },
+# JSON-schema "properties", shared verbatim between providers — only the surrounding tool-definition
+# envelope differs (Groq/OpenAI-style "function.parameters" vs Anthropic's "input_schema").
+_DIAGNOSIS_FIELDS: dict = {
+    "root_cause": {
+        "type": "string",
+        "description": (
+            "A short, snake_case label for the most likely root cause "
+            "(e.g. 'issuer_soft_decline', 'customer_dropped_authentication')."
+        ),
+    },
+    "confidence": {
+        "type": "number",
+        "description": (
+            "Your genuine confidence in this diagnosis, from 0.0 (pure guess) to 1.0 (certain). "
+            "A genuinely ambiguous case should score low — do not round up to sound more useful."
+        ),
+    },
+    "retryable": {
+        "type": "boolean",
+        "description": (
+            "Whether this class of failure typically resolves if the exact same payment method is "
+            "retried as-is, as opposed to requiring the customer to take a different action (a new "
+            "card, a new payment method, fixing something on their end)."
+        ),
+    },
+    "evidence": {
+        "type": "string",
+        "description": "One or two sentences on what in the failure signal supports this diagnosis.",
     },
 }
+_REQUIRED_FIELDS = ["root_cause", "confidence", "retryable", "evidence"]
 
 SYSTEM_PROMPT = (
     "You are a payment-failure diagnosis assistant for a Razorpay revenue-recovery system. "
@@ -110,7 +124,27 @@ SYSTEM_PROMPT = (
 
 
 class LLMDiagnosisError(Exception):
-    """Raised internally when the LLM call or its response can't be trusted; always caught by diagnose_ambiguous_case."""
+    """The LLM call or its response can't be trusted. Not retried — either a
+    genuine API/transport error, or a retry already happened and failed
+    again."""
+
+
+class RetryableLLMDiagnosisError(LLMDiagnosisError):
+    """The model responded but didn't produce a usable structured result
+    this turn (no tool call, malformed arguments, or a provider-reported
+    tool-use failure) — worth exactly one bounded retry, since this is
+    typically a one-off model hiccup rather than a systemic problem."""
+
+
+def select_provider() -> str:
+    """'anthropic' if ANTHROPIC_API_KEY is configured (the preferred
+    default), else 'groq' if GROQ_API_KEY is configured, else 'none' (forces
+    an immediate, explicit fallback rather than a pointless network call)."""
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        return "anthropic"
+    if os.environ.get("GROQ_API_KEY"):
+        return "groq"
+    return "none"
 
 
 def _build_user_message(failure_signal: dict) -> str:
@@ -124,8 +158,44 @@ def _build_user_message(failure_signal: dict) -> str:
     )
 
 
-def _call_llm(failure_signal: dict, *, client: Any, model: str) -> dict:
-    """`client` is an httpx.Client (real or test-injected via a MockTransport)."""
+def _groq_tool_schema() -> dict:
+    return {
+        "type": "function",
+        "function": {
+            "name": "report_diagnosis",
+            "description": "Report a structured diagnosis for one failed payment.",
+            "parameters": {"type": "object", "properties": _DIAGNOSIS_FIELDS, "required": _REQUIRED_FIELDS},
+        },
+    }
+
+
+def _anthropic_tool_schema() -> dict:
+    return {
+        "name": "report_diagnosis",
+        "description": "Report a structured diagnosis for one failed payment.",
+        "input_schema": {"type": "object", "properties": _DIAGNOSIS_FIELDS, "required": _REQUIRED_FIELDS},
+    }
+
+
+def _raise_for_status_with_body(response: httpx.Response, *, retryable_test) -> None:
+    """Shared HTTP-error handling: surfaces the response BODY (not just the
+    status line) in the error, and classifies it as retryable or not via the
+    provider-specific `retryable_test(parsed_body_or_None) -> bool`."""
+    try:
+        response.raise_for_status()
+    except httpx.HTTPStatusError as exc:
+        body_text = response.text
+        try:
+            parsed = response.json()
+        except Exception:  # noqa: BLE001 — body might not be JSON at all; that's fine, just can't classify further
+            parsed = None
+        message = f"{exc}. Response body: {body_text}"
+        if retryable_test(parsed):
+            raise RetryableLLMDiagnosisError(message) from exc
+        raise LLMDiagnosisError(message) from exc
+
+
+def _call_groq(failure_signal: dict, *, client: Any, model: str) -> dict:
     response = client.post(
         "/chat/completions",
         json={
@@ -136,32 +206,65 @@ def _call_llm(failure_signal: dict, *, client: Any, model: str) -> dict:
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": _build_user_message(failure_signal)},
             ],
-            "tools": [_DIAGNOSIS_TOOL],
+            "tools": [_groq_tool_schema()],
             "tool_choice": {"type": "function", "function": {"name": "report_diagnosis"}},
         },
     )
-    try:
-        response.raise_for_status()
-    except httpx.HTTPStatusError as exc:
-        # httpx's own message is just the status line ("Client error '400 Bad Request' for url
-        # '...'") — no diagnostic content. Groq's response body says exactly what was wrong
-        # (bad model id, malformed tool schema, etc.), so it has to be surfaced here or every
-        # HTTP error looks identical and unfixable from the fallback evidence text alone.
-        raise LLMDiagnosisError(f"{exc}. Response body: {response.text}") from exc
+    _raise_for_status_with_body(
+        response, retryable_test=lambda parsed: bool(parsed) and parsed.get("error", {}).get("code") == "tool_use_failed"
+    )
     body = response.json()
 
     tool_calls = body["choices"][0]["message"].get("tool_calls") or []
     for call in tool_calls:
         if call.get("function", {}).get("name") == "report_diagnosis":
             arguments = call["function"]["arguments"]
-            return json.loads(arguments) if isinstance(arguments, str) else arguments
+            try:
+                return json.loads(arguments) if isinstance(arguments, str) else arguments
+            except json.JSONDecodeError as exc:
+                raise RetryableLLMDiagnosisError(f"malformed tool-call arguments JSON: {exc}") from exc
 
-    raise LLMDiagnosisError("LLM response did not include a report_diagnosis tool call.")
+    raise RetryableLLMDiagnosisError("Groq response did not include a report_diagnosis tool call.")
+
+
+def _call_anthropic(failure_signal: dict, *, client: Any, model: str) -> dict:
+    response = client.post(
+        "/messages",
+        json={
+            "model": model,
+            "max_tokens": 512,
+            "system": SYSTEM_PROMPT,
+            "messages": [{"role": "user", "content": _build_user_message(failure_signal)}],
+            "tools": [_anthropic_tool_schema()],
+            "tool_choice": {"type": "tool", "name": "report_diagnosis"},
+        },
+    )
+    # Anthropic's forced tool-calling is reliable enough in practice that we don't guess at a
+    # provider-specific "the model refused" error code the way Groq's tool_use_failed is handled —
+    # any HTTP error here falls back immediately. A 200 OK with no usable tool_use block (below) is
+    # still retried, since that's the provider-agnostic core of "malformed response".
+    _raise_for_status_with_body(response, retryable_test=lambda parsed: False)
+    body = response.json()
+
+    for block in body.get("content", []):
+        if block.get("type") == "tool_use" and block.get("name") == "report_diagnosis":
+            input_value = block.get("input")
+            if not isinstance(input_value, dict):
+                raise RetryableLLMDiagnosisError(f"tool_use block had a non-object input: {input_value!r}")
+            return input_value
+
+    raise RetryableLLMDiagnosisError("Claude response did not include a report_diagnosis tool_use block.")
+
+
+def _call_llm(failure_signal: dict, *, client: Any, model: str, provider: str) -> dict:
+    if provider == "anthropic":
+        return _call_anthropic(failure_signal, client=client, model=model)
+    return _call_groq(failure_signal, client=client, model=model)
 
 
 def _validate(raw: Any) -> tuple[str, float, bool, str]:
     if not isinstance(raw, dict):
-        raise LLMDiagnosisError(f"Expected a dict from the tool call, got {type(raw).__name__}")
+        raise RetryableLLMDiagnosisError(f"Expected a dict from the tool call, got {type(raw).__name__}")
 
     root_cause = raw.get("root_cause")
     confidence = raw.get("confidence")
@@ -169,13 +272,13 @@ def _validate(raw: Any) -> tuple[str, float, bool, str]:
     evidence = raw.get("evidence")
 
     if not isinstance(root_cause, str) or not root_cause.strip():
-        raise LLMDiagnosisError(f"Missing or empty root_cause: {root_cause!r}")
+        raise RetryableLLMDiagnosisError(f"Missing or empty root_cause: {root_cause!r}")
     if not isinstance(confidence, (int, float)) or isinstance(confidence, bool) or not (0.0 <= float(confidence) <= 1.0):
-        raise LLMDiagnosisError(f"confidence must be a number in [0, 1], got {confidence!r}")
+        raise RetryableLLMDiagnosisError(f"confidence must be a number in [0, 1], got {confidence!r}")
     if not isinstance(retryable, bool):
-        raise LLMDiagnosisError(f"retryable must be a boolean, got {retryable!r}")
+        raise RetryableLLMDiagnosisError(f"retryable must be a boolean, got {retryable!r}")
     if not isinstance(evidence, str) or not evidence.strip():
-        raise LLMDiagnosisError(f"Missing or empty evidence: {evidence!r}")
+        raise RetryableLLMDiagnosisError(f"Missing or empty evidence: {evidence!r}")
 
     return root_cause.strip(), float(confidence), retryable, evidence.strip()
 
@@ -192,41 +295,86 @@ def _fallback(reason: str) -> Diagnosis:
     )
 
 
-def diagnose_ambiguous_case(failure_signal: dict, *, client: Any | None = None, model: str = DEFAULT_MODEL) -> Diagnosis:
+def _default_model_for(provider: str) -> str:
+    return DEFAULT_ANTHROPIC_MODEL if provider == "anthropic" else DEFAULT_GROQ_MODEL
+
+
+def _api_key_env_for(provider: str) -> str:
+    return "ANTHROPIC_API_KEY" if provider == "anthropic" else "GROQ_API_KEY"
+
+
+def _build_client(provider: str, api_key: str) -> httpx.Client:
+    if provider == "anthropic":
+        return httpx.Client(
+            base_url=ANTHROPIC_API_BASE,
+            headers={"x-api-key": api_key, "anthropic-version": ANTHROPIC_VERSION},
+            timeout=REQUEST_TIMEOUT_SECONDS,
+        )
+    return httpx.Client(base_url=GROQ_API_BASE, headers={"Authorization": f"Bearer {api_key}"}, timeout=REQUEST_TIMEOUT_SECONDS)
+
+
+def diagnose_ambiguous_case(
+    failure_signal: dict,
+    *,
+    client: Any | None = None,
+    model: str | None = None,
+    provider: str | None = None,
+    sleep_fn=time.sleep,
+) -> Diagnosis:
     """Attempts an LLM-backed diagnosis for a failure reason the rule table
-    doesn't recognize. Always returns a Diagnosis — on any failure it
-    returns an explicit LLM_FALLBACK diagnosis at LOW confidence rather than
-    silently treating the failure as a successful diagnosis.
+    doesn't recognize. Always returns a Diagnosis — on any unresolved
+    failure it returns an explicit LLM_FALLBACK diagnosis at LOW confidence
+    rather than silently treating the failure as a successful diagnosis.
 
     `client` is an injection seam for tests (an httpx.Client, typically
     built with a MockTransport); production code leaves it None and a real
-    httpx.Client is built from GROQ_API_KEY.
+    httpx.Client is built for the selected provider. `provider` defaults to
+    select_provider()'s auto-detection when not explicitly given — tests
+    that inject a client should pass `provider` explicitly rather than rely
+    on ambient environment state. `sleep_fn` is an injection seam so tests
+    don't wait through the real retry backoff.
     """
-    api_key = os.environ.get("GROQ_API_KEY", "")
+    provider = provider or select_provider()
+    if provider == "none":
+        return _fallback("neither ANTHROPIC_API_KEY nor GROQ_API_KEY is configured")
+
+    resolved_model = model or _default_model_for(provider)
+    api_key = os.environ.get(_api_key_env_for(provider), "")
     if client is None and not api_key:
-        return _fallback("GROQ_API_KEY not configured")
+        return _fallback(f"{_api_key_env_for(provider)} not configured")
 
     owns_client = client is None
-    active_client = client or httpx.Client(
-        base_url=GROQ_API_BASE, headers={"Authorization": f"Bearer {api_key}"}, timeout=REQUEST_TIMEOUT_SECONDS
-    )
+    active_client = client or _build_client(provider, api_key)
 
     try:
-        raw = _call_llm(failure_signal, client=active_client, model=model)
-        root_cause, confidence, retryable, evidence = _validate(raw)
-    except Exception as exc:  # noqa: BLE001 — this is the one place an external API's failure must
-        # never be allowed to propagate as a crash or masquerade as a valid diagnosis; see module docstring.
-        return _fallback(f"{type(exc).__name__}: {exc}")
+        last_error: Exception | None = None
+        for attempt in range(1, MAX_ATTEMPTS_ON_RETRYABLE_ERROR + 1):
+            try:
+                raw = _call_llm(failure_signal, client=active_client, model=resolved_model, provider=provider)
+                root_cause, confidence, retryable, evidence = _validate(raw)
+            except RetryableLLMDiagnosisError as exc:
+                last_error = exc
+                if attempt < MAX_ATTEMPTS_ON_RETRYABLE_ERROR:
+                    sleep_fn(RETRY_BACKOFF_SECONDS)
+                    continue
+                return _fallback(f"{type(exc).__name__} after {attempt} attempts: {exc}")
+            except Exception as exc:  # noqa: BLE001 — non-retryable: transport error, non-tool_use_failed HTTP
+                # error, or any other unexpected failure. This is the one place an external API's
+                # failure must never be allowed to propagate as a crash or masquerade as success.
+                return _fallback(f"{type(exc).__name__}: {exc}")
+            else:
+                return Diagnosis(
+                    root_cause=root_cause,
+                    confidence=confidence,
+                    confidence_band=confidence_band(confidence),
+                    evidence=f"LLM diagnosis ({provider}): {evidence}",
+                    source=DiagnosisSource.LLM,
+                    retryable=retryable,
+                    never_auto=False,  # risk-block-level safety gates stay rule-table-only; see RULE_TABLE in diagnosis.py
+                )
+        # Unreachable in practice (the loop always returns), but keeps the function's return type
+        # honest if MAX_ATTEMPTS_ON_RETRYABLE_ERROR were ever set to 0.
+        return _fallback(f"exhausted retries: {last_error}")
     finally:
         if owns_client:
             active_client.close()
-
-    return Diagnosis(
-        root_cause=root_cause,
-        confidence=confidence,
-        confidence_band=confidence_band(confidence),
-        evidence=f"LLM diagnosis: {evidence}",
-        source=DiagnosisSource.LLM,
-        retryable=retryable,
-        never_auto=False,  # risk-block-level safety gates stay rule-table-only; see RULE_TABLE in diagnosis.py
-    )

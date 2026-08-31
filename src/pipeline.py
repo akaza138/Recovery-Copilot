@@ -18,6 +18,7 @@ from app.models.customer import Customer
 from app.models.failed_payment import FailedPayment, FailedPaymentStatus
 from app.models.recovery_attempt import ActionMode, ActionResult, DecisionAction, DiagnosisSource, RecoveryAttempt
 from src.diagnosis import Diagnosis, diagnose
+from src.ledger import compute_content_hash, next_ledger_position
 from src.policy import PolicyConfig, PolicyDecision, PolicyInput, decide
 from src.razorpay_action import ActionOutcome
 
@@ -147,6 +148,9 @@ def build_policy_input(
         max_contact_attempts=customer.max_contact_attempts,
         prior_recovery_attempts=customer.prior_recovery_attempts,
         serial_failure_attempt_threshold=config.serial_failure_attempt_threshold,
+        retry_cost=config.retry_cost_paise,
+        payment_link_cost=config.payment_link_cost_paise,
+        max_cost_fraction=config.max_cost_fraction_of_value,
     )
 
 
@@ -237,6 +241,7 @@ def run_pipeline(
 
     attempt_number = _next_attempt_number(db, failed_payment)
     model_reported_confidence = diagnosis.confidence if diagnosis.source == DiagnosisSource.LLM else None
+    ledger_sequence, previous_hash = next_ledger_position(db)
 
     recovery_attempt = RecoveryAttempt(
         id=uuid.uuid4(),
@@ -252,7 +257,12 @@ def run_pipeline(
         action_mode=outcome.action_mode,
         action_result=outcome.action_result,
         razorpay_reference=outcome.razorpay_reference,
+        created_at=now,
+        ledger_sequence=ledger_sequence,
+        previous_hash=previous_hash,
+        content_hash="",  # placeholder — computed below, once every other field is set
     )
+    recovery_attempt.content_hash = compute_content_hash(recovery_attempt, previous_hash=previous_hash)
     db.add(recovery_attempt)
 
     _apply_outcome(customer, failed_payment, decision, outcome)

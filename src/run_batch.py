@@ -48,7 +48,9 @@ from sqlalchemy.orm import sessionmaker
 
 from app.db.base import Base
 from src.batch_metrics import BatchMetrics, compute_metrics, RecordOutcome
+from src.counterfactual import CounterfactualComparison, evaluate_record, summarize as summarize_counterfactual
 from src.diagnosis import RULE_TABLE
+from src.ledger import LedgerVerificationResult, verify_ledger
 from src.pipeline import load_full_dataset, load_ground_truth, run_pipeline
 from src.policy import PolicyConfig
 from src.razorpay_action import RazorpayActionClient
@@ -87,9 +89,10 @@ def run_batch(
     db_path: Path = DEFAULT_DB_PATH,
     data_dir: Path = DATA_DIR,
     policy_config: PolicyConfig | None = None,
-) -> tuple[BatchMetrics, list[dict]]:
-    """Runs the batch and returns (metrics, per_record_report_rows). Has no
-    print statements — the CLI (main(), below) owns all output."""
+) -> tuple[BatchMetrics, list[dict], CounterfactualComparison, LedgerVerificationResult]:
+    """Runs the batch and returns (metrics, per_record_report_rows,
+    counterfactual_comparison, ledger_verification). Has no print
+    statements — the CLI (main(), below) owns all output."""
     dataset = load_full_dataset(data_dir)
     ground_truth = load_ground_truth(data_dir)
     records = _select_records(dataset, only_ambiguous=only_ambiguous, limit=limit)
@@ -103,6 +106,7 @@ def run_batch(
 
     outcomes: list[RecordOutcome] = []
     per_record_rows: list[dict] = []
+    counterfactual_records = []
 
     for record in records:
         db = session_factory()
@@ -123,6 +127,19 @@ def run_batch(
             action_result=result.action_outcome.action_result,
         )
         outcomes.append(outcome)
+
+        # Counterfactual: derived from the SAME diagnosis (result.diagnosis) that already produced
+        # the real GATED decision above — no extra diagnosis call, no DB access, and neither
+        # candidate action is ever handed an action_executor (see src/counterfactual.py).
+        counterfactual_records.append(
+            evaluate_record(
+                external_payment_id=result.failed_payment.external_payment_id,
+                amount=result.failed_payment.amount,
+                retryable=result.diagnosis.retryable,
+                gated_action=result.policy_decision.action,
+                gated_reason=result.policy_decision.reason,
+            )
+        )
 
         gt = ground_truth.get(outcome.external_payment_id, {})
         per_record_rows.append(
@@ -162,7 +179,15 @@ def run_batch(
 
     config = policy_config or PolicyConfig()
     metrics = compute_metrics(outcomes, ground_truth, max_attempts=config.max_attempts)
-    return metrics, per_record_rows
+    counterfactual = summarize_counterfactual(counterfactual_records)
+
+    ledger_db = session_factory()
+    try:
+        ledger_verification = verify_ledger(ledger_db)
+    finally:
+        ledger_db.close()
+
+    return metrics, per_record_rows, counterfactual, ledger_verification
 
 
 def _fmt_inr(paise: int) -> str:
@@ -172,6 +197,26 @@ def _fmt_inr(paise: int) -> str:
 
 def _fmt_pct(rate: float) -> str:
     return f"{rate * 100:.1f}%"
+
+
+def print_counterfactual_table(comparison: CounterfactualComparison) -> None:
+    print("=" * 78)
+    print("COUNTERFACTUAL EVALUATION — what skipping the policy engine would cost")
+    print("=" * 78)
+    print(f"Same {comparison.total_records} records, three decision strategies:\n")
+    print("| Mode | Auto-actions taken | Unsafe actions |")
+    print("|---|---:|---:|")
+    for mode_summary in (comparison.naive, comparison.llm_only, comparison.gated):
+        print(f"| {mode_summary.label} | {mode_summary.auto_actions} | {mode_summary.unsafe_actions} |")
+
+    for mode_summary in (comparison.naive, comparison.llm_only):
+        if mode_summary.unsafe_breakdown:
+            print(f"\n{mode_summary.label} — unsafe action breakdown:")
+            for category, count in mode_summary.unsafe_breakdown.items():
+                print(f"  {count}x {category}")
+
+    print(f"\n{comparison.summary_line}")
+    print("=" * 78)
 
 
 def print_report(metrics: BatchMetrics, *, execute_real: bool) -> None:
@@ -241,6 +286,66 @@ def print_report(metrics: BatchMetrics, *, execute_real: bool) -> None:
         print("\nSafety check: incorrect_automatic_actions = 0 (target met).")
 
 
+def _mode_summary_to_dict(mode_summary) -> dict:
+    return {
+        "mode": mode_summary.mode,
+        "label": mode_summary.label,
+        "auto_actions": mode_summary.auto_actions,
+        "unsafe_actions": mode_summary.unsafe_actions,
+        "unsafe_breakdown": mode_summary.unsafe_breakdown,
+    }
+
+
+def _ledger_to_dict(result: LedgerVerificationResult) -> dict:
+    return {
+        "intact": result.intact,
+        "total_rows": result.total_rows,
+        "rows_verified": result.rows_verified,
+        "broken_at_sequence": result.broken_at_sequence,
+        "broken_row_id": result.broken_row_id,
+        "detail": result.detail,
+    }
+
+
+def print_ledger_status(result: LedgerVerificationResult) -> None:
+    if result.total_rows == 0:
+        print("\nLedger: empty — nothing to verify.")
+    elif result.intact:
+        print(f"\nLedger: intact, {result.rows_verified} rows verified (SHA-256 hash chain, src/ledger.py).")
+    else:
+        print("\n" + "!" * 70)
+        print("!! LEDGER TAMPERED — hash chain broke before the end of the audit trail !!")
+        print("!" * 70)
+        print(f"  Verified {result.rows_verified}/{result.total_rows} rows before the break.")
+        print(f"  Breaks at ledger_sequence={result.broken_at_sequence} (row id={result.broken_row_id})")
+        print(f"  {result.detail}")
+
+
+def _counterfactual_to_dict(comparison: CounterfactualComparison) -> dict:
+    return {
+        "total_records": comparison.total_records,
+        "summary_line": comparison.summary_line,
+        "naive": _mode_summary_to_dict(comparison.naive),
+        "llm_only": _mode_summary_to_dict(comparison.llm_only),
+        "gated": _mode_summary_to_dict(comparison.gated),
+        "records": [
+            {
+                "external_payment_id": r.external_payment_id,
+                "amount": r.amount,
+                "naive_action": r.naive_action.value if r.naive_action else None,
+                "naive_unsafe": r.naive_unsafe,
+                "naive_unsafe_category": r.naive_unsafe_category,
+                "llm_only_action": r.llm_only_action.value,
+                "llm_only_unsafe": r.llm_only_unsafe,
+                "llm_only_unsafe_category": r.llm_only_unsafe_category,
+                "gated_action": r.gated_action.value,
+                "gated_reason": r.gated_reason,
+            }
+            for r in comparison.records
+        ],
+    }
+
+
 def main() -> int:
     load_dotenv()
 
@@ -252,19 +357,23 @@ def main() -> int:
     parser.add_argument("--report-path", type=Path, default=DEFAULT_REPORT_PATH)
     args = parser.parse_args()
 
-    metrics, per_record_rows = run_batch(
+    metrics, per_record_rows, counterfactual, ledger_verification = run_batch(
         execute_real=args.execute_real,
         only_ambiguous=args.only_ambiguous,
         limit=args.limit,
         db_path=args.db_path,
     )
 
+    print_counterfactual_table(counterfactual)
     print_report(metrics, execute_real=args.execute_real)
+    print_ledger_status(ledger_verification)
 
     report = {
         "execute_real": args.execute_real,
         "only_ambiguous": args.only_ambiguous,
         "limit": args.limit,
+        "counterfactual": _counterfactual_to_dict(counterfactual),
+        "ledger": _ledger_to_dict(ledger_verification),
         "metrics": {k: v for k, v in metrics.__dict__.items() if k != "incorrect_automatic_action_details"},
         "incorrect_automatic_actions": [d.__dict__ for d in metrics.incorrect_automatic_action_details],
         "records": per_record_rows,
@@ -273,7 +382,7 @@ def main() -> int:
     args.report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"\nEvidence report written to {args.report_path}")
 
-    return 1 if metrics.incorrect_automatic_actions > 0 else 0
+    return 1 if (metrics.incorrect_automatic_actions > 0 or not ledger_verification.intact) else 0
 
 
 if __name__ == "__main__":

@@ -19,6 +19,9 @@ DEFAULT_MAX_ATTEMPTS = 3
 DEFAULT_COOLDOWN_SECONDS = 30 * 60  # 30 minutes between retry attempts on the same payment
 DEFAULT_SERIAL_FAILURE_ATTEMPT_THRESHOLD = 2  # 2+ prior failed recovery attempts -> human review, not another auto-action
 DEFAULT_SERIAL_FAILURE_LOOKBACK_DAYS = 30  # documented, not independently enforced — see note on PolicyInput.prior_recovery_attempts
+DEFAULT_RETRY_COST_PAISE = 500  # ₹5 — modeled gateway/processing cost of one retry attempt
+DEFAULT_PAYMENT_LINK_COST_PAISE = 1_500  # ₹15 — modeled SMS/notification + support-follow-up cost of one payment link
+DEFAULT_MAX_COST_FRACTION_OF_VALUE = 0.5  # never spend more than this fraction of the payment's own value recovering it
 
 
 @dataclass(frozen=True)
@@ -28,6 +31,9 @@ class PolicyConfig:
     cooldown_seconds: int = DEFAULT_COOLDOWN_SECONDS
     serial_failure_attempt_threshold: int = DEFAULT_SERIAL_FAILURE_ATTEMPT_THRESHOLD
     serial_failure_lookback_days: int = DEFAULT_SERIAL_FAILURE_LOOKBACK_DAYS
+    retry_cost_paise: int = DEFAULT_RETRY_COST_PAISE
+    payment_link_cost_paise: int = DEFAULT_PAYMENT_LINK_COST_PAISE
+    max_cost_fraction_of_value: float = DEFAULT_MAX_COST_FRACTION_OF_VALUE
 
 
 @dataclass(frozen=True)
@@ -52,6 +58,9 @@ class PolicyInput:
     # already be scoped to the lookback by whatever process populates it. A real system would filter a
     # dated attempt log at query time; this is a known simplification, not a hidden one.
     serial_failure_attempt_threshold: int
+    retry_cost: int  # paise — modeled cost of one RETRY attempt, from PolicyConfig.retry_cost_paise
+    payment_link_cost: int  # paise — modeled cost of one PAYMENT_LINK send, from PolicyConfig.payment_link_cost_paise
+    max_cost_fraction: float  # refuse an auto-action whose modeled cost exceeds this fraction of payment_value
 
 
 @dataclass(frozen=True)
@@ -110,5 +119,17 @@ def decide(policy_input: PolicyInput) -> PolicyDecision:
     if candidate == DecisionAction.PAYMENT_LINK:
         if policy_input.contact_count >= policy_input.max_contact_attempts:
             return PolicyDecision(DecisionAction.STAND_DOWN, "contact_limit_reached", factors)
+
+    # 6. Cost-effectiveness: everything above establishes that this action would otherwise be
+    #    legitimate — this gate asks whether it's worth the money. A modeled per-action cost
+    #    (gateway/processing fee for a retry, SMS + support follow-up for a payment link) is
+    #    checked against a configurable fraction of the payment's own value; refuse rather than
+    #    spend more chasing a payment than it's worth. Applies to both auto-action types alike,
+    #    since it's a business-sense gate, not a risk or compliance one.
+    if candidate in (DecisionAction.RETRY, DecisionAction.PAYMENT_LINK):
+        estimated_cost = policy_input.retry_cost if candidate == DecisionAction.RETRY else policy_input.payment_link_cost
+        max_cost = policy_input.payment_value * policy_input.max_cost_fraction
+        if estimated_cost > max_cost:
+            return PolicyDecision(DecisionAction.STAND_DOWN, "recovery_not_cost_effective", factors)
 
     return PolicyDecision(candidate, reason, factors)

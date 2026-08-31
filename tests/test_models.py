@@ -109,6 +109,9 @@ def test_recovery_attempt_is_the_audit_trail(db_session):
         decision_factors={"payment_value": payment.amount, "confidence_band": "high", "attempt_count": 1},
         action_mode=ActionMode.SIMULATED,
         action_result=ActionResult.PENDING,
+        ledger_sequence=0,
+        previous_hash="0" * 64,
+        content_hash="a" * 64,
     )
     db_session.add(attempt)
     db_session.commit()
@@ -143,6 +146,9 @@ def test_action_mode_must_be_explicit(db_session):
         action_mode=ActionMode.REAL,
         action_result=ActionResult.SUCCEEDED,
         razorpay_reference="plink_abc123",
+        ledger_sequence=0,
+        previous_hash="0" * 64,
+        content_hash="a" * 64,
     )
     db_session.add(attempt)
     db_session.commit()

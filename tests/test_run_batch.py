@@ -78,7 +78,7 @@ def test_batch_runner_processes_the_complete_dataset(tmp_path, monkeypatch):
     records = _small_dataset()
     _write_dataset(tmp_path, records)
 
-    metrics, rows = run_batch(execute_real=False, db_path=tmp_path / "batch.db", data_dir=tmp_path)
+    metrics, rows, counterfactual, ledger_verification = run_batch(execute_real=False, db_path=tmp_path / "batch.db", data_dir=tmp_path)
 
     assert len(rows) == len(records)
     assert metrics.total_records == len(records)
@@ -89,7 +89,7 @@ def test_four_way_outcome_categorization_from_a_real_run(tmp_path, monkeypatch):
     monkeypatch.delenv("GROQ_API_KEY", raising=False)
     _write_dataset(tmp_path, _small_dataset())
 
-    metrics, rows = run_batch(execute_real=False, db_path=tmp_path / "batch.db", data_dir=tmp_path)
+    metrics, rows, counterfactual, ledger_verification = run_batch(execute_real=False, db_path=tmp_path / "batch.db", data_dir=tmp_path)
 
     by_id = {r["external_payment_id"]: r for r in rows}
 
@@ -119,7 +119,7 @@ def test_confirmed_recovered_is_zero_in_simulated_mode(tmp_path, monkeypatch):
     monkeypatch.delenv("GROQ_API_KEY", raising=False)
     _write_dataset(tmp_path, _small_dataset())
 
-    metrics, _ = run_batch(execute_real=False, db_path=tmp_path / "batch.db", data_dir=tmp_path)
+    metrics, _, _counterfactual, _ledger_verification = run_batch(execute_real=False, db_path=tmp_path / "batch.db", data_dir=tmp_path)
 
     assert metrics.confirmed_recovered_amount == 0
     assert metrics.confirmed_recovered_count == 0
@@ -140,7 +140,7 @@ def test_execute_real_never_calls_razorpay_for_human_review_or_stand_down(tmp_pa
     # No mocked transport is wired in here on purpose: if the pipeline ever tried a real network
     # call for these two decisions, this test would hang/fail on a real connection attempt instead
     # of completing — the point is that RazorpayActionClient.execute_* must never be reached at all.
-    metrics, rows = run_batch(execute_real=True, db_path=tmp_path / "batch.db", data_dir=tmp_path)
+    metrics, rows, counterfactual, ledger_verification = run_batch(execute_real=True, db_path=tmp_path / "batch.db", data_dir=tmp_path)
 
     for row in rows:
         assert row["decision_action"] in ("stand_down",)
@@ -151,7 +151,7 @@ def test_only_ambiguous_filters_to_llm_path_records(tmp_path, monkeypatch):
     monkeypatch.delenv("GROQ_API_KEY", raising=False)
     _write_dataset(tmp_path, _small_dataset())
 
-    metrics, rows = run_batch(execute_real=False, only_ambiguous=True, db_path=tmp_path / "batch.db", data_dir=tmp_path)
+    metrics, rows, counterfactual, ledger_verification = run_batch(execute_real=False, only_ambiguous=True, db_path=tmp_path / "batch.db", data_dir=tmp_path)
 
     assert len(rows) == 1
     assert rows[0]["external_payment_id"] == "pay_ambiguous"
@@ -161,7 +161,7 @@ def test_limit_caps_records_processed(tmp_path, monkeypatch):
     monkeypatch.delenv("GROQ_API_KEY", raising=False)
     _write_dataset(tmp_path, _small_dataset())
 
-    metrics, rows = run_batch(execute_real=False, limit=2, db_path=tmp_path / "batch.db", data_dir=tmp_path)
+    metrics, rows, counterfactual, ledger_verification = run_batch(execute_real=False, limit=2, db_path=tmp_path / "batch.db", data_dir=tmp_path)
 
     assert len(rows) == 2
     assert metrics.total_records == 2
