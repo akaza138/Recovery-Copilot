@@ -33,7 +33,7 @@ python -m scripts.check_razorpay_keys        # confirms test-mode credentials wo
 python -m seed.generate_dataset              # writes data/synthetic_failed_payments.json + ground_truth.json
 python -m src.run_batch                      # full batch, simulated action layer, prints metrics
 python -m src.generate_report_html           # data/batch_report.json -> data/batch_report.html
-pytest -q                                    # 115 tests, no external API required
+pytest -q                                    # 186 tests, no external API required
 ```
 
 ## The one hero flow
@@ -51,10 +51,14 @@ Docker/Prometheus/CI until this works end to end. See the build order below.
 
 Working end to end, submission-ready. The full 64-record synthetic batch
 runs through diagnose → policy → action → observe → audit with real LLM
-diagnosis (Groq) for the reasons the rule table can't classify, real
-Razorpay test-mode actions available on request (`--execute-real`), 0
-incorrect automatic actions, and a static HTML report for both the batch
-summary and a per-record audit trail. 115 tests, all green. Not built:
+diagnosis (Claude if `ANTHROPIC_API_KEY` is set, Groq as fallback provider)
+for the reasons the rule table can't classify, real Razorpay test-mode
+actions available on request (`--execute-real`), 0 incorrect automatic
+actions, and a static HTML report for both the batch summary and a
+per-record audit trail. The counterfactual harness (below) shows what
+skipping the policy engine would have cost on this same batch: 20-32
+unsafe automatic actions across two ungated strategies, 0 for the gated
+one. 186 tests, all green. Not built:
 a payment-completion confirmation path (webhook/polling — see "Why
 Confirmed Recovered is ₹0" and Known limitations), and anything past the
 core loop (dashboard, Docker, CI) — out of scope by design, not by running
@@ -75,6 +79,14 @@ and why:
 - **Day 5** — re-checked the completion question from another environment
   (inconclusive); the minimal UI.
 - **Day 6** — this polish pass: README, pitch script, submission hygiene.
+- **Day 7** — competitive hardening: the counterfactual evaluation harness
+  (Naive / Ungated LLM / Gated, above), Claude added as the default LLM
+  provider with Groq as fallback and a bounded retry on malformed
+  responses, the adversarial safety suite promoted to a top-level section
+  with contact-limit coverage added, a cost-effectiveness policy gate, and
+  the tamper-evident hash-chained audit ledger. A quiet-hours/cooling-off
+  compliance gate was attempted and deliberately reverted — see Known
+  limitations.
 
 ### Two things genuine testing caught
 
@@ -105,13 +117,15 @@ Both are documented in full where they happened, not just claimed here:
 - **Database**: PostgreSQL, migrations via Alembic (production target);
   SQLite for the CLIs and tests (see [app/db/types.py](app/db/types.py))
 - **Reasoning**: an LLM, for ambiguous-case diagnosis only — it proposes a
-  root cause and a confidence band; it never decides the action. Currently
-  wired to Groq's OpenAI-compatible chat completions API (the working
-  credential available at build time — see
-  [src/llm_diagnosis.py](src/llm_diagnosis.py)'s docstring). The contract
-  (`DiagnosisSource.LLM`, structured root_cause/confidence/retryable/evidence)
-  is provider-agnostic; swapping to Anthropic/Claude directly is a contained
-  change to that one module.
+  root cause and a confidence band; it never decides the action. Two
+  providers behind one contract (`DiagnosisSource.LLM`, structured
+  root_cause/confidence/retryable/evidence):
+  Anthropic/Claude (Messages API) if `ANTHROPIC_API_KEY` is configured
+  (preferred), Groq's OpenAI-compatible chat completions API otherwise. A
+  bounded retry (2 attempts, one short backoff) covers a malformed/missing
+  tool-call response from either provider; a transport or credentials error
+  never retries. See [src/llm_diagnosis.py](src/llm_diagnosis.py)'s docstring
+  and Known limitations below for the measured reliability numbers.
 - **Payments**: Razorpay test-mode REST API (Orders, Payment Links), called
   directly over HTTPS
 - **Ops**: pytest only. Docker Compose exists from Day 1 but isn't required
@@ -166,11 +180,14 @@ label — and gets back a structured `{root_cause, confidence, retryable,
 evidence}` via forced tool-calling. Confidence bands: **HIGH ≥ 0.85, MEDIUM
 0.60–0.8499, LOW < 0.60** (`src/diagnosis.py`, configurable).
 
-On any LLM failure — no API key, network/timeout error, an API error, or a
-response that fails structural validation — `diagnose_ambiguous_case`
-returns an explicit `LLM_FALLBACK` diagnosis at LOW confidence (a sentinel
-`confidence=0.0`, never a plausible-looking guess) rather than letting the
-failure crash the pipeline or masquerade as a successful diagnosis.
+A missing/malformed tool-call response gets exactly one bounded retry (2
+attempts total, one short backoff) before giving up — a transport error or
+a genuine API error (bad credentials, unknown model, rate limit) never
+retries, since retrying doesn't fix those. On any unresolved failure,
+`diagnose_ambiguous_case` returns an explicit `LLM_FALLBACK` diagnosis at
+LOW confidence (a sentinel `confidence=0.0`, never a plausible-looking
+guess) rather than letting the failure crash the pipeline or masquerade as
+a successful diagnosis.
 
 ## Policy engine
 
@@ -196,31 +213,137 @@ factors below. Gates, in order:
 5. **Retry cap / cooldown** (RETRY only): `max_attempts` (default 3) and
    `cooldown_seconds` (default 30 min) since the last attempt.
 6. **Contact limit** (PAYMENT_LINK only): `max_contact_attempts`.
+7. **Cost-effectiveness** (RETRY or PAYMENT_LINK): a modeled per-action cost
+   (`retry_cost_paise`, default ₹5; `payment_link_cost_paise`, default ₹15)
+   is checked against `max_cost_fraction_of_value` (default 50%) of the
+   payment itself — `recovery_not_cost_effective` refuses an auto-action
+   that would cost more to attempt than the configured share of what it's
+   worth. Grouped with the other mechanical stopping rules in batch metrics
+   (`SAFETY_STOP_REASONS`), and has its own label in the counterfactual
+   comparison above.
 
-### Adversarially tested (Day 4)
+See "Red-teaming our own safety layer" below — every gate above has a
+dedicated attack in the test suite, not just a happy-path check.
 
-Not just the happy path — [tests/test_adversarial_safety.py](tests/test_adversarial_safety.py)
-specifically tries to break each gate above, and the precedence between them:
+## Counterfactual evaluation: what skipping the policy engine would cost
 
-- A fresh, HIGH-confidence, clearly-retryable diagnosis still can't get past
-  an already-reached retry cap, or a cooldown window that hasn't elapsed.
-- DND blocks both RETRY and PAYMENT_LINK even when stacked with HIGH
-  confidence and a high payment value — checked at the policy level and,
+Every other number in this README says what Recovery Copilot did. This
+section says what would have happened to the exact same 64 records if it
+hadn't — the comparison that matters most, because a recovery bot is easy
+to build and dangerous to trust.
+
+[src/counterfactual.py](src/counterfactual.py) replays the same batch
+through three decision strategies, all fed from the *same* diagnosis draw
+the real pipeline already computed for each record — zero extra LLM calls,
+zero extra DB access:
+
+- **Naive** — retry anything the diagnosis marks retryable. No policy
+  engine consulted at all. The bot most teams would ship first.
+- **Ungated LLM** — the diagnosis's full recommendation (retry if
+  retryable, else send a payment link) executes directly. Every gate in
+  `policy.py` is bypassed. The bot you get if you trust the model's
+  judgment instead of a deterministic policy layer.
+- **Recovery Copilot (gated)** — the real, unmodified `policy.decide()`
+  result, already produced by the real pipeline run.
+
+An action is scored unsafe when a mode would auto-act on a record the
+real, unmodified policy engine would *not* have auto-acted on — the oracle
+is the actual gate logic this system runs, not an approximate ground-truth
+label, so the comparison measures exactly what bypassing these specific
+gates costs.
+
+**Structurally, not just conventionally, Naive and Ungated LLM can never
+reach Razorpay.** `src/counterfactual.py` takes only a boolean and two
+action labels as input — it has no parameter, import, or code path that
+could construct or call `RazorpayActionClient` or `SimulatedActionExecutor`.
+[tests/test_counterfactual.py](tests/test_counterfactual.py) asserts this
+at the AST level (no import of either executor anywhere in the module) as
+well as at the signature level (no function takes an executor argument).
+
+One real run against the full 64-record batch:
+
+| Mode | Auto-actions taken | Unsafe actions |
+|---|---:|---:|
+| Naive (retryable → always retry, no gates) | 40 | 20 |
+| Ungated LLM (diagnosis recommendation executes directly) | 64 | 32 |
+| **Recovery Copilot (gated)** | 32 | **0** |
+
+Naive's 20 unsafe actions: 4 DND breaches, 4 retry-cap violations, 5 acted
+despite MEDIUM confidence, 2 high-value auto-acts on an uncertain
+diagnosis, 4 that ignored a customer's serial-failure history, 1 acted
+despite LOW confidence.
+
+Ungated LLM's 32 unsafe actions: 4 DND breaches, 4 retry-cap violations,
+4 contact-limit breaches, 5 acted despite MEDIUM confidence, 3 acted
+despite LOW confidence, 4 high-value auto-acts on an uncertain diagnosis,
+4 that ignored serial-failure history, and — the one that should worry you
+most — **4 auto-actions taken on a risk-blocked customer**, because
+nothing downstream of the diagnosis layer was checking for that anymore.
+
+Recovery Copilot: 32 auto-actions, 0 unsafe. Same records, same diagnoses,
+same starting point as both ungated modes — the only difference is the
+policy engine sitting between diagnosis and action.
+
+These exact counts will drift a little run to run — the ambiguous cases
+route through Groq, which isn't perfectly deterministic, so a handful of
+records land in a different confidence band on a different run. The shape
+never does: Naive and Ungated LLM are always double digits deep in unsafe
+actions, gated is always zero, by construction — see
+`test_gated_is_always_zero_unsafe_by_construction` in
+[tests/test_counterfactual.py](tests/test_counterfactual.py).
+
+The full table, per-mode breakdown, and this same comparison appear in the
+CLI output of `python -m src.run_batch`, in `data/batch_report.json` under
+`"counterfactual"`, and as the first panel — above the metrics table — in
+the generated HTML report.
+
+## Red-teaming our own safety layer
+
+[tests/test_adversarial_safety.py](tests/test_adversarial_safety.py) (22 tests) doesn't
+confirm the policy engine works — it specifically tries to break it, and
+the precedence between its gates. Each one is a real attack scenario, not
+just a test name:
+
+- **"Surely a fresh, confident diagnosis deserves one more try."** A
+  HIGH-confidence, clearly-retryable diagnosis, generated brand new this
+  turn, is thrown at a payment that's already at the retry cap, and
+  separately at one still inside its cooldown window. Both are still
+  blocked — the gates are on attempts and pacing, not on how good the
+  latest diagnosis looks.
+- **"A big enough payment buys through the compliance rule."** DND stacked
+  with HIGH confidence and a ₹90,00,000 payment — for both RETRY and
+  PAYMENT_LINK. DND still wins outright, checked at the policy level and,
   separately, end-to-end through the real pipeline with an assertion that
-  Razorpay is never called (not just that the result looks right).
-- The HIGH/MEDIUM confidence boundary (0.85) and the MEDIUM/LOW boundary
-  (0.60) are exercised exactly at the line and confirmed deterministic
-  across repeated calls with identical input.
-- Serial-failure history overrides even a high-value, HIGH-confidence,
-  retryable case.
-- Explicit precedence, not incidental code order: DND beats serial-failure
+  Razorpay is never called (not just that the labeled result looks right).
+- **"A bigger payment buys an extra contact attempt."** A non-retryable,
+  HIGH-confidence diagnosis (the textbook payment-link case) against a
+  customer whose contact budget is already exhausted, stacked with a
+  high-value payment on top. Still blocked. Checked, separately, that a
+  maxed-out contact count does *not* leak into blocking an unrelated RETRY
+  — the gate has to be scoped correctly, not just strict.
+- **"The confidence boundary is fuzzy in practice, even if the spec says
+  0.85."** The HIGH/MEDIUM line (0.85) and the MEDIUM/LOW line (0.60) are
+  hit exactly, from both sides, repeated five times with identical input —
+  a deterministic function is not allowed to disagree with itself.
+- **"Track record doesn't matter if today's diagnosis is clean."** A
+  customer with five prior failed recovery attempts gets a HIGH-confidence,
+  high-value, clearly-retryable diagnosis anyway — the serial-failure
+  history still overrides it.
+- **"Which gate actually wins when two fire at once?"** Explicit precedence
+  tests, not assumptions about code order: DND beats serial-failure
   history; serial-failure history beats the retry cap; risk-block
-  (`never_auto`) beats DND (deliberately — HUMAN_REVIEW never contacts the
-  customer, so it doesn't conflict with an opt-out).
-- The retry-cap pipeline test runs the real accumulating state (three real
-  sequential calls, then a fourth) rather than hand-setting `retry_count=3`
-  in a fixture; the cooldown pipeline test uses real wall-clock time with no
-  override, hammering the same payment twice back-to-back.
+  (`never_auto`) beats DND (deliberately — `HUMAN_REVIEW` never contacts
+  the customer, so it doesn't conflict with an opt-out).
+- **"Fixture data doesn't count — prove it holds under real state."** The
+  retry-cap test runs three real sequential pipeline calls, then a fourth,
+  rather than hand-setting `retry_count=3`; the cooldown test hammers the
+  same payment twice back-to-back with the real 30-minute default and no
+  override, using genuine wall-clock time.
+- **"Surely a clean, HIGH-confidence, non-retryable diagnosis always earns
+  a payment link."** Not if the payment itself is worth less than what
+  sending one is modeled to cost. Checked at the policy level and, again,
+  end-to-end through the real pipeline with an assertion that Razorpay is
+  never called.
 
 ## Action layer
 
@@ -241,6 +364,44 @@ recovery.
 
 HUMAN_REVIEW and STAND_DOWN decisions never reach either executor — see
 `_execute_action` in [src/pipeline.py](src/pipeline.py).
+
+## Tamper-evident audit ledger
+
+Every `RecoveryAttempt` row was already append-only by convention (see the
+model's docstring). [src/ledger.py](src/ledger.py) makes tampering
+*detectable*, not just discouraged: each row's `content_hash` is SHA-256 of
+its own canonical field snapshot (diagnosis, decision, action, factors,
+timestamp — everything except the hash fields themselves) chained onto
+`previous_hash`, the content_hash of the row written immediately before it
+(a genesis constant for the very first row). This is a hash chain — the
+same structure behind git commits or a certificate transparency log, not a
+cryptographic signature and not a substitute for real database access
+control. It proves *this row's recorded content matches what was written
+at the time*; editing any field in any row, even one nobody looks at
+again, changes that row's own hash and invalidates every row after it.
+
+- `verify_ledger()` walks the whole chain and reports either `intact: N
+  rows verified` or the exact row where it breaks (`ledger_sequence`, row
+  id, and whether the break is a content mutation or a tampered chain
+  link) — not just "something's wrong somewhere".
+- `python -m src.verify_ledger` is the standalone CLI check — run it
+  against any of this project's SQLite files (`data/batch_run.db` by
+  default, or `--db-path data/recovery_copilot.db` for the vertical-slice
+  DB) independent of a batch run. Exit code 0 if intact, 1 if tampered or
+  missing.
+- Every `python -m src.run_batch` run verifies its own ledger automatically
+  and prints the result (`Ledger: intact, N rows verified`, or a loud
+  `LEDGER TAMPERED` block naming the row); the same status is the first
+  thing in `data/batch_report.json`'s `"ledger"` key and renders as a
+  banner in the HTML report, right under the safety banner.
+- [tests/test_ledger.py](tests/test_ledger.py) proves the property that
+  actually matters: writing real rows through the real pipeline produces a
+  verifiable chain, and mutating a single field in the *middle* row of a
+  five-row chain is caught, at exactly that row, with every row before it
+  confirmed genuinely intact — not a blanket "tampered somewhere". A
+  separate test tampers the chain link itself (`previous_hash`) rather
+  than a content field, since that's a different way to attack a hash
+  chain and needs its own coverage.
 
 ## Why Confirmed Recovered is ₹0
 
@@ -425,7 +586,10 @@ mode (a structural guarantee, not a runtime check — see `_execute_action`).
 
 Prints the required metrics table plus an evaluation section, and writes
 `data/batch_report.json` (per-record detail + full metrics) as the evidence
-artifact for the run.
+artifact for the run. Also verifies its own tamper-evident ledger (see
+"Tamper-evident audit ledger" above) and prints the result; run
+`python -m src.verify_ledger` any time afterward to re-check the same
+`data/batch_run.db` file independently of a batch run.
 
 ### Metric definitions
 
@@ -527,20 +691,26 @@ pytest -q
 Runs against an in-memory SQLite database, so no Postgres container and no
 external API is required — Groq and Razorpay are both mocked at the
 transport layer (`httpx.MockTransport`) in every automated test; only the
-manual verification runs below hit real APIs. 115 tests covering: the
+manual verification runs below hit real APIs. 186 tests covering: the
 models, the case catalog, the diagnosis engine (rule table + LLM dispatch),
 the policy engine (every gate individually and in combination), the LLM
 diagnosis module (successful/low-confidence/malformed/HTTP-error/
-connection-error paths, tool-choice forcing, no-PII-no-ground-truth checks
-at both the helper and transport level), the Razorpay action executor
-(never returns `SUCCEEDED` under any mocked response shape), the
-vertical-slice pipeline end-to-end (successful retry, policy refusal, DND
-refusal, retry-cap refusal, audit record creation, no fake recovered
-result), the batch metrics computation, the batch runner (full-dataset
-processing, four-way categorization, `--execute-real` never touching
-Razorpay for HUMAN_REVIEW/STAND_DOWN, `--only-ambiguous`/`--limit`
-filtering, ground truth never reaching the LLM), adversarial safety tests
-(see "Policy engine" above), and the health endpoint.
+connection-error paths, both providers, bounded retry on malformed
+responses, tool-choice forcing, no-PII-no-ground-truth checks at both the
+helper and transport level), the Razorpay action executor (never returns
+`SUCCEEDED` under any mocked response shape), the vertical-slice pipeline
+end-to-end (successful retry, policy refusal, DND refusal, retry-cap
+refusal, audit record creation, no fake recovered result), the batch
+metrics computation, the batch runner (full-dataset processing, four-way
+categorization, `--execute-real` never touching Razorpay for
+HUMAN_REVIEW/STAND_DOWN, `--only-ambiguous`/`--limit` filtering, ground
+truth never reaching the LLM), the counterfactual evaluation harness
+(candidate-action derivation, safety scoring per category, structural
+proof it can never reach Razorpay), adversarial safety tests (see
+"Red-teaming our own safety layer" above), the tamper-evident ledger
+(writing a verifiable chain through the real pipeline, detecting a
+mutated content field, detecting a tampered chain link, the `verify-ledger`
+CLI's intact/missing/tampered paths), and the health endpoint.
 
 ## Build order
 
@@ -561,18 +731,30 @@ filtering, ground truth never reaching the LLM), adversarial safety tests
   headless-browser attempt at driving Razorpay's own Checkout UI was
   investigated and found blocked in this environment — see "Why Confirmed
   Recovered is ₹0" above for the full account.
-- **Groq's forced tool-calling is not 100% reliable.** In verification runs,
-  the ambiguous-case LLM calls succeeded roughly 40–60% of the time; the
-  rest hit Groq's `tool_use_failed` (the model didn't call the tool that
-  turn) and correctly fell back to `LLM_FALLBACK` at LOW confidence. This
-  never compromises safety — a fallback is always the most conservative
-  outcome — but it does mean a given batch run's rule/LLM/fallback split
-  will vary run to run. No retry logic was added for this (kept in scope);
-  see the batch report's `llm_fallback_rate`.
-- **Currently wired to Groq, not Anthropic/Claude**, because that was the
-  working credential available at build time — see the Stack section above.
-  The diagnosis contract is provider-agnostic; swapping is a contained
-  change to `src/llm_diagnosis.py` for anyone with an Anthropic key.
+- **Groq's forced tool-calling is not 100% reliable, even with a bounded
+  retry.** A single call's raw success rate was ~40–60% in earlier
+  verification runs. [src/llm_diagnosis.py](src/llm_diagnosis.py) now retries
+  exactly once (2 attempts total, short backoff) specifically for
+  `tool_use_failed` / malformed-response cases — never for a transport or
+  credentials error, where retrying doesn't fix anything. **Measured
+  observed success rate with the retry in place: 18/30 (60%)** across two
+  batches of real calls against Groq's `openai/gpt-oss-20b`. The retry
+  helps, but attempts aren't fully independent (a model/prompt combination
+  that fails once is more likely than baseline to fail again), so it's a
+  real, modest improvement, not a fix — every unresolved failure still
+  falls back to `LLM_FALLBACK` at LOW confidence, never compromising safety,
+  and a given batch run's rule/LLM/fallback split still varies run to run.
+  See the batch report's `llm_fallback_rate` for any specific run's actual
+  numbers.
+- **Two providers, Anthropic preferred.** `src/llm_diagnosis.py` now
+  supports both Claude (Anthropic's Messages API) and Groq behind the same
+  provider-agnostic contract; `select_provider()` picks Anthropic if
+  `ANTHROPIC_API_KEY` is configured, else Groq if `GROQ_API_KEY` is, else
+  neither (immediate, explicit `LLM_FALLBACK`, no pointless network call).
+  **In this build environment, `ANTHROPIC_API_KEY` is not configured, so
+  Groq remains the effective default** and the 60% figure above is what's
+  actually measured here — Claude's own success rate hasn't been measured
+  in this environment and shouldn't be assumed better without a real run.
 - **Serial-failure lookback isn't date-filtered.** `PolicyConfig.serial_failure_lookback_days`
   documents the intended window, but `Customer.prior_recovery_attempts` is a
   pre-aggregated count with no dated attempt log to filter by date in this
@@ -580,6 +762,25 @@ filtering, ground truth never reaching the LLM), adversarial safety tests
 - **LLM diagnosis accuracy isn't scored.** See "Rule-based diagnosis
   accuracy" above — ground truth's root-cause labels for ambiguous cases are
   illustrative, not gold-standard.
+- **No quiet-hours / pre-debit-notice / cooling-off compliance gates.** A
+  quiet-hours gate (default 09:00–21:00 IST, refusing auto-contact outside
+  that window) was built and then deliberately reverted: as specified, it
+  read real wall-clock time with no override in `run_batch.py`'s default
+  path, which means the *entire* batch run — including the one this
+  project's live pitch demo runs on stage — would silently refuse every
+  auto-action if run outside business hours IST. That's exactly the class
+  of bug this README already documents catching once (see "Two things
+  genuine testing caught" above, the frozen-cooldown-timestamp case) —
+  shipping a second instance of it under time pressure, right before a
+  live demo, would have been the wrong tradeoff. Doing this properly needs
+  every pipeline-level test and the demo script to explicitly pin a
+  daytime `now`, which wasn't attempted. Pre-debit-notice and cooling-off
+  gates were designed but not built at all — pre-debit-notice specifically
+  needs a "mandate payment" concept this data model doesn't currently have,
+  which would mean a schema change under the same time pressure. The
+  cost-effectiveness gate (`recovery_not_cost_effective`, above) has no
+  such flaw — it's pure arithmetic on values already in `PolicyInput`, and
+  shipped with full test coverage.
 
 ## Out of scope for the buildathon
 

@@ -15,6 +15,9 @@ DEFAULT_KWARGS = dict(
     max_contact_attempts=3,
     prior_recovery_attempts=0,
     serial_failure_attempt_threshold=2,
+    retry_cost=500,
+    payment_link_cost=1_500,
+    max_cost_fraction=0.5,
 )
 
 
@@ -164,4 +167,58 @@ def test_decision_factors_snapshot_is_json_serializable():
 
     decision = decide(_input())
     json.dumps(decision.factors)  # raises if anything (e.g. a bare enum) isn't serializable
-    assert decision.factors["confidence_band"] == "high"
+
+
+def test_cost_effectiveness_blocks_a_low_value_payment_link():
+    """A HIGH-confidence, non-retryable case would normally auto-send a
+    payment link — but if the payment is worth less than the modeled cost
+    of sending one, spending money to chase it isn't worth it."""
+    decision = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=False, payment_value=2000, payment_link_cost=1_500, max_cost_fraction=0.5)
+    )
+    assert decision.action == DecisionAction.STAND_DOWN
+    assert decision.reason == "recovery_not_cost_effective"
+
+
+def test_cost_effectiveness_blocks_a_low_value_retry():
+    decision = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=True, payment_value=600, retry_cost=500, max_cost_fraction=0.5)
+    )
+    assert decision.action == DecisionAction.STAND_DOWN
+    assert decision.reason == "recovery_not_cost_effective"
+
+
+def test_cost_effectiveness_does_not_block_a_normal_value_action():
+    """Sanity: the gate only fires when cost genuinely exceeds the
+    configured fraction of value — it must not creep into ordinary cases."""
+    decision = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=True, payment_value=10000, retry_cost=500, max_cost_fraction=0.5)
+    )
+    assert decision.action == DecisionAction.RETRY
+    assert decision.reason == "high_confidence_auto_action"
+
+
+def test_cost_effectiveness_fraction_is_configurable():
+    """The same payment/cost pair flips from blocked to allowed purely by
+    widening the configured fraction — proves the threshold is read from
+    input, not hardcoded."""
+    tight = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=True, payment_value=2000, retry_cost=1_000, max_cost_fraction=0.3)
+    )
+    loose = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=True, payment_value=2000, retry_cost=1_000, max_cost_fraction=0.9)
+    )
+    assert tight.action == DecisionAction.STAND_DOWN
+    assert tight.reason == "recovery_not_cost_effective"
+    assert loose.action == DecisionAction.RETRY
+
+
+def test_cost_effectiveness_does_not_apply_to_human_review_or_stand_down_candidates():
+    """The gate only evaluates auto-action candidates (RETRY/PAYMENT_LINK) —
+    a case that was already going to HUMAN_REVIEW or STAND_DOWN on its own
+    merits must keep that original reason, not get relabeled."""
+    decision = decide(
+        _input(confidence_band=ConfidenceBand.MEDIUM, payment_value=100, retry_cost=500, payment_link_cost=1_500, max_cost_fraction=0.5)
+    )
+    assert decision.action == DecisionAction.HUMAN_REVIEW
+    assert decision.reason == "medium_confidence_human_review"

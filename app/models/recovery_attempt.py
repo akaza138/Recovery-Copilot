@@ -86,4 +86,15 @@ class RecoveryAttempt(Base):
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
+    # Tamper-evident ledger (src/ledger.py). ledger_sequence is this row's position in the whole
+    # audit trail (global, not per-payment — unlike attempt_number above), assigned once at write
+    # time. content_hash is SHA-256 of this row's own canonical fields chained onto previous_hash,
+    # which is the content_hash of the row immediately before it in the ledger (or a genesis
+    # constant for the first row ever written). Mutating any field in any row after the fact
+    # changes that row's own content_hash and therefore every content_hash after it — see
+    # `verify_ledger` in src/ledger.py.
+    ledger_sequence: Mapped[int] = mapped_column(Integer, index=True, unique=True)
+    previous_hash: Mapped[str] = mapped_column(String(64))
+    content_hash: Mapped[str] = mapped_column(String(64))
+
     failed_payment: Mapped["FailedPayment"] = relationship(back_populates="attempts")

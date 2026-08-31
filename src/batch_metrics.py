@@ -9,9 +9,10 @@ total record count:
   AUTO_ACTION     decision.reason == "high_confidence_auto_action"
                   (RETRY or PAYMENT_LINK was actually attempted)
   SAFETY_STOP     max_attempts_reached / cooldown_not_elapsed / dnd_opt_out /
-                  contact_limit_reached — mechanical stopping rules and
-                  compliance gates, grouped together per the original spec's
-                  own "Stopping rules ... Compliance" pairing
+                  contact_limit_reached / recovery_not_cost_effective —
+                  mechanical stopping rules and compliance gates, grouped
+                  together per the original spec's own "Stopping rules ...
+                  Compliance" pairing
   POLICY_REFUSAL  risk_block_requires_human_review / medium_confidence_human_review /
                   high_value_uncertain_escalation / serial_recovery_failure_history /
                   confidence_below_action_threshold — a human-judgment-shaped
@@ -27,7 +28,13 @@ from dataclasses import dataclass, field
 
 from app.models.recovery_attempt import ActionMode, ActionResult, DecisionAction, DiagnosisSource
 
-SAFETY_STOP_REASONS = {"max_attempts_reached", "cooldown_not_elapsed", "dnd_opt_out", "contact_limit_reached"}
+SAFETY_STOP_REASONS = {
+    "max_attempts_reached",
+    "cooldown_not_elapsed",
+    "dnd_opt_out",
+    "contact_limit_reached",
+    "recovery_not_cost_effective",
+}
 AUTO_ACTION_REASON = "high_confidence_auto_action"
 AUTO_ACTIONS = (DecisionAction.RETRY, DecisionAction.PAYMENT_LINK)
 

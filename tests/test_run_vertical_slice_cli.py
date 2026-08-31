@@ -91,6 +91,9 @@ def _seed_stale_recovery_attempt(db_path: Path, dataset_record: dict) -> None:
         decision_factors={},
         action_mode=ActionMode.SIMULATED,
         action_result=ActionResult.PENDING,
+        ledger_sequence=0,
+        previous_hash="0" * 64,
+        content_hash="a" * 64,
     )
     db.add(attempt)
     db.commit()

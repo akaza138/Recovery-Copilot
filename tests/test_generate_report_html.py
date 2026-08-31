@@ -61,9 +61,39 @@ BASE_RECORD = dict(
 )
 
 
+BASE_COUNTERFACTUAL = {
+    "total_records": 2,
+    "summary_line": "Naive (retryable -> always retry, no gates): 1 unsafe automatic actions (1 DND breach). "
+    "Ungated LLM (diagnosis recommendation executes directly): 1 unsafe automatic actions (1 DND breach). "
+    "Recovery Copilot (gated): 0.",
+    "naive": {"mode": "naive", "label": "Naive (retryable -> always retry, no gates)", "auto_actions": 2, "unsafe_actions": 1, "unsafe_breakdown": {"DND breach": 1}},
+    "llm_only": {"mode": "llm_only", "label": "Ungated LLM (diagnosis recommendation executes directly)", "auto_actions": 2, "unsafe_actions": 1, "unsafe_breakdown": {"DND breach": 1}},
+    "gated": {"mode": "gated", "label": "Recovery Copilot (gated)", "auto_actions": 1, "unsafe_actions": 0, "unsafe_breakdown": {}},
+    "records": [],
+}
+
+
+BASE_LEDGER = {
+    "intact": True,
+    "total_rows": 2,
+    "rows_verified": 2,
+    "broken_at_sequence": None,
+    "broken_row_id": None,
+    "detail": None,
+}
+
+
 def _report(**metric_overrides) -> dict:
     metrics = {**BASE_METRICS, **metric_overrides}
-    return {"execute_real": False, "only_ambiguous": False, "limit": None, "metrics": metrics, "records": [BASE_RECORD]}
+    return {
+        "execute_real": False,
+        "only_ambiguous": False,
+        "limit": None,
+        "counterfactual": BASE_COUNTERFACTUAL,
+        "ledger": BASE_LEDGER,
+        "metrics": metrics,
+        "records": [BASE_RECORD],
+    }
 
 
 def test_renders_valid_html_shell():
@@ -153,3 +183,62 @@ def test_model_reported_confidence_shown_only_for_llm_source():
 
     rule_html = render_html(_report())  # model_reported_confidence=None for rule-based
     assert "n/a (rule-based" in rule_html
+
+
+def test_counterfactual_table_renders_before_the_metrics_table():
+    """It's the headline number in the project — must appear first on the page."""
+    html_out = render_html(_report())
+    cf_index = html_out.index("Counterfactual evaluation")
+    metrics_index = html_out.index("Batch metrics")
+    assert cf_index < metrics_index
+
+
+def test_counterfactual_table_shows_all_three_modes_and_their_counts():
+    html_out = render_html(_report())
+    assert "Naive (retryable -&gt; always retry, no gates)" in html_out or "Naive (retryable -> always retry, no gates)" in html_out
+    assert "Ungated LLM (diagnosis recommendation executes directly)" in html_out
+    assert "Recovery Copilot (gated)" in html_out
+    assert "DND breach" in html_out
+
+
+def test_counterfactual_summary_line_is_rendered():
+    html_out = render_html(_report())
+    assert "Recovery Copilot (gated): 0." in html_out
+
+
+def test_missing_counterfactual_key_does_not_crash():
+    """Backward compatibility: an older report JSON without a counterfactual
+    section should still render (just without that panel), not raise."""
+    report = _report()
+    del report["counterfactual"]
+    html_out = render_html(report)  # must not raise
+    assert "Counterfactual evaluation" not in html_out
+    assert "Batch metrics" in html_out
+
+
+def test_intact_ledger_shows_a_positive_status():
+    html_out = render_html(_report())
+    assert "Ledger: intact, 2 rows verified" in html_out
+
+
+def test_tampered_ledger_shows_the_breaking_row():
+    report = _report()
+    report["ledger"] = {
+        "intact": False,
+        "total_rows": 5,
+        "rows_verified": 2,
+        "broken_at_sequence": 2,
+        "broken_row_id": "abc-123",
+        "detail": "content_hash mismatch",
+    }
+    html_out = render_html(report)
+    assert "LEDGER TAMPERED" in html_out
+    assert "ledger_sequence=2" in html_out
+    assert "abc-123" in html_out
+
+
+def test_missing_ledger_key_does_not_crash():
+    report = _report()
+    del report["ledger"]
+    html_out = render_html(report)  # must not raise
+    assert "Batch metrics" in html_out

@@ -39,6 +39,9 @@ BASE_KWARGS = dict(
     max_contact_attempts=3,
     prior_recovery_attempts=0,
     serial_failure_attempt_threshold=2,
+    retry_cost=500,
+    payment_link_cost=1_500,
+    max_cost_fraction=0.5,
 )
 
 
@@ -164,6 +167,38 @@ def test_precedence_never_auto_beats_dnd_and_high_value():
     )
     assert decision.action == DecisionAction.HUMAN_REVIEW
     assert decision.reason == "risk_block_requires_human_review"
+
+
+def test_contact_limit_blocks_a_fresh_high_confidence_non_retryable_diagnosis():
+    """Attack: a non-retryable, HIGH-confidence diagnosis is the textbook
+    PAYMENT_LINK case — confirm the contact cap still blocks it once the
+    customer's contact budget for this period is already used up."""
+    decision = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=False, contact_count=3, max_contact_attempts=3)
+    )
+    assert decision.action == DecisionAction.STAND_DOWN
+    assert decision.reason == "contact_limit_reached"
+
+
+def test_contact_limit_stacked_with_high_value_still_blocks():
+    """Attack: stack the contact cap against a high-value payment too — a
+    bigger payment doesn't buy an extra contact attempt."""
+    decision = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=False, payment_value=90_00_000, contact_count=5, max_contact_attempts=5)
+    )
+    assert decision.action == DecisionAction.STAND_DOWN
+    assert decision.reason == "contact_limit_reached"
+
+
+def test_contact_limit_does_not_leak_into_blocking_a_retry():
+    """Attack (inverse): confirm the contact-limit gate is scoped to
+    PAYMENT_LINK only and can't be smuggled in to also block a RETRY — a
+    silent gateway retry isn't a customer contact, so a maxed-out contact
+    count must not stop it."""
+    decision = decide(
+        _input(confidence_band=ConfidenceBand.HIGH, retryable=True, contact_count=99, max_contact_attempts=3)
+    )
+    assert decision.action == DecisionAction.RETRY
 
 
 def test_high_value_gate_cannot_be_smuggled_past_by_high_confidence_alone():
@@ -295,6 +330,23 @@ def test_pipeline_dnd_customer_never_triggers_a_real_retry_call(db_session):
     assert razorpay._call_count["n"] == 0
 
 
+def test_pipeline_contact_limit_blocks_a_real_payment_link_call(db_session):
+    """Attack: a customer whose contact budget is already exhausted gets a
+    non-retryable, HIGH-confidence diagnosis — the textbook PAYMENT_LINK
+    case — confirm the real pipeline blocks it and Razorpay is never called,
+    not just that the labeled decision looks right."""
+    record = _dataset_record(external_payment_id="pay_contact_limit_attack", failure_reason="expired_card")
+    record["customer"]["contact_count"] = 3
+    record["customer"]["max_contact_attempts"] = 3
+    razorpay = _real_razorpay_mock()
+
+    result = run_pipeline(db_session, record, action_executor=razorpay)
+
+    assert result.policy_decision.action == DecisionAction.STAND_DOWN
+    assert result.policy_decision.reason == "contact_limit_reached"
+    assert razorpay._call_count["n"] == 0
+
+
 def test_pipeline_high_value_dnd_customer_is_never_auto_acted_on(db_session):
     """Combined-factor attack at the pipeline level: high value + a
     retryable, high-confidence diagnosis + DND. DND must still win end to
@@ -307,4 +359,28 @@ def test_pipeline_high_value_dnd_customer_is_never_auto_acted_on(db_session):
     assert result.diagnosis.confidence_band == ConfidenceBand.HIGH  # confirms this really was the strong case
     assert result.policy_decision.action == DecisionAction.STAND_DOWN
     assert result.policy_decision.reason == "dnd_opt_out"
+    assert razorpay._call_count["n"] == 0
+
+
+def test_cost_effectiveness_does_not_leak_into_blocking_a_normal_payment():
+    """Attack: confirm the new gate doesn't quietly widen and start
+    blocking payments it was never meant to touch — the default cost
+    estimates must stay tiny relative to any dataset-scale payment."""
+    decision = decide(_input(confidence_band=ConfidenceBand.HIGH, retryable=True, payment_value=10000))
+    assert decision.action == DecisionAction.RETRY
+    assert decision.reason == "high_confidence_auto_action"
+
+
+def test_pipeline_cost_effectiveness_blocks_a_real_payment_link_call(db_session):
+    """Attack: 'surely a fresh, HIGH-confidence, non-retryable diagnosis
+    always earns a payment link' — not if the payment itself is worth less
+    than what sending one is modeled to cost. Confirm the real pipeline
+    refuses and Razorpay is never called."""
+    record = _dataset_record(external_payment_id="pay_cost_attack", failure_reason="expired_card", amount=2000)
+    razorpay = _real_razorpay_mock()
+
+    result = run_pipeline(db_session, record, action_executor=razorpay)
+
+    assert result.policy_decision.action == DecisionAction.STAND_DOWN
+    assert result.policy_decision.reason == "recovery_not_cost_effective"
     assert razorpay._call_count["n"] == 0

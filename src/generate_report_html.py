@@ -98,6 +98,16 @@ details.record[open] summary { border-bottom: 1px solid var(--border); }
 .factors div { display: flex; justify-content: space-between; gap: 1rem; }
 .factors div span:first-child { color: var(--muted); }
 footer { color: var(--muted); font-size: 0.8rem; text-align: center; margin-top: 2rem; }
+.cf-panel { background: var(--panel); border: 2px solid var(--text); border-radius: 10px; padding: 1.5rem 1.75rem; margin-bottom: 1.5rem; }
+.cf-panel h2 { font-size: 1.2rem; margin: 0 0 0.25rem; }
+.cf-panel .cf-subtitle { color: var(--muted); margin: 0 0 1rem; font-size: 0.9rem; }
+.cf-table td, .cf-table th { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); text-align: left; }
+.cf-table th:not(:first-child), .cf-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+.cf-table tr.cf-gated td { font-weight: 700; background: var(--green-bg); }
+.cf-breakdown { margin-top: 0.9rem; font-size: 0.85rem; }
+.cf-breakdown h4 { margin: 0.6rem 0 0.3rem; font-size: 0.85rem; }
+.cf-breakdown ul { margin: 0; padding-left: 1.2rem; }
+.cf-summary { margin-top: 1.1rem; padding: 0.8rem 1rem; background: var(--gray-bg); border-radius: 8px; font-size: 0.95rem; font-weight: 600; }
 """
 
 
@@ -146,12 +156,53 @@ def _render_metrics_table(m: dict) -> str:
     return f'<table class="metrics-table"><tbody>{body}</tbody></table>'
 
 
+def _render_counterfactual(cf: dict) -> str:
+    rows = ""
+    for mode_key in ("naive", "llm_only", "gated"):
+        mode = cf[mode_key]
+        cls = ' class="cf-gated"' if mode_key == "gated" else ""
+        rows += f"<tr{cls}><td>{html.escape(mode['label'])}</td><td>{mode['auto_actions']}</td><td>{mode['unsafe_actions']}</td></tr>\n"
+
+    table = f"""<table class="cf-table"><thead><tr><th>Mode</th><th>Auto-actions taken</th><th>Unsafe actions</th></tr></thead>
+    <tbody>{rows}</tbody></table>"""
+
+    breakdowns = ""
+    for mode_key in ("naive", "llm_only"):
+        mode = cf[mode_key]
+        if mode["unsafe_breakdown"]:
+            items = "".join(f"<li>{count}&times; {html.escape(category)}</li>" for category, count in mode["unsafe_breakdown"].items())
+            breakdowns += f'<div class="cf-breakdown"><h4>{html.escape(mode["label"])} — unsafe action breakdown</h4><ul>{items}</ul></div>'
+
+    return f"""
+    <div class="cf-panel">
+      <h2>Counterfactual evaluation — what skipping the policy engine would cost</h2>
+      <p class="cf-subtitle">Same {cf['total_records']} records, three decision strategies. This is the headline
+        number in the project: not what Recovery Copilot does, but what it prevents.</p>
+      {table}
+      {breakdowns}
+      <div class="cf-summary">{html.escape(cf['summary_line'])}</div>
+    </div>
+    """
+
+
 def _render_safety_banner(m: dict) -> str:
     if m["incorrect_automatic_actions"] == 0:
         return '<div class="safety-banner safety-ok">Safety check: incorrect automatic actions = 0 (target met)</div>'
     return (
         f'<div class="safety-banner safety-bad">SAFETY VIOLATION: '
         f'{m["incorrect_automatic_actions"]} incorrect automatic action(s) — see records below</div>'
+    )
+
+
+def _render_ledger_status(ledger: dict) -> str:
+    if ledger["total_rows"] == 0:
+        return '<div class="safety-banner">Ledger: empty — nothing to verify.</div>'
+    if ledger["intact"]:
+        return f'<div class="safety-banner safety-ok">Ledger: intact, {ledger["rows_verified"]} rows verified (SHA-256 hash chain)</div>'
+    return (
+        f'<div class="safety-banner safety-bad">LEDGER TAMPERED: verified {ledger["rows_verified"]}/{ledger["total_rows"]} '
+        f'rows before the chain broke at ledger_sequence={ledger["broken_at_sequence"]} '
+        f'(row id={html.escape(str(ledger["broken_row_id"]))})</div>'
     )
 
 
@@ -248,7 +299,10 @@ def render_html(report: dict) -> str:
     only ever propose a diagnosis; a deterministic policy engine decides every action.
     Mode: <strong>{html.escape(mode_label)}</strong> &middot; {m['total_records']} records processed.</p>
 
+  {_render_counterfactual(report["counterfactual"]) if report.get("counterfactual") else ""}
+
   {_render_safety_banner(m)}
+  {_render_ledger_status(report["ledger"]) if report.get("ledger") else ""}
 
   <div class="panel">
     <h2>Batch metrics</h2>
